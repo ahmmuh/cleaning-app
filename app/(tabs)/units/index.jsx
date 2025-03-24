@@ -12,10 +12,12 @@ function UnitScreen() {
   const fetchUnits = async () => {
     try {
       const data = await getUnits();
-      console.log("Units i unit sida", units);
+      console.log("Units i unit sida", data);
       setUnits(data);
+      setLoading(false);
     } catch (error) {
       console.error("Error vid hämtning av units", error.message);
+      setError(error);
       setLoading(false);
     }
   };
@@ -33,16 +35,18 @@ function UnitScreen() {
   }
 
   if (error) {
-    <View style={{ flex: 1 }}>
-      <Text>Fel vid hämtning av enheter: {error}</Text>
-    </View>;
+    return (
+      <View style={{ flex: 1 }}>
+        <Text>Fel vid hämtning av enheter: {error.message}</Text>
+      </View>
+    );
   }
   return (
     <View style={styles.container}>
       <Text>Sektion för alla enheter</Text>
       {units && units.length > 0 ? (
         units.map((unit) => (
-          <Link key={unit.id} href={`/units/${unit.id}`}>
+          <Link key={unit._id} href={`/units/${unit._id}`}>
             {unit.name}
           </Link>
         ))

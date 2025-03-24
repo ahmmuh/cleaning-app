@@ -8,7 +8,7 @@ function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Start",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome size={25} name="home" color={color} />
           ),

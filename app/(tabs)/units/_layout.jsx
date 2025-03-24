@@ -1,20 +1,20 @@
+import { Stack } from "expo-router";
 import React from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
-function DrawerLayout() {
+function AllaEnheterSTackLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer screenOptions={{ headerShown: true }}>
-        <Drawer.Screen
-          name="index"
-          options={{
-            drawerLabel: "Enheter",
-            title: "Alla enheter",
-          }}
-        />
-      </Drawer>
-    </GestureHandlerRootView>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen
+        name="index"
+        options={{
+          headerTitle: "Alla enheter",
+          headerShown: true,
+        }}
+      />
+    </Stack>
   );
 }
 
-export default DrawerLayout;
+export default AllaEnheterSTackLayout;
