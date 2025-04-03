@@ -5,6 +5,12 @@ function AllaEnheterSTackLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: "#4dd",
+        headerStyle: {
+          backgroundColor: "#81C784",
+        },
+
+        headerTitleStyle: "bold",
       }}>
       <Stack.Screen
         name="index"

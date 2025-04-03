@@ -7,6 +7,12 @@ function SingelDrawerLayout() {
       <Drawer
         screenOptions={{
           headerShown: true,
+          tabBarActiveTintColor: "#4dd",
+          headerStyle: {
+            backgroundColor: "#81C784",
+          },
+
+          headerTitleStyle: "bold",
         }}>
         <Drawer.Screen
           name="index"
