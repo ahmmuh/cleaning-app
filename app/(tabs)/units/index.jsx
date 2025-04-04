@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -10,6 +11,8 @@ import {
 import { getUnits } from "../../../backend/api";
 import { Link } from "expo-router";
 import ListItem from "../../../components/listItem";
+import Card from "../../../components/card";
+import MainLink from "../../../components/link";
 
 function UnitScreen() {
   const [units, setUnits] = useState([]);
@@ -49,43 +52,69 @@ function UnitScreen() {
       </View>
     );
   }
+
+  const Item = ({ title }) => {
+    return (
+      <View>
+        <Text>{title}</Text>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
-      <Text style={{ paddingLeft: 20, fontSize: 20 }}>
+      {/* <Text style={{ paddingLeft: 20, fontSize: 20 }}>
         Sektion för alla enheter
-      </Text>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
-          {units && units.length > 0 ? (
-            units.map((unit) => (
-              <ListItem key={unit._id} url={`/units/${unit._id}`}>
-                <Text> {unit.name}</Text>
-              </ListItem>
-            ))
-          ) : (
-            <Text>Inga enheter tillgängliga</Text>
-          )}
-        </View>
-      </ScrollView>
+      </Text> */}
+      <FlatList
+        data={units}
+        renderItem={({ item }) => (
+          <>
+            <Card title={item.name}>
+              <Link href={`/units/${item._id}/chef`} style={styles.link}>
+                <Text>{item.chef.name}</Text>
+              </Link>
+              <Link href={`/units/${item._id}/specialist`} style={styles.link}>
+                <Text>Specialister {item.specialister.length}</Text>
+              </Link>
+              <Link href={`/units/${item._id}/task`} style={styles.link}>
+                <Text>Att göra {item.tasks.length}</Text>
+              </Link>
+              <Link href={`/units/${item._id}/workplace`} style={styles.link}>
+                <Text>Mina objekt {item.specialister.length}</Text>
+              </Link>
+            </Card>
+          </>
+        )}
+        // keyExtractor={({ item }) => item.id}
+        ListHeaderComponent={(item) => <Text>{item.name}</Text>}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1,
   },
 
   scrollContainer: {
     paddingHorizontal: 10,
     paddingVertical: 20, // Ger extra padding runt scrollinnehållet
-    alignItems: "center",
-    justifyContent: "center",
   },
   safeAreaContainer: {
     flex: 1, // Gör så att SafeAreaView tar upp hela skärmen
-    marginVertical: 20,
+    marginVertical: 10,
+  },
+  link: {
+    marginBottom: 2,
+    fontSize: 15,
+    color: "blue",
+    padding: 5,
+    border: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    paddingBottom: 20,
+    cursor: "pointer",
   },
 });
 

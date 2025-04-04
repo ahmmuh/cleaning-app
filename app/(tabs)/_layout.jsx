@@ -6,9 +6,9 @@ function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#4dd",
+        tabBarActiveTintColor: "#003366",
         headerStyle: {
-          backgroundColor: "#81C784",
+          backgroundColor: "#bff38c",
         },
 
         headerTitleStyle: "bold",

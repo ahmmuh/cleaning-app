@@ -5,9 +5,9 @@ function AllaEnheterSTackLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#4dd",
+        tabBarActiveTintColor: "#003366",
         headerStyle: {
-          backgroundColor: "#81C784",
+          backgroundColor: "#bff38c",
         },
 
         headerTitleStyle: "bold",

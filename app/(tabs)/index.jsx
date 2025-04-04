@@ -12,6 +12,7 @@ function HomeScreen() {
             <Text>Welcome to Cleaning APP</Text>
             <Link href="/units">Alla enheter</Link>
             <Link href="/keys">Nycklar</Link>
+            <Link href="/products">Products</Link>
           </View>
         </ScrollView>
       </SafeAreaView>
