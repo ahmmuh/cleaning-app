@@ -8,7 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { getUnits } from "../../../backend/api";
+import { getUnitByID, getUnits } from "../../../backend/api";
 import { Link } from "expo-router";
 import ListItem from "../../../components/listItem";
 import Card from "../../../components/card";
@@ -17,14 +17,48 @@ import MainLink from "../../../components/link";
 function UnitScreen() {
   const [units, setUnits] = useState([]);
 
+  const [unit, setUnit] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const fetchUnitById = async (unitId) => {
+    try {
+      const unitData = await getUnitByID(unitId);
+      console.log("Fullständig enhet:", unitData);
+      // setUnit(unitData);
+      return unitData;
+    } catch (error) {
+      console.error("Error vid hämtning av 1 unit", error.message);
+      setError(error);
+      // setLoading(false);
+      return null;
+    }
+  };
 
   const fetchUnits = async () => {
     try {
       const data = await getUnits();
       console.log("Units i unit sida", data);
+      console.log("Type of units data *********", typeof data);
+
+      // Hämta detaljer för varje enhet genom att loopa genom dem
+      const unitDetailsPromses = data.map((unitData) =>
+        getUnitByID(unitData._id)
+      );
+
+      // Vänta på att alla detaljer ska hämtas
+      const unitDetails = await Promise.all(unitDetailsPromses);
       setUnits(data);
+
+      //kombinera alla enheter med detaljer
+
+      const unitsWithDetails = data.map((unit, index) => ({
+        ...unit,
+        ...unitDetails[index],
+      }));
+
+      setUnits(unitsWithDetails);
       setLoading(false);
     } catch (error) {
       console.error("Error vid hämtning av units", error.message);
@@ -47,8 +81,10 @@ function UnitScreen() {
 
   if (error) {
     return (
-      <View style={{ flex: 1 }}>
-        <Text>Fel vid hämtning av enheter: {error.message}</Text>
+      <View style={{ flex: 1, padding: 20 }}>
+        <Text style={{ fontSize: 20, color: "red", alignSelf: "center" }}>
+          Fel vid hämtning av enheter: {error.message}
+        </Text>
       </View>
     );
   }
@@ -63,24 +99,25 @@ function UnitScreen() {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       {/* <Text style={{ paddingLeft: 20, fontSize: 20 }}>
-        Sektion för alla enheter
-      </Text> */}
+          Sektion för alla enheter
+        </Text> */}
       <FlatList
         data={units}
         renderItem={({ item }) => (
           <>
-            <Card title={item.name}>
+            <Card title={item.name} key={item._id}>
               <Link href={`/units/${item._id}/chef`} style={styles.link}>
-                <Text>{item.chef.name}</Text>
+                <Text>Enhetchef {item.chef.name}</Text>
               </Link>
+
               <Link href={`/units/${item._id}/specialist`} style={styles.link}>
-                <Text>Specialister {item.specialister.length}</Text>
+                <Text>Specialister ({item.specialister.length})</Text>
               </Link>
               <Link href={`/units/${item._id}/task`} style={styles.link}>
-                <Text>Att göra {item.tasks.length}</Text>
+                <Text>Att göra ({item.tasks.length})</Text>
               </Link>
               <Link href={`/units/${item._id}/workplace`} style={styles.link}>
-                <Text>Mina objekt {item.specialister.length}</Text>
+                <Text>Mina objekt ({item.workPlaces.length})</Text>
               </Link>
             </Card>
           </>
