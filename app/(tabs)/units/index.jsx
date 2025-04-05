@@ -106,10 +106,16 @@ function UnitScreen() {
         renderItem={({ item }) => (
           <>
             <Card title={item.name} key={item._id}>
-              <Link href={`/units/${item._id}/chef`} style={styles.link}>
+              {/* <Link href={`/units/${item._id}/chef`} style={styles.link}>
                 <Text>Enhetchef {item.chef.name}</Text>
+              </Link> */}
+              <Link
+                href={`/units/${item._id}/chef?chefId=${item.chef._id}`} // Skickar chefens ID
+                style={styles.link}>
+                <Text>Enhetchef: {item.chef.name} Ahmed</Text>
               </Link>
 
+              {/* 
               <Link href={`/units/${item._id}/specialist`} style={styles.link}>
                 <Text>Specialister ({item.specialister.length})</Text>
               </Link>
@@ -118,7 +124,7 @@ function UnitScreen() {
               </Link>
               <Link href={`/units/${item._id}/workplace`} style={styles.link}>
                 <Text>Mina objekt ({item.workPlaces.length})</Text>
-              </Link>
+              </Link> */}
             </Card>
           </>
         )}
