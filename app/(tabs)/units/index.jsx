@@ -49,7 +49,6 @@ function UnitScreen() {
 
       // Vänta på att alla detaljer ska hämtas
       const unitDetails = await Promise.all(unitDetailsPromses);
-      setUnits(data);
 
       //kombinera alla enheter med detaljer
 
@@ -89,13 +88,6 @@ function UnitScreen() {
     );
   }
 
-  const Item = ({ title }) => {
-    return (
-      <View>
-        <Text>{title}</Text>
-      </View>
-    );
-  };
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       {/* <Text style={{ paddingLeft: 20, fontSize: 20 }}>
@@ -106,16 +98,12 @@ function UnitScreen() {
         renderItem={({ item }) => (
           <>
             <Card title={item.name} key={item._id}>
-              {/* <Link href={`/units/${item._id}/chef`} style={styles.link}>
-                <Text>Enhetchef {item.chef.name}</Text>
-              </Link> */}
               <Link
                 href={`/units/${item._id}/chef?chefId=${item.chef._id}`} // Skickar chefens ID
                 style={styles.link}>
-                <Text>Enhetchef: {item.chef.name} Ahmed</Text>
+                <Text>Enhetchef: {item.chef.name}</Text>
               </Link>
 
-              {/* 
               <Link href={`/units/${item._id}/specialist`} style={styles.link}>
                 <Text>Specialister ({item.specialister.length})</Text>
               </Link>
@@ -124,7 +112,7 @@ function UnitScreen() {
               </Link>
               <Link href={`/units/${item._id}/workplace`} style={styles.link}>
                 <Text>Mina objekt ({item.workPlaces.length})</Text>
-              </Link> */}
+              </Link>
             </Card>
           </>
         )}
@@ -136,14 +124,14 @@ function UnitScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  // container: {
+  //   flex: 1,
+  // },
 
-  scrollContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 20, // Ger extra padding runt scrollinnehållet
-  },
+  // scrollContainer: {
+  //   paddingHorizontal: 10,
+  //   paddingVertical: 20, // Ger extra padding runt scrollinnehållet
+  // },
   safeAreaContainer: {
     flex: 1, // Gör så att SafeAreaView tar upp hela skärmen
     marginVertical: 10,

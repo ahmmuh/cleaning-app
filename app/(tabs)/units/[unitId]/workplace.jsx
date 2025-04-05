@@ -1,9 +1,11 @@
+import { useSearchParams } from "expo-router";
 import { Text, View } from "react-native";
 
 function WorkPlaceScreen() {
+  const { unitId } = useSearchParams();
   return (
     <View>
-      <Text>Work Place Lista</Text>
+      <Text>Work Place Lista {unitId}</Text>
     </View>
   );
 }

@@ -31,6 +31,23 @@ export const getUnitByID = async (unitId) => {
   }
 };
 
+//get chef by ID
+
+export const getChefByID = async (unitId, chefId) => {
+  try {
+    const res = await fetch(`${BASE_URL}/units/${unitId}/chefer/${chefId}`);
+    if (!res.ok) {
+      console.log(`Server error when fething data, status: ${res.status}`);
+      return null;
+    }
+    const data = await res.json();
+    console.log("Hämtat data från servern ", data);
+    return data;
+  } catch (error) {
+    if (error instanceof Error) console.error("Server Error: ", error.message);
+  }
+};
+
 export const getWorkplace = async (unitId, workplaceId) => {
   try {
     const response = await fetch(
