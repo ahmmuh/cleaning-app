@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -9,12 +10,13 @@ import {
   View,
 } from "react-native";
 import { getUnitByID, getUnits } from "../../../backend/api";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import ListItem from "../../../components/listItem";
 import Card from "../../../components/card";
 import MainLink from "../../../components/link";
 
 function UnitScreen() {
+  const router = useRouter();
   const [units, setUnits] = useState([]);
 
   const [unit, setUnit] = useState(null);
@@ -104,9 +106,22 @@ function UnitScreen() {
                 <Text>Enhetchef: {item.chef.name}</Text>
               </Link>
 
-              <Link href={`/units/${item._id}/specialist`} style={styles.link}>
+              {/* <Link href={`/units/${item._id}/specialist`} style={styles.link}>
                 <Text>Specialister ({item.specialister.length})</Text>
-              </Link>
+              </Link> */}
+
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: `/units/${item._id}/specialist`,
+                    query: {
+                      unitId: item._id,
+                      specialister: JSON.stringify(item.specialister),
+                    },
+                  })
+                }>
+                <Text>Specialister med props {item.specialister.length}</Text>
+              </Pressable>
               <Link href={`/units/${item._id}/task`} style={styles.link}>
                 <Text>Att göra ({item.tasks.length})</Text>
               </Link>

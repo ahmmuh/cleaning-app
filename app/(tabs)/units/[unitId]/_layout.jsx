@@ -23,9 +23,9 @@ function SingelDrawerLayout() {
         />
 
         <Drawer.Screen
-          name="Enhetschef"
+          name="chef"
           options={{
-            drawerLabel: "Enhetschef",
+            drawerLabel: "chef",
             title: "Enhetschef",
           }}
         />
