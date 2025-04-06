@@ -4,6 +4,8 @@ import { Text, View, StyleSheet, Pressable } from "react-native";
 import { getUnitByID } from "../../../../backend/api";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native";
+import { formatDate } from "../../../../date/dateFormat";
+import BackButton from "../../../../components/backButton";
 
 function TodoScreen() {
   const { unitId } = useLocalSearchParams();
@@ -13,6 +15,8 @@ function TodoScreen() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  //date format
 
   //filter tasks
 
@@ -84,24 +88,44 @@ function TodoScreen() {
           </Pressable>
         </View>
 
-        {filterTasks.length < 0 ? (
+        {filteredTasks.length === 0 ? (
           <View style={{ flex: 1 }}>
             <Text style={styles.noTaskText}>
-              Det finns inget att visa {selectedStatus}{" "}
+              Det finns inget att visa för status "{selectedStatus}"
             </Text>
           </View>
         ) : (
           <FlatList
             data={filteredTasks}
+            keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
               <View style={styles.tasksContainer}>
                 <Text style={styles.taskTitle}>{item.title}</Text>
-                <Text>Status: {item.completed}</Text>
-                <Text>uppdaterades: {item.Uppdaterats}</Text>
+                {item.completed === "Färdigt" && (
+                  <Text style={{ color: "green", fontWeight: "bold" }}>
+                    Status: {item.completed}
+                  </Text>
+                )}
+                {item.completed === "Ej påbörjat" && (
+                  <Text style={{ color: "red", fontWeight: "bold" }}>
+                    Status: {item.completed}
+                  </Text>
+                )}
+                {item.completed === "Påbörjat" && (
+                  <Text style={{ color: "orange", fontWeight: "bold" }}>
+                    Status: {item.completed}
+                  </Text>
+                )}
+
+                {item.completed === "Ej påbörjat" && (
+                  <Text>Skapades: {formatDate(item.skapats)}</Text>
+                )}
+                <Text>uppdaterades: {formatDate(item.Uppdaterats)}</Text>
               </View>
             )}
           />
         )}
+        <BackButton onPress={() => router.navigate(`/units`)} />
       </View>
     </SafeAreaView>
   );
@@ -109,6 +133,8 @@ function TodoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 20,
+    marginLeft: 10,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -128,6 +154,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#000",
+    fontSize: 16,
   },
 
   tasksContainer: {
@@ -139,12 +166,15 @@ const styles = StyleSheet.create({
 
   taskTitle: {
     fontWeight: "bold",
+    fontSize: 18,
   },
-
+  textStatus: {
+    fontWeight: "bold",
+  },
   noTaskText: {
     textAlign: "center",
     fontSize: 18,
-    color: "#777",
+    color: "#000",
     marginTop: 20,
   },
 });
