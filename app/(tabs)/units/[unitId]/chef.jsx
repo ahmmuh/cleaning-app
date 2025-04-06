@@ -6,6 +6,7 @@ import Card from "../../../../components/card";
 import { Button } from "react-native";
 import MainLink from "../../../../components/link";
 import MainCard from "../../../../components/maincard";
+import BackButton from "../../../../components/backButton";
 
 function ChefScreen() {
   const [chef, setChef] = useState({});
@@ -67,11 +68,11 @@ function ChefScreen() {
     // </View>
     <MainCard
       title={"Enhetschef"}
-      url={"/units"}
       name={chef.name}
       email={chef.email}
-      phone={chef.phone}
-    />
+      phone={chef.phone}>
+      <BackButton onPress={() => router.navigate("/units")} />
+    </MainCard>
   );
 }
 

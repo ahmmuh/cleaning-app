@@ -3,7 +3,7 @@ import React from "react";
 import { StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
-function MainCard({ url, title, name, email, phone }) {
+function MainCard({ url, title, name, email, phone, children }) {
   return (
     <View style={styles.container}>
       <View title={title} style={styles.card}>
@@ -16,7 +16,7 @@ function MainCard({ url, title, name, email, phone }) {
         <Link href={""} style={styles.link}>
           <Text>E-post {email}</Text>
         </Link>
-        <Link href={url}>Tillbaka</Link>
+        {children}
       </View>
     </View>
   );

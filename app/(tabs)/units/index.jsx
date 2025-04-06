@@ -120,14 +120,37 @@ function UnitScreen() {
                     },
                   })
                 }>
-                <Text>Specialister med props {item.specialister.length}</Text>
+                <Text style={styles.link}>
+                  Specialer ({item.specialister.length})
+                </Text>
               </Pressable>
-              <Link href={`/units/${item._id}/task`} style={styles.link}>
-                <Text>Att göra ({item.tasks.length})</Text>
-              </Link>
-              <Link href={`/units/${item._id}/workplace`} style={styles.link}>
-                <Text>Mina objekt ({item.workPlaces.length})</Text>
-              </Link>
+
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: `/units/${item._id}/task`,
+                    query: {
+                      unitId: item._id,
+                      specialister: JSON.stringify(item.tasks),
+                    },
+                  })
+                }>
+                <Text style={styles.link}>Att göra ({item.tasks.length})</Text>
+              </Pressable>
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: `/units/${item._id}/workPlaces`,
+                    query: {
+                      unitId: item._id,
+                      workPlaces: JSON.stringify(item.workPlaces),
+                    },
+                  })
+                }>
+                <Text style={styles.link}>
+                  Mina objekt ({item.workPlaces.length})
+                </Text>
+              </Pressable>
             </Card>
           </>
         )}
@@ -139,28 +162,22 @@ function UnitScreen() {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  // },
-
-  // scrollContainer: {
-  //   paddingHorizontal: 10,
-  //   paddingVertical: 20, // Ger extra padding runt scrollinnehållet
-  // },
   safeAreaContainer: {
     flex: 1, // Gör så att SafeAreaView tar upp hela skärmen
     marginVertical: 10,
   },
   link: {
     marginBottom: 2,
-    fontSize: 15,
-    color: "blue",
-    padding: 5,
+    fontSize: 17,
+    color: "#2a4ede",
+    padding: 2,
     border: 1,
     borderBottomWidth: 1,
-    borderBottomColor: "#000",
+    borderBottomColor: "#334",
     paddingBottom: 20,
     cursor: "pointer",
+    textDecoration: "underline",
+    fontStyle: "italic",
   },
 });
 

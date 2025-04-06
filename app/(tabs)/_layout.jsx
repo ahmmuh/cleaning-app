@@ -23,15 +23,16 @@ function TabLayout() {
         }}
       />
 
-      <Tabs.Screen
-        name="keys"
+      {/* <Tabs.Screen
+        name="index"
         options={{
           title: "Nyckel hantering",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome size={25} name="key" color={color} />
           ),
+          headerShown: false,
         }}
-      />
+      /> */}
 
       <Tabs.Screen
         name="units"

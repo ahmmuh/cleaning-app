@@ -71,6 +71,31 @@ export const getWorkplace = async (unitId, workplaceId) => {
   }
 };
 
+//Tasks
+
+// export const getTasks = async (unitId, workplaceId) => {
+//   try {
+//     const response = await fetch(
+//       `${BASE_URL}/units/${unitId}/workplaces/${workplaceId}`,
+//       {
+//         method: "GET",
+//         "Content-Type": "application/json",
+//       }
+//     );
+//     if (!response.ok) {
+//       console.warn(
+//         `Error - status: ${response.status}, message: ${response.statusText}`
+//       );
+//       return null;
+//     }
+
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error("Error", error.message);
+//   }
+// };
+
 //specialist operations
 ///units/:unitId/specialister/:specialistId
 
