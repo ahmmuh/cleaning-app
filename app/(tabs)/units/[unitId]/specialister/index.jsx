@@ -1,9 +1,9 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
-import MainCard from "../../../../components/maincard";
-import { getUnitByID } from "../../../../backend/api";
+import MainCard from "../../../../../components/maincard";
+import { getUnitByID } from "../../../../../backend/api";
 import { useEffect, useState } from "react";
-import BackButton from "../../../../components/backButton";
+import BackButton from "../../../../../components/backButton";
 
 function SpecialistScreen() {
   const router = useRouter();

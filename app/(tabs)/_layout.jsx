@@ -12,27 +12,23 @@ function TabLayout() {
         },
 
         headerTitleStyle: "bold",
+        tabBarStyle: { height: 70, paddingVertical: 5 },
+
+        tabBarItemStyle: {
+          flexDirection: "row",
+          justifyContent: "space-between",
+        },
+        tabBarScrollEnabled: true, // Gör tabbarna scrollbara horisontellt
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Start",
+          title: "Start ",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome size={25} name="home" color={color} />
           ),
         }}
       />
-
-      {/* <Tabs.Screen
-        name="index"
-        options={{
-          title: "Nyckel hantering",
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome size={25} name="key" color={color} />
-          ),
-          headerShown: false,
-        }}
-      /> */}
 
       <Tabs.Screen
         name="units"

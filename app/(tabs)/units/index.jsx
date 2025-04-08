@@ -13,7 +13,6 @@ import { getUnitByID, getUnits } from "../../../backend/api";
 import { Link, useRouter } from "expo-router";
 import ListItem from "../../../components/listItem";
 import Card from "../../../components/card";
-import MainLink from "../../../components/link";
 
 function UnitScreen() {
   const router = useRouter();
@@ -101,7 +100,7 @@ function UnitScreen() {
           <>
             <Card title={item.name} key={item._id}>
               <Link
-                href={`/units/${item._id}/chef?chefId=${item.chef._id}`} // Skickar chefens ID
+                href={`/units/${item._id}/chefer?chefId=${item.chef._id}`} // Skickar chefens ID
                 style={styles.link}>
                 <Text>Enhetchef: {item.chef.name}</Text>
               </Link>
@@ -113,7 +112,7 @@ function UnitScreen() {
               <Pressable
                 onPress={() =>
                   router.push({
-                    pathname: `/units/${item._id}/specialist`,
+                    pathname: `/units/${item._id}/specialister`,
                     query: {
                       unitId: item._id,
                       specialister: JSON.stringify(item.specialister),
@@ -128,7 +127,7 @@ function UnitScreen() {
               <Pressable
                 onPress={() =>
                   router.push({
-                    pathname: `/units/${item._id}/task`,
+                    pathname: `/units/${item._id}/tasks`,
                     query: {
                       unitId: item._id,
                       specialister: JSON.stringify(item.tasks),
@@ -140,7 +139,7 @@ function UnitScreen() {
               <Pressable
                 onPress={() =>
                   router.push({
-                    pathname: `/units/${item._id}/workPlaces`,
+                    pathname: `/units/${item._id}/workplaces`,
                     query: {
                       unitId: item._id,
                       workPlaces: JSON.stringify(item.workPlaces),

@@ -1,12 +1,12 @@
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { getChefByID, getUnitByID } from "../../../../backend/api";
-import Card from "../../../../components/card";
+import { getChefByID, getUnitByID } from "../../../../../backend/api";
+import Card from "../../../../../components/card";
 import { Button } from "react-native";
-import MainLink from "../../../../components/link";
-import MainCard from "../../../../components/maincard";
-import BackButton from "../../../../components/backButton";
+import MainLink from "../../../../../components/link";
+import MainCard from "../../../../../components/maincard";
+import BackButton from "../../../../../components/backButton";
 
 function ChefScreen() {
   const [chef, setChef] = useState({});

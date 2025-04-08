@@ -1,11 +1,32 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+// import React from "react";
+// import { Text, View } from "react-native";
+
+// function TaskScreen() {
+//   return (
+//     <View style={{ flex: 1 }}>
+//       <Text>Welcome to do list</Text>
+//     </View>
+//   );
+// }
+
+// export default TaskScreen;
+
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import { getUnitByID } from "../../../../backend/api";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  Touchable,
+  TouchableOpacity,
+} from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native";
-import { formatDate } from "../../../../date/dateFormat";
-import BackButton from "../../../../components/backButton";
+import { getUnitByID } from "../../../../../backend/api";
+import { formatDate } from "../../../../../date/dateFormat";
+import BackButton from "../../../../../components/backButton";
+import { FontAwesome } from "@expo/vector-icons";
 
 function TodoScreen() {
   const { unitId } = useLocalSearchParams();
@@ -29,10 +50,18 @@ function TodoScreen() {
       if (!taskData.tasks) {
         console.log("Enheten finns inte");
       }
+      // const filterSameKeys = taskData.tasks.filter(
+      //   (task) => task._id !== task._id
+      // );
 
-      console.log("Tasks hittades i TASK COMPONENT", taskData.tasks);
-      setTasks(taskData.tasks);
-      setFilteredTasks(taskData.tasks);
+      const uniqueTasks = taskData.tasks.filter(
+        (task, index, self) =>
+          index === self.findIndex((t) => t._id === task._id)
+      );
+
+      console.log("Tasks hittades i TASK COMPONENT", uniqueTasks);
+      setTasks(uniqueTasks);
+      setFilteredTasks(uniqueTasks);
       setLoading(false);
     } catch (error) {
       throw new Error("Error vid hämtning av tasks via enhet", error.message);
@@ -97,9 +126,9 @@ function TodoScreen() {
         ) : (
           <FlatList
             data={filteredTasks}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item) => `${item._id}-${item.title}`}
             renderItem={({ item }) => (
-              <View style={styles.tasksContainer}>
+              <View style={styles.tasksContainer} key={item._id}>
                 <Text style={styles.taskTitle}>{item.title}</Text>
                 {item.completed === "Färdigt" && (
                   <Text style={{ color: "green", fontWeight: "bold" }}>
@@ -125,7 +154,6 @@ function TodoScreen() {
             )}
           />
         )}
-        <BackButton onPress={() => router.navigate(`/units`)} />
       </View>
     </SafeAreaView>
   );
@@ -176,24 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#000",
     marginTop: 20,
+    paddingHorizontal: 40,
   },
 });
 export default TodoScreen;
-
-// {tasks.map((task) => (
-// <View key={task._id} style={styles.buttonContainer}>
-//   {task.completed == "Ej påbörjat" && (
-//     <Pressable style={styles.button}>
-//       <Text style={styles.buttonText}>{task.completed}</Text>
-//     </Pressable>
-//   )}
-
-//   {task.completed == "Påbörjat" && (
-
-//   )}
-
-//   {task.completed == "Färdigt" && (
-
-//   )}
-// </View>
-// ))}
