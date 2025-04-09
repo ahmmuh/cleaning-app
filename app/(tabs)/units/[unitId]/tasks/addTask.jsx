@@ -12,13 +12,16 @@ import { FlatList } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import MainLink from "../../../../../components/link";
 import BackButton from "../../../../../components/backButton";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import { addNewTask } from "../../../../../backend/taskAPI";
 
 function AddTask() {
   const router = useRouter();
   const [task, setTask] = useState({
     title: "",
     description: "",
+    location: "",
+    //Danmarksgatan 26753 23 Uppsala
   });
 
   // States
@@ -60,10 +63,25 @@ function AddTask() {
     fetchPlaces(searchText);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetchPlaces();
+  // const handChangeLocation = (item) => {
+  //   setTask((prevTask) => ({
+  //     ...prevTask,
+  //     location: item.formatted_location,
+  //   }));
+  // };
+
+  const choosePlace = (item) => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      title: item.name,
+      location: item.formatted_address,
+    }));
   };
+  const handleSubmit = () => {
+    addNewTask(task);
+  };
+
+  //välj en plats i listan från google place API
 
   if (loading) {
     return <Text>Loading .....</Text>;
@@ -90,6 +108,7 @@ function AddTask() {
       />
 
       {/* Description Input */}
+      {/* <Text>{task.title ? task.location : ""}</Text> */}
       <TextInput
         name="description"
         placeholder="Beskriv lite om vad som ska göras"
@@ -100,31 +119,41 @@ function AddTask() {
       />
 
       {/* Display filtered places */}
-      {filteredPlaces.length > 0 ? (
-        <FlatList
-          data={filteredPlaces}
-          keyExtractor={(item) => item.place_id}
-          renderItem={({ item }) => (
-            <View style={styles.searchedPlaceContainer}>
-              <TouchableOpacity>
-                {!item.name || item.name === "undefined" ? (
-                  <Text style={styles.fallbackText}>Sök platser</Text>
-                ) : (
-                  <Text style={styles.foundPlaceTitle}>
-                    {task.title ? item.name : null}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+
+      {task.title && task.location ? (
+        ""
       ) : (
-        <Text style={styles.noResultsText}>Inga platser hittades</Text>
+        <>
+          {filteredPlaces.length > 0 ? (
+            <FlatList
+              data={filteredPlaces}
+              keyExtractor={(item) => item.place_id}
+              renderItem={({ item }) => (
+                <View style={styles.searchedPlaceContainer}>
+                  <TouchableOpacity onPress={() => choosePlace(item)}>
+                    {!item.name || item.name === "undefined" ? (
+                      <Text style={styles.fallbackText}>Sök platser</Text>
+                    ) : (
+                      <Text style={styles.foundPlaceTitle}>
+                        {task.title ? item.name : null}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                  {/* <Text>{item.formatted_address}</Text> */}
+                </View>
+              )}
+            />
+          ) : (
+            <Text style={styles.noResultsText}>Inga platser hittades</Text>
+          )}
+        </>
       )}
+
+      <Text>{task.title && task.location}</Text>
 
       {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <FontAwesome size={18} color={"ded"} name="edit" />
+        <FontAwesome size={18} color={"#ded"} name="edit" />
         <Text style={styles.submitButtonText}> Ny Task</Text>
       </TouchableOpacity>
     </View>

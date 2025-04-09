@@ -27,6 +27,8 @@ import { getUnitByID } from "../../../../../backend/api";
 import { formatDate } from "../../../../../date/dateFormat";
 import BackButton from "../../../../../components/backButton";
 import { FontAwesome } from "@expo/vector-icons";
+import MainLink from "../../../../../components/link";
+import { Button } from "react-native";
 
 function TodoScreen() {
   const { unitId } = useLocalSearchParams();
@@ -43,6 +45,12 @@ function TodoScreen() {
 
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("Ej påbörjat");
+
+  //buttons array
+
+  console.log("unitId", unitId);
+
+  //functions
 
   const fetchTasks = async () => {
     try {
@@ -87,6 +95,10 @@ function TodoScreen() {
     setFilteredTasks(filtered);
   };
 
+  const addViewHandler = (unitId) => {
+    router.push(`/units/${unitId}/tasks/addTask`);
+  };
+
   if (error) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -124,35 +136,73 @@ function TodoScreen() {
             </Text>
           </View>
         ) : (
-          <FlatList
-            data={filteredTasks}
-            keyExtractor={(item) => `${item._id}-${item.title}`}
-            renderItem={({ item }) => (
-              <View style={styles.tasksContainer} key={item._id}>
-                <Text style={styles.taskTitle}>{item.title}</Text>
-                {item.completed === "Färdigt" && (
-                  <Text style={{ color: "green", fontWeight: "bold" }}>
-                    Status: {item.completed}
-                  </Text>
-                )}
-                {item.completed === "Ej påbörjat" && (
-                  <Text style={{ color: "red", fontWeight: "bold" }}>
-                    Status: {item.completed}
-                  </Text>
-                )}
-                {item.completed === "Påbörjat" && (
-                  <Text style={{ color: "orange", fontWeight: "bold" }}>
-                    Status: {item.completed}
-                  </Text>
-                )}
+          <>
+            <TouchableOpacity onPress={() => addViewHandler(unitId)}>
+              <Text>Ny task</Text>
+            </TouchableOpacity>
+            <FlatList
+              data={filteredTasks}
+              keyExtractor={(item) => `${item._id}-${item.title}`}
+              renderItem={({ item }) => (
+                <View style={styles.tasksContainer} key={item._id}>
+                  <Text style={styles.taskTitle}>{item.title}</Text>
+                  {item.completed === "Färdigt" && (
+                    <View>
+                      <Text style={{ color: "green", fontWeight: "bold" }}>
+                        Status: {item.completed}
+                      </Text>
+                      <Text>Uppdaterad: {formatDate(item.Uppdaterats)}</Text>
+                    </View>
+                  )}
+                  {item.completed === "Ej påbörjat" && (
+                    <View>
+                      <Text style={{ color: "red", fontWeight: "bold" }}>
+                        Status: {item.completed}
+                      </Text>
+                    </View>
+                  )}
+                  {item.completed === "Påbörjat" && (
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ color: "orange", fontWeight: "bold" }}>
+                        Status: {item.completed}
+                      </Text>
+                      <Text>Uppdaterad: {formatDate(item.Uppdaterats)}</Text>
+                    </View>
+                  )}
 
-                {item.completed === "Ej påbörjat" && (
-                  <Text>Skapades: {formatDate(item.skapats)}</Text>
-                )}
-                <Text>uppdaterades: {formatDate(item.Uppdaterats)}</Text>
-              </View>
-            )}
-          />
+                  {item.completed === "Ej påbörjat" && (
+                    <View style={{ flex: 1 }}>
+                      <Text>Skapades: {formatDate(item.skapats)}</Text>
+                      <Link
+                        href={`/units/${item._id}/tasks`}
+                        style={{
+                          backgroundColor: "#ddd",
+                          padding: 10,
+                          marginVertical: 10,
+                          borderWidth: 0,
+                        }}>
+                        <View
+                          style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}>
+                          <Text> Hjälp oss idag</Text>
+                          <FontAwesome
+                            name="heart"
+                            size={15}
+                            color={"red"}
+                            style={{ marginTop: 10, marginLeft: 10 }}
+                          />
+                        </View>
+                      </Link>
+                    </View>
+                  )}
+                </View>
+              )}
+            />
+          </>
         )}
       </View>
     </SafeAreaView>
