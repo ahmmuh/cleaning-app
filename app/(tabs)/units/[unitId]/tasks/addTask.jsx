@@ -12,11 +12,13 @@ import { FlatList } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import MainLink from "../../../../../components/link";
 import BackButton from "../../../../../components/backButton";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { addNewTask } from "../../../../../backend/taskAPI";
 
 function AddTask() {
   const router = useRouter();
+  const { unitId } = useLocalSearchParams();
+  console.log("UNIT ID i AddTask", unitId);
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -78,7 +80,14 @@ function AddTask() {
     }));
   };
   const handleSubmit = () => {
-    addNewTask(task);
+    const newTask = {
+      title: task.title,
+      description: task.description,
+      location: task.location,
+    };
+
+    console.log("NY TASK i AddTask component", newTask);
+    addNewTask(unitId, newTask);
   };
 
   //välj en plats i listan från google place API

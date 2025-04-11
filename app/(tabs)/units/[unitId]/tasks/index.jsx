@@ -1,16 +1,3 @@
-// import React from "react";
-// import { Text, View } from "react-native";
-
-// function TaskScreen() {
-//   return (
-//     <View style={{ flex: 1 }}>
-//       <Text>Welcome to do list</Text>
-//     </View>
-//   );
-// }
-
-// export default TaskScreen;
-
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -137,8 +124,12 @@ function TodoScreen() {
           </View>
         ) : (
           <>
-            <TouchableOpacity onPress={() => addViewHandler(unitId)}>
-              <Text>Ny task</Text>
+            <TouchableOpacity
+              onPress={() => addViewHandler(unitId)}
+              style={styles.addButton}>
+              <Text style={{ color: "#000", fontSize: 17 }}>
+                <FontAwesome name="plus" size={20} color={"#000"} />
+              </Text>
             </TouchableOpacity>
             <FlatList
               data={filteredTasks}
@@ -151,13 +142,21 @@ function TodoScreen() {
                       <Text style={{ color: "green", fontWeight: "bold" }}>
                         Status: {item.completed}
                       </Text>
-                      <Text>Uppdaterad: {formatDate(item.Uppdaterats)}</Text>
+                      <Text>{item.description}</Text>
+                      <Text>Senast ändrad: {formatDate(item.Uppdaterats)}</Text>
                     </View>
                   )}
                   {item.completed === "Ej påbörjat" && (
                     <View>
                       <Text style={{ color: "red", fontWeight: "bold" }}>
                         Status: {item.completed}
+                      </Text>
+                      <Text>{item.description} </Text>
+                      <Text>
+                        Skapad:{" "}
+                        {item.skapad
+                          ? formatDate(item.skapad)
+                          : formatDate(item.skapats)}
                       </Text>
                     </View>
                   )}
@@ -166,13 +165,14 @@ function TodoScreen() {
                       <Text style={{ color: "orange", fontWeight: "bold" }}>
                         Status: {item.completed}
                       </Text>
-                      <Text>Uppdaterad: {formatDate(item.Uppdaterats)}</Text>
+                      <Text>{item.description} </Text>
+
+                      <Text>Senast ändrad: {formatDate(item.Uppdaterats)}</Text>
                     </View>
                   )}
 
                   {item.completed === "Ej påbörjat" && (
                     <View style={{ flex: 1 }}>
-                      <Text>Skapades: {formatDate(item.skapats)}</Text>
                       <Link
                         href={`/units/${item._id}/tasks`}
                         style={{
@@ -255,6 +255,12 @@ const styles = StyleSheet.create({
     color: "#000",
     marginTop: 20,
     paddingHorizontal: 40,
+  },
+
+  addButton: {
+    marginLeft: 10,
+    padding: 6,
+    width: "30%",
   },
 });
 export default TodoScreen;

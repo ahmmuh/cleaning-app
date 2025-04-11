@@ -1,3 +1,5 @@
+import { BASE_URL } from "./base_url";
+
 export const addNewTask = async (unitId, newTask) => {
   try {
     const res = await fetch(`${BASE_URL}/units/${unitId}/tasks/add`, {
