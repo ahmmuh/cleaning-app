@@ -13,6 +13,8 @@ import { SafeAreaView } from "react-native";
 import { getUnitByID } from "../../../../../backend/api";
 import { formatDate } from "../../../../../date/dateFormat";
 import { FontAwesome } from "@expo/vector-icons";
+import { deleteTaskById } from "../../../../../backend/taskAPI";
+import BlinkingRedDot from "../../../../../components/blinkingAlarm";
 
 function TodoScreen() {
   const { unitId } = useLocalSearchParams();
@@ -77,6 +79,19 @@ function TodoScreen() {
     const filtered = tasks.filter((tasks) => tasks.completed === status);
     console.log("Status", filtered);
     setFilteredTasks(filtered);
+  };
+
+  const deleteHandle = async (id) => {
+    try {
+      await deleteTaskById(unitId, id);
+      const updatedTasks = tasks.filter((task) => task._id !== id);
+      setTasks(updatedTasks);
+      setFilteredTasks(
+        updatedTasks.filter((task) => task.completed === selectedStatus)
+      );
+    } catch (err) {
+      console.log("Kunde inte ta bort task:", err.message);
+    }
   };
 
   const addViewHandler = (unitId) => {
@@ -149,18 +164,26 @@ function TodoScreen() {
                         {item.location}
                       </Text>
                       <Text>Senast ändrad: {formatDate(item.Uppdaterats)}</Text>
-                      <TouchableOpacity
-                        onPress={() =>
-                          router.navigate(
-                            `/units/${unitId}/tasks/editTask?taskId=${item._id}`
-                          )
-                        }>
-                        <FontAwesome name="edit" color={"green"} size={30} />
-                      </TouchableOpacity>
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={{ marginRight: 20 }}
+                          onPress={() =>
+                            router.navigate(
+                              `/units/${unitId}/tasks/editTask?taskId=${item._id}`
+                            )
+                          }>
+                          <FontAwesome name="edit" color={"green"} size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => deleteHandle(item._id)}>
+                          <FontAwesome name="trash" color={"red"} size={20} />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   )}
                   {item.completed === "Ej påbörjat" && (
                     <View>
+                      <BlinkingRedDot />
                       <Text style={{ color: "red", fontWeight: "bold" }}>
                         Status: {item.completed}
                       </Text>
@@ -179,14 +202,32 @@ function TodoScreen() {
                           ? formatDate(item.skapad)
                           : formatDate(item.skapats)}
                       </Text>
-                      <TouchableOpacity
-                        onPress={() =>
-                          router.navigate(
-                            `/units/${unitId}/tasks/editTask?taskId=${item._id}`
-                          )
-                        }>
-                        <FontAwesome name="edit" color={"green"} size={30} />
-                      </TouchableOpacity>
+                      <Text style={{ fontWeight: "bold" }}>
+                        {" "}
+                        Hjälp oss idag{" "}
+                        <FontAwesome
+                          name="heart"
+                          size={15}
+                          color={"red"}
+                          style={{ marginTop: 10, marginLeft: 10 }}
+                        />
+                      </Text>
+
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={{ marginRight: 20 }}
+                          onPress={() =>
+                            router.navigate(
+                              `/units/${unitId}/tasks/editTask?taskId=${item._id}`
+                            )
+                          }>
+                          <FontAwesome name="edit" color={"green"} size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => deleteHandle(item._id)}>
+                          <FontAwesome name="trash" color={"red"} size={20} />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   )}
                   {item.completed === "Påbörjat" && (
@@ -207,43 +248,21 @@ function TodoScreen() {
                         {item.location}
                       </Text>
                       <Text>Senast ändrad: {formatDate(item.Uppdaterats)}</Text>
-                      <TouchableOpacity
-                        onPress={() =>
-                          router.navigate(
-                            `/units/${unitId}/tasks/editTask?taskId=${item._id}`
-                          )
-                        }>
-                        <FontAwesome name="edit" color={"green"} size={30} />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-
-                  {item.completed === "Ej påbörjat" && (
-                    <View style={{ flex: 1 }}>
-                      <Link
-                        href={`/units/${item._id}/tasks`}
-                        style={{
-                          backgroundColor: "#ddd",
-                          padding: 10,
-                          marginVertical: 10,
-                          borderWidth: 0,
-                        }}>
-                        <View
-                          style={{
-                            flex: 1,
-                            justifyContent: "center",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}>
-                          <Text> Hjälp oss idag</Text>
-                          <FontAwesome
-                            name="heart"
-                            size={15}
-                            color={"red"}
-                            style={{ marginTop: 10, marginLeft: 10 }}
-                          />
-                        </View>
-                      </Link>
+                      <View style={styles.actionButtonsContainer}>
+                        <TouchableOpacity
+                          style={{ marginRight: 20 }}
+                          onPress={() =>
+                            router.navigate(
+                              `/units/${unitId}/tasks/editTask?taskId=${item._id}`
+                            )
+                          }>
+                          <FontAwesome name="edit" color={"green"} size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => deleteHandle(item._id)}>
+                          <FontAwesome name="trash" color={"red"} size={20} />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   )}
                 </View>
@@ -308,6 +327,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     padding: 6,
     width: "30%",
+  },
+
+  actionButtonsContainer: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    padding: 5,
+    marginVertical: 20,
+    backgroundColor: "#e1e1e1",
   },
 });
 export default TodoScreen;

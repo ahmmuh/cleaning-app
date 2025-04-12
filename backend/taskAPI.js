@@ -39,3 +39,56 @@ export const getTaskByID = async (unitId, taskId) => {
     if (error instanceof Error) console.error("Server Error: ", error.message);
   }
 };
+
+//tilldela task
+
+export const assignTaskToUnit = async (unitId, taskId, assignedTask) => {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/units/${unitId}/tasks/${taskId}/assign`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(assignedTask),
+      }
+    );
+    if (!res.ok) {
+      console.error(
+        `Fel vid uppdatering av task. Status: ${res.status} (${res.statusText})`
+      );
+      return null;
+    }
+    const data = await res.json();
+    console.log(`Tilldelad ${data} Utförs av enhet med ID ${unitId}`);
+    return data;
+  } catch (error) {
+    console.error(`Error on the Server ${error.message}`);
+  }
+};
+
+//delete task
+
+// DELETE TASK
+
+export const deleteTaskById = async (unitId, taskId) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/units/${unitId}/tasks/${taskId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      console.log(`Error deleting task: ${response.status}`);
+      return;
+    }
+
+    const data = await response.json();
+    console.log(`Task deleted: ${data.message}`);
+  } catch (error) {
+    console.error("Error deleting task:", error.message);
+  }
+};

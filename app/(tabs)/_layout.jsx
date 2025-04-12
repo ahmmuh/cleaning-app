@@ -12,7 +12,6 @@ function TabLayout() {
         },
 
         headerTitleStyle: "bold",
-        tabBarStyle: { height: 70, paddingVertical: 5 },
 
         tabBarItemStyle: {
           flexDirection: "row",

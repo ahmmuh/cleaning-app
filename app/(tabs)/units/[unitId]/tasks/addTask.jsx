@@ -14,11 +14,16 @@ import MainLink from "../../../../../components/link";
 import BackButton from "../../../../../components/backButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { addNewTask } from "../../../../../backend/taskAPI";
+import usePlaces from "../../../../../hooks/usePlaces";
 
 function AddTask() {
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const { unitId } = useLocalSearchParams();
   console.log("UNIT ID i AddTask", unitId);
+
+  // States
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -26,35 +31,10 @@ function AddTask() {
     //Danmarksgatan 26753 23 Uppsala
   });
 
-  // States
-  const [places, setPlaces] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [selectedtPlace, setSelectedPlace] = useState(null);
 
-  // Fetch places from API
-  const fetchPlaces = async (searchText) => {
-    try {
-      const placeData = await getPlaces(searchText);
-      if (!placeData.results) {
-        // throw new Error("The place you are searching was not found");
-        placeData.results = [];
-      }
-
-      console.log("Founded place:", placeData.results);
-      setPlaces(placeData.results);
-      setFilteredPlaces(placeData.results);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error vid hämtning av platser", error.message);
-      setError(error);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPlaces();
-  }, []);
+  const { places, filteredPlaces, error, fetchPlaces } = usePlaces();
 
   const handleTitleChange = (searchText) => {
     setTask((prevTask) => ({
@@ -62,24 +42,31 @@ function AddTask() {
       title: searchText,
     }));
 
-    fetchPlaces(searchText);
+    // fetchPlaces(searchText);
+    setSearchText(searchText);
   };
-
-  // const handChangeLocation = (item) => {
-  //   setTask((prevTask) => ({
-  //     ...prevTask,
-  //     location: item.formatted_location,
-  //   }));
-  // };
-
   const choosePlace = (item) => {
     setTask((prevTask) => ({
       ...prevTask,
       title: item.name,
       location: item.formatted_address,
     }));
+    setSelectedPlace(item);
+    // setSearchText("");
   };
+
+  useEffect(() => {
+    const delayFetchAnrop = setTimeout(() => {
+      if (searchText.trim().length > 1) {
+        fetchPlaces(searchText);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayFetchAnrop);
+  }, [searchText]);
+
   const handleSubmit = () => {
+    if (!task.title || !task.description) return;
     const newTask = {
       title: task.title,
       description: task.description,
@@ -88,12 +75,23 @@ function AddTask() {
 
     console.log("NY TASK i AddTask component", newTask);
     addNewTask(unitId, newTask);
+    router.back();
   };
 
   //välj en plats i listan från google place API
 
   if (loading) {
-    return <Text>Loading .....</Text>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+        <Text>Loading .....</Text>
+      </View>
+    );
   }
 
   if (error) {
@@ -110,7 +108,7 @@ function AddTask() {
       {/* Title Input */}
       <TextInput
         name="title"
-        value={task.title}
+        value={searchText}
         placeholder="Todo title"
         onChangeText={handleTitleChange}
         style={styles.inputStyle}
@@ -143,9 +141,7 @@ function AddTask() {
                     {!item.name || item.name === "undefined" ? (
                       <Text style={styles.fallbackText}>Sök platser</Text>
                     ) : (
-                      <Text style={styles.foundPlaceTitle}>
-                        {task.title ? item.name : null}
-                      </Text>
+                      <Text style={styles.foundPlaceTitle}>{task.title}</Text>
                     )}
                   </TouchableOpacity>
                   {/* <Text>{item.formatted_address}</Text> */}
@@ -153,7 +149,7 @@ function AddTask() {
               )}
             />
           ) : (
-            <Text style={styles.noResultsText}>Inga platser hittades</Text>
+            ""
           )}
         </>
       )}

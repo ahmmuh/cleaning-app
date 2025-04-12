@@ -7,29 +7,35 @@ import {
   ActivityIndicator,
   Text,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { getTaskByID } from "../../../../../backend/taskAPI";
+import { assignTaskToUnit, getTaskByID } from "../../../../../backend/taskAPI";
 import { Picker } from "@react-native-picker/picker";
+import { getUnits } from "../../../../../backend/api";
+import UsePlaces from "../../../../../hooks/usePlaces";
 
 function EditTask() {
   //   const [contentHeight, setContentHeight] = useState(40); // För att hantera dynamisk höjd
-  const [task, setTask] = useState({
-    title: "",
-    description: "",
-    location: "",
-    completed: "Ej påbörjat", // Startvärde för completed
-  });
 
   const statusar = ["Ej påbörjat", "Påbörjat", "Färdigt"];
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { unitId, taskId } = useLocalSearchParams();
 
+  const [units, setUnits] = useState([]);
   const [selectStatus, setSelectStatus] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState("");
 
   console.log("Task which will be updated", taskId);
   console.log("Unit which will be updated", unitId);
 
+  const [task, setTask] = useState({
+    title: "",
+    description: "",
+    location: "",
+    completed: "Ej påbörjat", // Startvärde för completed
+    unit: selectedUnit,
+  });
   const fetchTask = async () => {
     try {
       const foundedTask = await getTaskByID(unitId, taskId);
@@ -48,6 +54,24 @@ function EditTask() {
     }
   };
 
+  const fetchUnits = async () => {
+    try {
+      const unitList = await getUnits();
+      if (!unitList || unitList.length === 0) {
+        console.log("Det finns inga enheter i listan");
+        return;
+      }
+      console.log("Unit list", unitList);
+      setUnits(unitList);
+      setLoading(false);
+    } catch (error) {
+      throw new Error("Error vid hämtning av enheter");
+    }
+  };
+  useEffect(() => {
+    fetchUnits();
+  }, []);
+
   useEffect(() => {
     fetchTask();
   }, [unitId, taskId]);
@@ -59,6 +83,14 @@ function EditTask() {
       setSelectStatus(task.completed);
     }
   }, [task.completed, selectStatus]);
+
+  //update unit (enheter)
+
+  useEffect(() => {
+    if (!task.selectedUnit) {
+      setSelectedUnit(task.selectedUnit);
+    }
+  }, [task.selectedUnit]);
 
   if (loading) {
     return (
@@ -89,72 +121,98 @@ function EditTask() {
         description: task.description,
         location: task.location,
         completed: selectStatus,
+        unit: selectedUnit,
       };
       console.log("Updated", updatedTask);
+      assignTaskToUnit(unitId, taskId, updatedTask);
     } catch (error) {
       console.log("Can not updated", error.message);
     }
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.statusTitle}>Uppdatera status för {task.title}</Text>
-      {task && (
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textInput}
-            name="title"
-            value={task.title}
-            onChangeText={(text) =>
-              setTask((prevTask) => ({
-                ...prevTask,
-                title: text,
-              }))
-            }
-            placeholder="Task Title"
-          />
-          <TextInput
-            name="description"
-            style={[styles.textInput, styles.descriptionInput]}
-            value={task.description}
-            onChangeText={(text) =>
-              setTask((prevTask) => ({
-                ...prevTask,
-                description: text,
-              }))
-            }
-            placeholder="Description"
-            multiline
-          />
-          <TextInput
-            name="location"
-            style={styles.textInput}
-            value={task.location || ""}
-            onChangeText={(text) =>
-              setTask((prevTask) => ({
-                ...prevTask,
-                location: text,
-              }))
-            }
-            placeholder="Location"
-          />
-          <View style={styles.selectContainer}>
-            <Text style={styles.statusTitle}>Status AHmed</Text>
-            <Picker
-              selectedValue={task.completed}
-              onValueChange={setSelectStatus}
-              style={styles.picker}>
-              {statusar.map((status, index) => (
-                <Picker.Item key={index} label={status} value={status} />
-              ))}
-            </Picker>
+    <ScrollView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Text style={styles.statusTitle}>
+          Uppdatera status för {task.title}
+        </Text>
+        {task && (
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              name="title"
+              value={task.title}
+              onChangeText={(text) =>
+                setTask((prevTask) => ({
+                  ...prevTask,
+                  title: text,
+                }))
+              }
+              placeholder="Task Title"
+            />
+            <TextInput
+              name="description"
+              style={[styles.textInput, styles.descriptionInput]}
+              value={task.description}
+              onChangeText={(text) =>
+                setTask((prevTask) => ({
+                  ...prevTask,
+                  description: text,
+                }))
+              }
+              placeholder="Description"
+              multiline
+            />
+            <TextInput
+              name="location"
+              style={styles.textInput}
+              value={task.location || ""}
+              onChangeText={(text) =>
+                setTask((prevTask) => ({
+                  ...prevTask,
+                  location: text,
+                }))
+              }
+              placeholder="Location"
+            />
+            <View style={styles.selectContainer}>
+              <View style={{ width: "100%" }}>
+                <Text style={styles.statusTitle}>Välj Status</Text>
+              </View>
+              <Picker
+                selectedValue={task.completed}
+                onValueChange={setSelectStatus}
+                onTouchCancel={true}
+                style={styles.picker}>
+                {statusar.map((status, index) => (
+                  <Picker.Item key={index} label={status} value={status} />
+                ))}
+              </Picker>
+              <View style={{ width: "100%" }}>
+                <Text style={styles.statusTitle}>Välj enhet</Text>
+              </View>
+              <Picker
+                style={styles.picker}
+                selectedValue={task.selectedUnit}
+                onTouchCancel={true}
+                onValueChange={setSelectedUnit}>
+                {units.map((unit) => (
+                  <Picker.Item
+                    key={unit._id}
+                    label={unit.name}
+                    value={unit.name}
+                  />
+                ))}
+              </Picker>
+            </View>
+            <TouchableOpacity
+              style={styles.updateButton}
+              onPress={handleSubmit}>
+              <Text style={styles.buttonTitle}>Update</Text>
+            </TouchableOpacity>
           </View>
-
-          <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
-            <Text style={styles.buttonTitle}>Update</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -165,13 +223,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f7f7f7",
+    marginBottom: 20,
   },
   inputContainer: {
     width: "100%",
     alignItems: "center",
   },
   textInput: {
-    width: "90%",
+    width: "100%",
     height: 50,
     marginBottom: 12,
     paddingLeft: 15,
@@ -183,15 +242,13 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   updateButton: {
-    width: "60%",
+    width: "100%",
     height: 45,
     marginVertical: 15,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#007AFF",
     borderRadius: 12,
-    backgroundColor: "#ded",
+    backgroundColor: "#eed",
   },
   buttonTitle: {
     color: "#222",
@@ -227,18 +284,29 @@ const styles = StyleSheet.create({
   selectContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    padding: 30,
+    // flexDirection: "column",
+    // padding: 20,
+    width: "100%",
   },
 
   picker: {
     height: 50,
-    width: 200,
+    // backgroundColor: "#ded",
+    padding: 10,
+    width: "100%",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#222",
   },
   statusTitle: {
     fontSize: 15,
-    marginBottom: 20,
-    color: "#000",
+    padding: 10,
+    color: "#222",
+    fontWeight: "bold",
+    borderWidth: 0.2,
+    borderColor: "#444",
+    width: "100%",
+    backgroundColor: "#eed",
   },
 
   taskTitle: {
