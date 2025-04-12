@@ -6,16 +6,13 @@ import {
   StyleSheet,
   Pressable,
   Touchable,
+  FlatList,
   TouchableOpacity,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native";
 import { getUnitByID } from "../../../../../backend/api";
 import { formatDate } from "../../../../../date/dateFormat";
-import BackButton from "../../../../../components/backButton";
 import { FontAwesome } from "@expo/vector-icons";
-import MainLink from "../../../../../components/link";
-import { Button } from "react-native";
 
 function TodoScreen() {
   const { unitId } = useLocalSearchParams();
@@ -142,8 +139,24 @@ function TodoScreen() {
                       <Text style={{ color: "green", fontWeight: "bold" }}>
                         Status: {item.completed}
                       </Text>
-                      <Text>{item.description}</Text>
+                      <Text>
+                        {" "}
+                        <Text style={{ fontWeight: "bold" }}>Besktivning:</Text>
+                        {item.description}
+                      </Text>
+                      <Text>
+                        <Text style={{ fontWeight: "bold" }}>Address: </Text>
+                        {item.location}
+                      </Text>
                       <Text>Senast ändrad: {formatDate(item.Uppdaterats)}</Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          router.navigate(
+                            `/units/${unitId}/tasks/editTask?taskId=${item._id}`
+                          )
+                        }>
+                        <FontAwesome name="edit" color={"green"} size={30} />
+                      </TouchableOpacity>
                     </View>
                   )}
                   {item.completed === "Ej påbörjat" && (
@@ -151,13 +164,29 @@ function TodoScreen() {
                       <Text style={{ color: "red", fontWeight: "bold" }}>
                         Status: {item.completed}
                       </Text>
-                      <Text>{item.description} </Text>
+                      <Text>
+                        <Text style={{ fontWeight: "bold" }}>Besktivning:</Text>
+                        {item.description}{" "}
+                      </Text>
+                      <Text>
+                        <Text style={{ fontWeight: "bold" }}>Address: </Text>
+                        {item.location}
+                      </Text>
+
                       <Text>
                         Skapad:{" "}
                         {item.skapad
                           ? formatDate(item.skapad)
                           : formatDate(item.skapats)}
                       </Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          router.navigate(
+                            `/units/${unitId}/tasks/editTask?taskId=${item._id}`
+                          )
+                        }>
+                        <FontAwesome name="edit" color={"green"} size={30} />
+                      </TouchableOpacity>
                     </View>
                   )}
                   {item.completed === "Påbörjat" && (
@@ -165,9 +194,27 @@ function TodoScreen() {
                       <Text style={{ color: "orange", fontWeight: "bold" }}>
                         Status: {item.completed}
                       </Text>
-                      <Text>{item.description} </Text>
+                      <Text>
+                        {" "}
+                        <Text style={{ fontWeight: "bold" }}>
+                          Besktivning:
+                        </Text>{" "}
+                        {item.description}{" "}
+                      </Text>
 
+                      <Text style={{ fontWeight: "bold" }}>
+                        Address:
+                        {item.location}
+                      </Text>
                       <Text>Senast ändrad: {formatDate(item.Uppdaterats)}</Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          router.navigate(
+                            `/units/${unitId}/tasks/editTask?taskId=${item._id}`
+                          )
+                        }>
+                        <FontAwesome name="edit" color={"green"} size={30} />
+                      </TouchableOpacity>
                     </View>
                   )}
 
