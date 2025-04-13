@@ -12,9 +12,8 @@ import {
 import { SafeAreaView } from "react-native";
 import { getUnitByID } from "../../../../../backend/api";
 import { formatDate } from "../../../../../date/dateFormat";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { deleteTaskById } from "../../../../../backend/taskAPI";
-import BlinkingRedDot from "../../../../../components/blinkingAlarm";
 
 function TodoScreen() {
   const { unitId } = useLocalSearchParams();
@@ -112,19 +111,33 @@ function TodoScreen() {
           <Pressable
             style={styles.button}
             onPress={() => filterTasks("Ej påbörjat")}>
-            <Text style={styles.buttonText}>Ej påbörjat</Text>
+            <View style={styles.iconWithText}>
+              <FontAwesome5 name="circle" size={15} color="#aaa" />
+              <Text style={styles.buttonText}>Ej påbörjat</Text>
+            </View>
           </Pressable>
           <Pressable style={styles.button}>
-            <Text
-              style={styles.buttonText}
-              onPress={() => filterTasks("Färdigt")}>
-              Färdigt
-            </Text>
+            <View style={styles.iconWithText}>
+              <Text
+                style={styles.buttonText}
+                onPress={() => filterTasks("Färdigt")}>
+                Färdigt
+              </Text>
+              <FontAwesome5 name="check-circle" size={15} color="#28a745" />
+            </View>
           </Pressable>
           <Pressable
             style={styles.button}
             onPress={() => filterTasks("Påbörjat")}>
-            <Text style={styles.buttonText}>Påbörjat</Text>
+            <View style={styles.iconWithText}>
+              <Text style={styles.buttonText}>Påbörjat</Text>
+              <FontAwesome5
+                name="adjust"
+                size={18}
+                color="#aaa"
+                style={{ marginRight: 10, color: "#84c276" }}
+              />
+            </View>
           </Pressable>
         </View>
 
@@ -140,7 +153,7 @@ function TodoScreen() {
               onPress={() => addViewHandler(unitId)}
               style={styles.addButton}>
               <Text style={{ color: "#000", fontSize: 17 }}>
-                <FontAwesome name="plus" size={20} color={"#000"} />
+                <FontAwesome name="plus" size={20} color={"#000"} /> Ny todo
               </Text>
             </TouchableOpacity>
             <FlatList
@@ -183,7 +196,6 @@ function TodoScreen() {
                   )}
                   {item.completed === "Ej påbörjat" && (
                     <View>
-                      <BlinkingRedDot />
                       <Text style={{ color: "red", fontWeight: "bold" }}>
                         Status: {item.completed}
                       </Text>
@@ -277,12 +289,14 @@ function TodoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
     marginBottom: 20,
     marginLeft: 10,
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    alignItems: "center",
+    flexDirection: "row",
     marginBottom: 20,
   },
   button: {
@@ -298,9 +312,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#000",
-    fontSize: 16,
+    fontSize: 12,
   },
-
+  iconWithText: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
   tasksContainer: {
     padding: 10,
     marginBottom: 10,
@@ -324,18 +342,19 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    marginLeft: 10,
+    alignSelf: "flex-start",
     padding: 6,
     width: "30%",
+    backgroundColor: "#ded",
   },
 
   actionButtonsContainer: {
     flex: 1,
-    alignItems: "center",
     flexDirection: "row",
     justifyContent: "flex-start",
-    padding: 5,
-    marginVertical: 20,
+    alignItems: "center",
+    padding: 10,
+    marginVertical: 10,
     backgroundColor: "#e1e1e1",
   },
 });

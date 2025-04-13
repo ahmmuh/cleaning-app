@@ -192,7 +192,7 @@ function EditTask() {
               </View>
               <Picker
                 style={styles.picker}
-                selectedValue={task.selectedUnit}
+                selectedValue={task.unit}
                 onTouchCancel={true}
                 onValueChange={setSelectedUnit}>
                 {units.map((unit) => (
