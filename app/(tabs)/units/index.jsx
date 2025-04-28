@@ -4,64 +4,27 @@ import {
   FlatList,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { getUnitByID, getUnits } from "../../../backend/api";
 import { Link, useRouter } from "expo-router";
-import ListItem from "../../../components/listItem";
-import Card from "../../../components/card";
+import { Ionicons } from "@expo/vector-icons"; // <- Lägger till ikoner
 
 function UnitScreen() {
   const router = useRouter();
   const [units, setUnits] = useState([]);
-
-  const [unit, setUnit] = useState(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchUnitById = async (unitId) => {
-    try {
-      const unitData = await getUnitByID(unitId);
-      console.log("Fullständig enhet:", unitData);
-      // setUnit(unitData);
-      return unitData;
-    } catch (error) {
-      console.error("Error vid hämtning av 1 unit", error.message);
-      setError(error);
-      // setLoading(false);
-      return null;
-    }
-  };
-
   const fetchUnits = async () => {
     try {
-      const data = await getUnits();
-      console.log("Units i unit sida", data);
-      console.log("Type of units data *********", typeof data);
-
-      // Hämta detaljer för varje enhet genom att loopa genom dem
-      const unitDetailsPromses = data.map((unitData) =>
-        getUnitByID(unitData._id)
-      );
-
-      // Vänta på att alla detaljer ska hämtas
-      const unitDetails = await Promise.all(unitDetailsPromses);
-
-      //kombinera alla enheter med detaljer
-
-      const unitsWithDetails = data.map((unit, index) => ({
-        ...unit,
-        ...unitDetails[index],
-      }));
-
-      setUnits(unitsWithDetails);
+      const data = await getUnits(); // Här får du redan enheter med alla detaljer
+      setUnits(data);
       setLoading(false);
     } catch (error) {
-      console.error("Error vid hämtning av units", error.message);
+      console.error("Fel vid hämtning av enheter:", error.message);
       setError(error);
       setLoading(false);
     }
@@ -71,18 +34,58 @@ function UnitScreen() {
     fetchUnits();
   }, []);
 
+  // const [units, setUnits] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+
+  // const fetchUnitById = async (unitId) => {
+  //   try {
+  //     const unitData = await getUnitByID(unitId);
+  //     return unitData;
+  //   } catch (error) {
+  //     console.error("Fel vid hämtning av enhet:", error.message);
+  //     setError(error);
+  //     return null;
+  //   }
+  // };
+
+  // const fetchUnits = async () => {
+  //   try {
+  //     const data = await getUnits();
+  //     const unitDetailsPromises = data?.map((unitData) =>
+  //       fetchUnitById(unitData._id)
+  //     );
+  //     const unitDetails = await Promise.all(unitDetailsPromises);
+  //     const unitsWithDetails = data?.map((unit, index) => ({
+  //       ...unit,
+  //       ...unitDetails[index],
+  //     }));
+
+  //     setUnits(unitsWithDetails);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Fel vid hämtning av enheter:", error.message);
+  //     setError(error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchUnits();
+  // }, []);
+
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color="#0000ff" />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#2a4ede" />
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={{ flex: 1, padding: 20 }}>
-        <Text style={{ fontSize: 20, color: "red", alignSelf: "center" }}>
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>
           Fel vid hämtning av enheter: {error.message}
         </Text>
       </View>
@@ -91,70 +94,104 @@ function UnitScreen() {
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
-      {/* <Text style={{ paddingLeft: 20, fontSize: 20 }}>
-          Sektion för alla enheter
-        </Text> */}
       <FlatList
         data={units}
+        keyExtractor={(item) => item._id}
+        contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => (
-          <>
-            <Card title={item.name} key={item._id}>
-              <Link
-                href={`/units/${item._id}/chefer?chefId=${item.chef._id}`} // Skickar chefens ID
-                style={styles.link}>
-                <Text>Enhetchef: {item.chef.name}</Text>
-              </Link>
-
-              {/* <Link href={`/units/${item._id}/specialist`} style={styles.link}>
-                <Text>Specialister ({item.specialister.length})</Text>
-              </Link> */}
-
-              <Pressable
-                onPress={() =>
-                  router.push({
-                    pathname: `/units/${item._id}/specialister`,
-                    query: {
-                      unitId: item._id,
-                      specialister: JSON.stringify(item.specialister),
-                    },
-                  })
-                }>
-                <Text style={styles.link}>
-                  Specialer ({item.specialister.length})
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>{item.name}</Text>
+            {/* Enhetschef */}
+            <Link
+              href={`/units/${item._id}/chefer?chefId=${item.chef._id}`}
+              style={styles.linkButton}>
+              <View style={styles.linkContent}>
+                <Ionicons
+                  name="person-circle-outline"
+                  size={20}
+                  color="#1e40af"
+                />
+                <Text style={styles.linkText}>Chef: {item.chef.name}</Text>
+              </View>
+            </Link>
+            {/* Specialister */}
+            <Pressable
+              style={styles.linkButton}
+              onPress={() =>
+                router.push({
+                  pathname: `/units/${item._id}/specialister`,
+                  query: {
+                    unitId: item._id,
+                    specialister: JSON.stringify(item.specialister),
+                  },
+                })
+              }>
+              <View style={styles.linkContent}>
+                <Ionicons name="people-outline" size={20} color="#1e40af" />
+                <Text style={styles.linkText}>
+                  Specialister ({item.specialister.length})
                 </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={() =>
-                  router.push({
-                    pathname: `/units/${item._id}/tasks`,
-                    query: {
-                      unitId: item._id,
-                      specialister: JSON.stringify(item.tasks),
-                    },
-                  })
-                }>
-                <Text style={styles.link}>Att göra ({item.tasks.length})</Text>
-              </Pressable>
-              <Pressable
-                onPress={() =>
-                  router.push({
-                    pathname: `/units/${item._id}/workplaces`,
-                    query: {
-                      unitId: item._id,
-                      workPlaces: JSON.stringify(item.workPlaces),
-                    },
-                  })
-                }>
-                <Text style={styles.link}>
+              </View>
+            </Pressable>
+            {/* Att göra */}
+            <Pressable
+              style={styles.linkButton}
+              onPress={() =>
+                router.push({
+                  pathname: `/units/${item._id}/tasks`,
+                  query: {
+                    unitId: item._id,
+                    tasks: JSON.stringify(item.tasks),
+                  },
+                })
+              }>
+              <View style={styles.linkContent}>
+                <Ionicons name="list-outline" size={20} color="#1e40af" />
+                <Text style={styles.linkText}>
+                  Att göra ({item.tasks.length})
+                </Text>
+              </View>
+            </Pressable>
+            {/* //flytstäd */}
+            <Pressable
+              style={styles.linkButton}
+              onPress={() =>
+                router.push({
+                  pathname: `/units/${item._id}/apartments`,
+                  query: {
+                    unitId: item._id,
+                    apartments: JSON.stringify(item.apartments),
+                  },
+                })
+              }>
+              <View style={styles.linkContent}>
+                <Ionicons name="home-outline" size={20} color="#1e40af" />
+                <Text style={styles.linkText}>
+                  Flytstäd ({item.apartments.length})
+                </Text>
+              </View>
+            </Pressable>
+            {/* {/* Mina objekt */}
+            <Pressable
+              style={styles.linkButton}
+              onPress={() =>
+                router.push({
+                  pathname: `/units/${item._id}/workplaces`,
+                  query: {
+                    unitId: item._id,
+                    workPlaces: JSON.stringify(item.workPlaces),
+                  },
+                })
+              }>
+              <View style={styles.linkContent}>
+                <Ionicons name="home-outline" size={20} color="#1e40af" />
+                <Text style={styles.linkText}>
                   Mina objekt ({item.workPlaces.length})
                 </Text>
-              </Pressable>
-            </Card>
-          </>
+              </View>
+            </Pressable>
+          </View>
         )}
-        // keyExtractor={({ item }) => item.id}
-        ListHeaderComponent={(item) => <Text>{item.name}</Text>}
       />
     </SafeAreaView>
   );
@@ -162,21 +199,61 @@ function UnitScreen() {
 
 const styles = StyleSheet.create({
   safeAreaContainer: {
-    flex: 1, // Gör så att SafeAreaView tar upp hela skärmen
-    marginVertical: 10,
+    flex: 1,
+    backgroundColor: "#f9fafe",
+    paddingHorizontal: 16,
+    paddingTop: 10,
   },
-  link: {
-    marginBottom: 2,
-    fontSize: 17,
-    color: "#2a4ede",
-    padding: 2,
-    border: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: "#334",
-    paddingBottom: 20,
-    cursor: "pointer",
-    textDecoration: "underline",
-    fontStyle: "italic",
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    color: "red",
+    textAlign: "center",
+  },
+  card: {
+    marginBottom: 20,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cardTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: 16,
+  },
+  linkButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#eef2ff",
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 8,
+  },
+  linkContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  linkText: {
+    fontSize: 16,
+    color: "#1e40af",
+    marginLeft: 8,
   },
 });
 

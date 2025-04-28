@@ -53,21 +53,8 @@ function ChefScreen() {
       </View>
     );
   return (
-    // <View style={{ flex: 1 }}>
-    //   <Card title={`Enhetschef: ${chef.name}`}>
-    //     <Text>E-post: {chef.email}</Text>
-    //     <Text>Telefon {chef.phone}</Text>
-    //     <MainLink title={"Alla enheter"} url={"/units"} />
-    //     <Link href={"/units"}>Alla enheter</Link>
-    //     <Link href={"/keys"}>Nyckel hantering</Link>
-
-    //     {/* <Button
-    //       title="Tillbaka"
-    //       onPress={() => router.navigate("/units")}></Button> */}
-    //   </Card>
-    // </View>
     <MainCard
-      title={"Enhetschef"}
+      title={"Chef"}
       name={chef.name}
       email={chef.email}
       phone={chef.phone}>
@@ -75,37 +62,5 @@ function ChefScreen() {
     </MainCard>
   );
 }
-
-const styles = StyleSheet.create({
-  // cardContainer: {
-  //   marginTop: 10,
-  //   backgroundColor: "#ded",
-  //   borderRadius: 10,
-  //   marginVertical: 3,
-  //   width: "90%",
-  //   maxWidth: 350,
-  //   minHeight: "auto",
-  //   alignSelf: "center",
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 5 },
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 8,
-  //   elevation: 5,
-  //   padding: 20,
-  //   marginBottom: 20,
-  // },
-  // text: {
-  //   marginBottom: 2,
-  //   fontSize: 15,
-  //   color: "blue",
-  //   padding: 5,
-  //   border: 1,
-  //   borderBottomWidth: 1,
-  //   borderBottomColor: "#000",
-  //   paddingBottom: 5,
-  //   cursor: "pointer",
-  //   marginBottom: 30,
-  // },
-});
 
 export default ChefScreen;
