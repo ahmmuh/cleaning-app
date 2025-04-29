@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getAllApartments } from "../backend/apartmentAPI";
+import { useFocusEffect } from "expo-router";
 
 function useFetchApartment() {
   const [apartments, setApartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllApartments();
+    }, [])
+  );
 
   const fetchAllApartments = async () => {
     try {
@@ -34,6 +41,7 @@ function useFetchApartment() {
     apartments,
     loading,
     error,
+    fetchAllApartments,
   };
 }
 

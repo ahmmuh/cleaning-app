@@ -72,31 +72,31 @@ function HomeScreen() {
           </View>
 
           {/* Specialist Enheter Section */}
-          <View style={styles.card}>
+          {/* <View style={styles.card}>
             <Text style={styles.cardTitle}>Specialist Enheter</Text>
             <Text style={styles.cardCount}>{units.specialister?.length}</Text>
             <Link href="/specialists" style={styles.cardLink}>
               Visa alla specialistenheter
             </Link>
-          </View>
+          </View> */}
 
           {/* Lägenheter Section */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Lägenheter</Text>
-            <Text style={styles.cardCount}>{apartments?.length}</Text>{" "}
+            <Text style={styles.cardCount}></Text>{" "}
             <Link href="/apartments" style={styles.cardLink}>
-              Visa alla lägenheter {apartments?.length}
+              Visa alla lägenheter
             </Link>
           </View>
 
           {/* Uppgifter Section */}
-          <View style={styles.card}>
+          {/* <View style={styles.card}>
             <Text style={styles.cardTitle}>Uppgifter</Text>
             <Text style={styles.cardCount}>{units.tasks?.length}</Text>{" "}
             <Link href="/tasks" style={styles.cardLink}>
               Visa alla uppgifter
             </Link>
-          </View>
+          </View> */}
 
           {/* Nycklar Section * */}
           <View style={styles.card}>
