@@ -9,13 +9,13 @@ const ApartmentLayout = () => {
         headerStyle: {
           backgroundColor: "#bff38c",
         },
-
-        headerTitleStyle: "bold",
-        title: "",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+        // headerTitle: "Flytstäd", // Sätt Flytstäd som headertitel
       }}>
       <Stack.Screen
-              name="index"
-              
+        name="index"
         options={{
           headerTitle: "Flytstäd",
           headerShown: true,

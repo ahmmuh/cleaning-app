@@ -64,7 +64,7 @@ function HomeScreen() {
           {/* Enheter Section */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Enheter</Text>
-            <Text style={styles.cardCount}>{units.length}</Text>{" "}
+            <Text style={styles.cardCount}>{units.length}</Text>
             {/* Antal enheter */}
             <Link href="/units" style={styles.cardLink}>
               Visa alla enheter
@@ -83,7 +83,7 @@ function HomeScreen() {
           {/* Lägenheter Section */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Lägenheter</Text>
-            <Text style={styles.cardCount}></Text>{" "}
+            <Text style={styles.cardCount}></Text>
             <Link href="/apartments" style={styles.cardLink}>
               Visa alla lägenheter
             </Link>
@@ -101,7 +101,7 @@ function HomeScreen() {
           {/* Nycklar Section * */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Nycklar</Text>
-            <Text style={styles.cardCount}>{keys?.length}</Text>
+            <Text style={styles.cardCount}></Text>
             <Link href="/keys" style={styles.cardLink}>
               Visa alla nycklar
             </Link>
