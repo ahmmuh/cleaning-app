@@ -20,6 +20,7 @@ export default function ApartmentDetail() {
   const [apartment, setApartment] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
   const statusar = ["Ej påbörjat", "Påbörjat", "Färdigt"];
+
   const { fetchAllApartments } = useFetchApartment();
 
   const fetchApartment = async () => {

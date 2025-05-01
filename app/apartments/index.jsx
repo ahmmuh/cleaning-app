@@ -3,7 +3,6 @@ import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import useFetchApartment from "../../hooks/useFetchApartment";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ApartmentItem from "./apartmentItem";
-import { useFocusEffect } from "expo-router";
 
 function ApartmentList() {
   const { apartments, loading, error } = useFetchApartment();

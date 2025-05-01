@@ -1,14 +1,14 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import React from "react";
 
 function KeyLayout() {
   return (
-    <Tabs
+    <Stack
       screenOptions={{
         headerShown: false,
       }}>
-      <Tabs.Screen
+      <Stack.Screen
         name="index"
         options={{
           title: "Nycklar",
@@ -17,7 +17,7 @@ function KeyLayout() {
           },
         }}
       />
-    </Tabs>
+    </Stack>
   );
 }
 
