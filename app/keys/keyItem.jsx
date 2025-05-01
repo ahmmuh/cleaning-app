@@ -7,7 +7,12 @@ function KeyItem({ item }) {
   const router = useRouter();
   const statusIcon = getStatusIcon(item.status);
   const statusColor = getStatusColor(item.status);
-  console.log("Navigerar till:", `/keys/${item._id}`);
+  // console.log("Navigerar till:", `/keys/${item._id}`);
+  // console.log("ReturnedAt:", item.returnedAt);
+
+  // console.log("STATUS:", item.status);
+  // console.log("COLOR:", getStatusColor(item.status));
+  // console.log("LABEL:", getStatusLabel(item.status));
 
   return (
     <View style={styles.container}>
@@ -20,17 +25,17 @@ function KeyItem({ item }) {
         </View>
 
         <Text style={styles.detail}>Enhet: {item.location}</Text>
-        {item.borrowedBy && (
+        {normalizeStatus(item.status) === "checked-out" && item.borrowedBy && (
           <Text style={styles.detail}>Lånetagare: {item.borrowedBy.name}</Text>
         )}
 
-        {item.status === "checked-out" && (
+        {normalizeStatus(item.status) === "checked-out" && item.borrowedAt && (
           <Text style={styles.detail}>
             Utlånat: {new Date(item.borrowedAt).toLocaleDateString("sv-SE")}
           </Text>
         )}
 
-        {item.status === "returned" && (
+        {normalizeStatus(item.status) === "returned" && item.returnedAt && (
           <Text style={styles.detail}>
             Inlämnat: {new Date(item.returnedAt).toLocaleDateString("sv-SE")}
           </Text>
@@ -44,8 +49,17 @@ function KeyItem({ item }) {
   );
 }
 
+const normalizeStatus = (status) => {
+  // Gör det enklare att hantera olika format
+  const s = status.toLowerCase();
+  if (s === "inlämnad" || s === "returned") return "returned";
+  if (s === "utlånad" || s === "checked-out") return "checked-out";
+  if (s === "tillgänglig" || s === "available") return "available";
+  return s; // fallback
+};
+
 const getStatusLabel = (status) => {
-  switch (status) {
+  switch (normalizeStatus(status)) {
     case "available":
       return "Tillgänglig";
     case "checked-out":
@@ -58,7 +72,7 @@ const getStatusLabel = (status) => {
 };
 
 const getStatusColor = (status) => {
-  switch (status) {
+  switch (normalizeStatus(status)) {
     case "returned":
     case "available":
       return "green";

@@ -1,10 +1,16 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { getKeyByID, updateKey } from "../../../backend/keyAPI";
+import {
+  checkinKey,
+  checkoutKey,
+  getKeyByID,
+  updateKey,
+} from "../../../backend/keyAPI";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesome } from "@expo/vector-icons";
 import ToastManager, { Toast } from "toastify-react-native";
+import useFetchUsers from "../../../hooks/useFetchUsers";
 
 function KeyDetail() {
   const { keyId } = useLocalSearchParams();
@@ -12,10 +18,12 @@ function KeyDetail() {
   const keyStatusar = ["Inlämnad", "Utlånad"];
 
   const [selectedStatus, setSelectedStatus] = useState("");
+  const { users, loading, error } = useFetchUsers();
+  const [selectedUserId, setSelectedUserId] = useState("");
 
   //Router
-
   const router = useRouter();
+
   const fetchKey = async () => {
     try {
       const keyData = await getKeyByID(keyId);
@@ -26,6 +34,7 @@ function KeyDetail() {
       }
       setKey(keyData);
       setSelectedStatus(keyData.status || "");
+      setSelectedUserId(keyData.borrowedBy ? keyData.borrowedBy._id : "");
     } catch (err) {
       console.error("Kunde inte hämta key:", err);
     }
@@ -36,6 +45,55 @@ function KeyDetail() {
       fetchKey();
     }
   }, [keyId]);
+
+  //functions
+  const changeStatus = async () => {
+    const selectedUser = users.find((u) => u._id === selectedUserId);
+    try {
+      if (selectedStatus === "Utlånad") {
+        if (!selectedUserId) {
+          Toast.error("Välj en användare att låna ut till.");
+          return;
+        }
+        console.log(
+          "Vid utlåning",
+          selectedUser.userType,
+          selectedUserId,
+          keyId
+        );
+        // Utlåning
+        await checkoutKey(selectedUser.userType, selectedUserId, keyId);
+
+        Toast.success("Nyckeln har lånats ut.");
+      } else if (selectedStatus === "Inlämnad") {
+        if (key.status !== "Utlånad") {
+          Toast.error("Nyckeln är inte utlånad, kan inte lämnas in.");
+          return;
+        }
+
+        if (key.borrowedBy?._id !== selectedUserId) {
+          Toast.error("Vald användare matchar inte nuvarande lånetagare.");
+          return;
+        }
+        console.log(
+          "Vid inlämning",
+          key.borrowedBy.userType,
+          key.borrowedBy._id,
+          keyId
+        );
+
+        // Inlämning
+        await checkinKey(key.borrowedBy.userType, key.borrowedBy._id, keyId);
+
+        Toast.success("Nyckeln har lämnats in.");
+      }
+
+      router.push("/keys");
+    } catch (err) {
+      console.error("Fel vid statusändring:", err);
+      Toast.error("Ett fel uppstod vid uppdatering.");
+    }
+  };
 
   if (!keyId) {
     return (
@@ -52,22 +110,35 @@ function KeyDetail() {
       </View>
     );
   }
-  //functions
-  const changeStatus = async () => {
-    // if (key.status === "checked-out") {
-    //   alert("Den är redan utlånad");
-    // }
-    // if (key.status === "returned") {
-    //   alert("Den är redan inlämnad");
-    // }
-    console.log(keyId, selectedStatus);
-    setSelectedStatus(selectedStatus);
-    await updateKey(keyId, { status: selectedStatus });
-    Toast.success({ status: selectedStatus });
-    router.push("/keys");
-  };
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Text>Loading</Text>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
+      <ToastManager />
       <View style={styles.card}>
         <Text style={styles.title}>
           <FontAwesome
@@ -85,8 +156,10 @@ function KeyDetail() {
           <FontAwesome name="building" size={20} color={"gray"} />:{" "}
           {key.location}
         </Text>
-        <Text>
-          {key.status === "checked-out" && (
+
+        {/* Dynamically display dates based on key status */}
+        <Text style={styles.info}>
+          {key.status === "Utlånad" && (
             <>
               <FontAwesome
                 style={{ paddingRight: 5 }}
@@ -94,13 +167,11 @@ function KeyDetail() {
                 color={"gray"}
                 size={20}
               />
-              {key.borrowedAt
-                ? new Date(key.borrowedAt).toLocaleDateString()
-                : ""}
+              Lånedatum: {new Date(key.borrowedAt).toDateString()}
             </>
           )}
 
-          {key.status === "returned" && (
+          {key.status === "Inlämnad" && (
             <>
               <FontAwesome
                 style={{ paddingRight: 5 }}
@@ -108,9 +179,7 @@ function KeyDetail() {
                 color={"green"}
                 size={20}
               />
-              {key.borrowedAt
-                ? new Date(key.returnedAt).toLocaleDateString()
-                : ""}
+              Inlämnad: {new Date(key.returnedAt).toDateString()}
             </>
           )}
 
@@ -122,20 +191,30 @@ function KeyDetail() {
                 color={"green"}
                 size={20}
               />
-              {key.borrowedAt
-                ? new Date(key.createdAt).toLocaleDateString()
-                : ""}
+              Skapad: {new Date(key.createdAt).toLocaleDateString()}
             </>
           )}
         </Text>
 
         <Text style={styles.info}>
-          Status:{selectedStatus}
+          Status: {selectedStatus}
           <FontAwesome
             name="check"
             color={key.status === "Utlånad" ? "red" : "green"}
           />
         </Text>
+
+        <View style={styles.pickerContainer}>
+          <Text style={styles.pickerLabel}>Välj Lånetagare:</Text>
+          <Picker
+            style={styles.picker}
+            selectedValue={selectedUserId}
+            onValueChange={(value) => setSelectedUserId(value)}>
+            {users.map((user) => (
+              <Picker.Item key={user._id} label={user.name} value={user._id} />
+            ))}
+          </Picker>
+        </View>
         <View style={styles.pickerContainer}>
           <Text style={styles.pickerLabel}>Välj Status:</Text>
           <Picker
@@ -147,13 +226,19 @@ function KeyDetail() {
             ))}
           </Picker>
           <TouchableOpacity style={styles.updateButton} onPress={changeStatus}>
-            <Text style={styles.buttonTitle}>Byt status</Text>
+            <Text style={styles.buttonTitle}>{getButtonLabel(key.status)}</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 }
+
+const getButtonLabel = (status) => {
+  if (status === "Utlånad") return "Lämna in";
+  if (status === "Inlämnad" || status === "available") return "Låna ut";
+  return "Uppdatera";
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -223,6 +308,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+
+  warningText: {
+    color: "red",
+    fontSize: 14,
+    marginTop: 5,
+    fontStyle: "italic",
   },
 });
 

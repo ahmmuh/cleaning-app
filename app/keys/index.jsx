@@ -28,6 +28,7 @@ function KeyScreen() {
       </SafeAreaView>
     );
   }
+
   return (
     <SafeAreaView style={styles.safeViewContainer}>
       <FlatList
@@ -42,11 +43,6 @@ function KeyScreen() {
 const styles = StyleSheet.create({
   safeViewContainer: {
     paddingVertical: 10,
-  },
-  container: {
-    //   flex: 1,
-    //   justifyContent: "center",
-    //   alignItems: "center",
   },
 });
 
