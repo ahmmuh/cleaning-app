@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -13,11 +13,13 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import useFetchUnits from "../../hooks/useFetchUnits";
 import useFetchKeys from "../../hooks/useFetchKeys";
 import useFetchApartment from "../../hooks/useFetchApartment";
-
+import useFetchTasks from "../../hooks/useFetchTasks";
 function HomeScreen() {
   const { units, loading, error } = useFetchUnits();
   const { keys } = useFetchKeys();
   const { apartments } = useFetchApartment();
+  const { tasks } = useFetchTasks();
+  console.log("TASK i första sidan med enheter, nycklar och apartments", tasks);
 
   if (loading) {
     return (
@@ -35,6 +37,8 @@ function HomeScreen() {
     );
   }
 
+  useEffect(() => {}, [apartments, units, tasks, keys]);
+
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -44,7 +48,7 @@ function HomeScreen() {
             <FontAwesome5
               name="building"
               size={30}
-              color="#007BFF"
+              color="#28a745"
               style={styles.cardIcon}
             />
             <Text style={styles.cardTitle}>Enheter</Text>
@@ -52,6 +56,24 @@ function HomeScreen() {
             <TouchableOpacity>
               <Link href="/units" style={styles.cardLink}>
                 Visa alla enheter
+              </Link>
+            </TouchableOpacity>
+          </View>
+
+          {/* Alla Tasks */}
+
+          <View style={styles.card}>
+            <FontAwesome5
+              name="building"
+              size={30}
+              color="#28a745"
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardTitle}>Alla tasks</Text>
+            <Text style={styles.cardCount}>{tasks.length}</Text>
+            <TouchableOpacity>
+              <Link href="/tasks" style={styles.cardLink}>
+                Alla uppgifter
               </Link>
             </TouchableOpacity>
           </View>
@@ -78,7 +100,7 @@ function HomeScreen() {
             <FontAwesome5
               name="key"
               size={30}
-              color="#ffc107"
+              color="#28a745"
               style={styles.cardIcon}
             />
             <Text style={styles.cardTitle}>Nycklar</Text>
