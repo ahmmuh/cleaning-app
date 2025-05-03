@@ -58,7 +58,7 @@ function ChefScreen() {
       name={chef.name}
       email={chef.email}
       phone={chef.phone}>
-      <BackButton onPress={() => router.navigate("/units")} />
+      {/* <BackButton onPress={() => router.navigate("/units")} /> */}
     </MainCard>
   );
 }

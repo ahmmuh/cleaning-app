@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -13,6 +13,10 @@ import { assignTaskToUnit, getTaskByID } from "../../../../../backend/taskAPI";
 import { Picker } from "@react-native-picker/picker";
 import { getUnits } from "../../../../../backend/api";
 import UsePlaces from "../../../../../hooks/usePlaces";
+import {
+  displayError,
+  displaySuccess,
+} from "../../../../../utils/toastService";
 
 function EditTask() {
   //   const [contentHeight, setContentHeight] = useState(40); // För att hantera dynamisk höjd
@@ -40,7 +44,7 @@ function EditTask() {
     try {
       const foundedTask = await getTaskByID(unitId, taskId);
       if (!foundedTask) {
-        throw new Error("Denna task finns inte");
+        displayError("Denna task finns inte");
       }
       console.log("Founded task", foundedTask);
       setTask(foundedTask);
@@ -65,7 +69,7 @@ function EditTask() {
       setUnits(unitList);
       setLoading(false);
     } catch (error) {
-      throw new Error("Error vid hämtning av enheter");
+      displayError("Error vid hämtning av enheter");
     }
   };
   useEffect(() => {
@@ -125,8 +129,11 @@ function EditTask() {
       };
       console.log("Updated", updatedTask);
       assignTaskToUnit(unitId, taskId, updatedTask);
+      displaySuccess("Todo har uppdaterats");
+      router.push("/tasks");
     } catch (error) {
       console.log("Can not updated", error.message);
+      displayError("Det gick inte att uppdatera (todo)");
     }
   };
   return (
@@ -207,7 +214,7 @@ function EditTask() {
             <TouchableOpacity
               style={styles.updateButton}
               onPress={handleSubmit}>
-              <Text style={styles.buttonTitle}>Update</Text>
+              <Text style={styles.buttonTitle}>Uppdatera</Text>
             </TouchableOpacity>
           </View>
         )}

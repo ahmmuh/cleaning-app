@@ -13,10 +13,14 @@ function ChefLayout() {
         },
 
         headerTitleStyle: "bold",
-        headerTitle: "Enhetschef",
-        headerShown: true,
       }}>
-      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerTitle: "Chef",
+          headerShown: true,
+        }}
+      />
     </Stack>
   );
 }

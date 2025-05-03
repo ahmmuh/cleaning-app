@@ -7,16 +7,16 @@ function KeyLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: "#003366",
+        headerStyle: {
+          backgroundColor: "#bff38c",
+        },
+
+        headerTitleStyle: "bold",
+        headerTitle: "Nycklar",
+        headerShown: true,
       }}>
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "Nycklar",
-          tabBarIcon: ({ color, size }) => {
-            <FontAwesome name="key" size={25} color={color} />;
-          },
-        }}
-      />
+      <Stack.Screen name="index" />
     </Stack>
   );
 }

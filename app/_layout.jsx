@@ -1,20 +1,26 @@
 import { Stack, Tabs } from "expo-router";
+import ToastManager, { Toast } from "toastify-react-native";
 
 export default function RootLayout() {
   return (
-    <Stack
-      screenOptions={{
-        tabBarActiveTintColor: "#003366",
-        headerStyle: {
-          backgroundColor: "#bff38c",
-        },
+    <>
+      <ToastManager />
+      <Stack
+        screenOptions={{
+          tabBarActiveTintColor: "#003366",
+          headerShown: false,
 
-        headerTitleStyle: "bold",
-      }}>
-      <Stack.Screen
-        name="(tabs)"
-        options={{ headerTitle: "", headerShown: false }}
-      />
-    </Stack>
+          headerStyle: {
+            backgroundColor: "#bff38c",
+          },
+
+          headerTitleStyle: "bold",
+        }}>
+        <Stack.Screen
+          name="(tabs)"
+          options={{ headerTitle: "", headerShown: false }}
+        />
+      </Stack>
+    </>
   );
 }

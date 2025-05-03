@@ -21,8 +21,7 @@ function TaskItem({ item }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.location}>Plats: {item.location}</Text>
-      <Text style={styles.assignedTo}>Tilldelad till: {item.unit?.name}</Text>
+      <Text style={styles.assignedTo}>Tilldelad: {item.unit?.name}</Text>
       <Text style={styles.description}>{item.description}</Text>
       <View style={styles.statusContainer}>
         {item.completed === "Ej påbörjat" && (

@@ -13,7 +13,7 @@ function SpecialistLayout() {
         },
 
         headerTitleStyle: "bold",
-        headerTitle: "Specialister",
+        headerTitle: "Specialstädare",
         headerShown: true,
       }}>
       <Stack.Screen name="index" />

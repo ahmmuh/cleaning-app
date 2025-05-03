@@ -8,10 +8,17 @@ const TaskLayout = () => {
         headerStyle: {
           backgroundColor: "#bff38c",
         },
-
-        headerTitleStyle: "bold",
+        headerTitleStyle: { fontWeight: "bold" },
       }}>
-      <Stack.Screen name="tasks" />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: true,
+          headerTitle: "Todo lista",
+        }}
+      />
     </Stack>
   );
 };
+
+export default TaskLayout;

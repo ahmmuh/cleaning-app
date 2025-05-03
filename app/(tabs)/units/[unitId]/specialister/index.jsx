@@ -62,7 +62,7 @@ function SpecialistScreen() {
             name={specialist.name}
             email={specialist.email}
             phone={specialist.phone}>
-            <BackButton onPress={() => router.navigate("/units")} />
+            {/* <BackButton onPress={() => router.navigate("/units")} /> */}
           </MainCard>
         ))
       ) : (
@@ -75,7 +75,7 @@ function SpecialistScreen() {
           <Text style={{ fontSize: 20, color: "green" }}>
             Inga specialister
           </Text>
-          <BackButton onPress={() => router.navigate("/units")} />
+          {/* <BackButton onPress={() => router.navigate("/units")} /> */}
         </View>
       )}
     </>

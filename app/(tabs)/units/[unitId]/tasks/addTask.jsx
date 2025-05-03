@@ -15,6 +15,10 @@ import BackButton from "../../../../../components/backButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { addNewTask } from "../../../../../backend/taskAPI";
 import usePlaces from "../../../../../hooks/usePlaces";
+import {
+  displayError,
+  displaySuccess,
+} from "../../../../../utils/toastService";
 
 function AddTask() {
   const [loading, setLoading] = useState(false);
@@ -67,15 +71,20 @@ function AddTask() {
 
   const handleSubmit = () => {
     if (!task.title || !task.description) return;
-    const newTask = {
-      title: task.title,
-      description: task.description,
-      location: task.location,
-    };
+    try {
+      const newTask = {
+        title: task.title,
+        description: task.description,
+        location: task.location,
+      };
 
-    console.log("NY TASK i AddTask component", newTask);
-    addNewTask(unitId, newTask);
-    router.back();
+      console.log("NY TASK i AddTask component", newTask);
+      addNewTask(unitId, newTask);
+      displaySuccess("En ny todo har skapats");
+      router.push("/tasks");
+    } catch (error) {
+      displayError("Det gick inte att skapa ny todo");
+    }
   };
 
   //välj en plats i listan från google place API
@@ -144,7 +153,6 @@ function AddTask() {
                       <Text style={styles.foundPlaceTitle}>{task.title}</Text>
                     )}
                   </TouchableOpacity>
-                  {/* <Text>{item.formatted_address}</Text> */}
                 </View>
               )}
             />
@@ -159,7 +167,7 @@ function AddTask() {
       {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <FontAwesome size={18} color={"#ded"} name="edit" />
-        <Text style={styles.submitButtonText}> Ny Task</Text>
+        <Text style={styles.submitButtonText}> Ny Todo</Text>
       </TouchableOpacity>
     </View>
   );

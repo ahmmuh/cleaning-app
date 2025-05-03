@@ -6,6 +6,7 @@ import { Picker } from "@react-native-picker/picker";
 import { FontAwesome } from "@expo/vector-icons";
 import ToastManager, { Toast } from "toastify-react-native";
 import useFetchUsers from "../../../hooks/useFetchUsers";
+import { displayError, displaySuccess } from "../../../utils/toastService";
 
 function KeyDetail() {
   const { keyId } = useLocalSearchParams();
@@ -14,6 +15,7 @@ function KeyDetail() {
   const keyStatusar = [
     { label: "Inlämnad", value: "returned" },
     { label: "Utlånad", value: "checked-out" },
+    { label: "Tillgänglig", value: "available" },
   ];
 
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -34,6 +36,7 @@ function KeyDetail() {
       setSelectedUserId(keyData.borrowedBy ? keyData.borrowedBy._id : "");
     } catch (err) {
       console.error("Kunde inte hämta key:", err);
+      displayError("Vi kunde inte hämta nyckeln");
     }
   };
 
@@ -43,9 +46,55 @@ function KeyDetail() {
     }
   }, [keyId]);
 
+  // const isActionsValid = () => {
+  //   const isCheckingOut =
+  //     selectedStatus === "checked-out" && key.status === "returned";
+
+  //   const isCheckingIn =
+  //     selectedStatus === "returned" &&
+  //     key.status === "checked-out" &&
+  //     key.borrowedBy?._id === selectedUserId;
+
+  //   return isCheckingOut || isCheckingIn;
+  // };
+
+  // const changeStatus = async () => {
+  //   const selectedUser = users.find((u) => u._id === selectedUserId);
+  //   try {
+  //     if (selectedStatus === "checked-out") {
+  //       if (!selectedUserId) {
+  //         Toast.error("Välj en användare att låna ut till.");
+  //         return;
+  //       }
+  //       await checkoutKey(selectedUser.userType, selectedUserId, keyId);
+  //       Toast.success("Nyckeln har lånats ut.");
+  //     } else if (
+  //       selectedStatus === "returned" ||
+  //       selectedStatus === "available"
+  //     ) {
+  //       if (key.status !== "checked-out") {
+  //         Toast.error("Nyckeln är inte utlånad, kan inte lämnas in.");
+  //         return;
+  //       }
+
+  //       if (key.borrowedBy?._id !== selectedUserId) {
+  //         Toast.error("Vald användare matchar inte nuvarande lånetagare.");
+  //         return;
+  //       }
+  //       await checkinKey(key.borrowedBy.userType, key.borrowedBy._id, keyId);
+  //       Toast.success("Nyckeln har lämnats in.");
+  //     }
+
+  //     router.push("/keys");
+  //   } catch (err) {
+  //     console.error("Fel vid statusändring:", err);
+  //     Toast.error("Ett fel uppstod vid uppdatering.");
+  //   }
+  // };
   const isActionsValid = () => {
     const isCheckingOut =
-      selectedStatus === "checked-out" && key.status === "returned";
+      selectedStatus === "checked-out" &&
+      (key.status === "returned" || key.status === "available");
 
     const isCheckingIn =
       selectedStatus === "returned" &&
@@ -57,32 +106,42 @@ function KeyDetail() {
 
   const changeStatus = async () => {
     const selectedUser = users.find((u) => u._id === selectedUserId);
+
     try {
       if (selectedStatus === "checked-out") {
         if (!selectedUserId) {
           Toast.error("Välj en användare att låna ut till.");
           return;
         }
+
+        if (key.status !== "returned" && key.status !== "available") {
+          Toast.error(
+            "Nyckeln kan bara lånas ut om den är tillgänglig eller inlämnad."
+          );
+          return;
+        }
+
         await checkoutKey(selectedUser.userType, selectedUserId, keyId);
-        Toast.success("Nyckeln har lånats ut.");
+        displaySuccess("Nyckeln har lånats ut.");
       } else if (selectedStatus === "returned") {
         if (key.status !== "checked-out") {
-          Toast.error("Nyckeln är inte utlånad, kan inte lämnas in.");
+          displayError("Nyckeln är inte utlånad, kan inte lämnas in.");
           return;
         }
 
         if (key.borrowedBy?._id !== selectedUserId) {
-          Toast.error("Vald användare matchar inte nuvarande lånetagare.");
+          displayError("Vald användare matchar inte nuvarande lånetagare.");
           return;
         }
+
         await checkinKey(key.borrowedBy.userType, key.borrowedBy._id, keyId);
-        Toast.success("Nyckeln har lämnats in.");
+        displaySuccess("Nyckeln har lämnats in.");
       }
 
       router.push("/keys");
     } catch (err) {
       console.error("Fel vid statusändring:", err);
-      Toast.error("Ett fel uppstod vid uppdatering.");
+      displayError("Ett fel uppstod vid uppdatering.");
     }
   };
 
@@ -210,7 +269,7 @@ function KeyDetail() {
 
 const getButtonLabel = (status) => {
   if (status === "checked-out") return "Lämna in";
-  if (status === "returned") return "Låna ut";
+  if (status === "returned" || status === "available") return "Låna ut";
   return "Uppdatera";
 };
 

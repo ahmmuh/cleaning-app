@@ -31,13 +31,6 @@ function TaskDrawerLayout() {
             ),
           }}
         />
-        <Drawer.Screen
-          name="addTask"
-          options={{
-            drawerLabel: "NY uppgift",
-            title: "NY uppgift",
-          }}
-        />
       </Drawer>
     </GestureHandlerRootView>
   );

@@ -15,11 +15,18 @@ import useFetchKeys from "../../hooks/useFetchKeys";
 import useFetchApartment from "../../hooks/useFetchApartment";
 import useFetchTasks from "../../hooks/useFetchTasks";
 function HomeScreen() {
-  const { units, loading, error } = useFetchUnits();
-  const { keys } = useFetchKeys();
-  const { apartments } = useFetchApartment();
-  const { tasks } = useFetchTasks();
-  console.log("TASK i första sidan med enheter, nycklar och apartments", tasks);
+  const { units, loading: loadingUnits, error: errorUnits } = useFetchUnits();
+  const { keys, loading: loadingKeys, error: errorKeys } = useFetchKeys();
+  const {
+    apartments,
+    loading: loadingApartments,
+    error: errorApartments,
+  } = useFetchApartment();
+  const { tasks, loading: loadingTasks, error: errorTasks } = useFetchTasks();
+
+  const loading =
+    loadingUnits || loadingKeys || loadingApartments || loadingTasks;
+  const error = errorUnits || errorKeys || errorApartments || errorTasks;
 
   if (loading) {
     return (
@@ -36,8 +43,6 @@ function HomeScreen() {
       </SafeAreaView>
     );
   }
-
-  useEffect(() => {}, [apartments, units, tasks, keys]);
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
@@ -64,7 +69,7 @@ function HomeScreen() {
 
           <View style={styles.card}>
             <FontAwesome5
-              name="building"
+              name="tasks"
               size={30}
               color="#28a745"
               style={styles.cardIcon}
@@ -81,12 +86,12 @@ function HomeScreen() {
           {/* Lägenheter */}
           <View style={styles.card}>
             <FontAwesome5
-              name="home"
+              name="soap"
               size={30}
               color="#28a745"
               style={styles.cardIcon}
             />
-            <Text style={styles.cardTitle}>Lägenheter</Text>
+            <Text style={styles.cardTitle}>Lägenhetstäd</Text>
             <Text style={styles.cardCount}>{apartments.length}</Text>
             <TouchableOpacity>
               <Link href="/apartments" style={styles.cardLink}>

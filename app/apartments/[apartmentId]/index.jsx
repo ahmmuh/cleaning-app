@@ -14,6 +14,7 @@ import { updateApartment } from "../../../backend/apartmentAPI";
 import { BASE_URL } from "../../../backend/base_url";
 import useFetchApartment from "../../../hooks/useFetchApartment";
 import ToastManager, { Toast } from "toastify-react-native";
+import { displayError, displaySuccess } from "../../../utils/toastService";
 
 export default function ApartmentDetail() {
   const { apartmentId } = useLocalSearchParams();
@@ -32,6 +33,7 @@ export default function ApartmentDetail() {
       setSelectedStatus(data.status);
     } catch (err) {
       console.error("Kunde inte hämta apartment:", err);
+      displayError("Det gick inte att hämta lägenheten");
     }
   };
 
@@ -43,10 +45,10 @@ export default function ApartmentDetail() {
     if (updated) {
       setApartment(updated);
       fetchAllApartments();
-      Toast.success("Status har uppdaterats");
+      displaySuccess("Status har uppdaterats");
       router.push("/apartments");
     } else {
-      Toast.error("Kunde inte uppdatera status");
+      displayError("Kunde inte uppdatera status");
     }
   };
 

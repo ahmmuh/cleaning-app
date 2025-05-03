@@ -11,6 +11,7 @@ import {
 import { getUnitByID, getUnits } from "../../../backend/api";
 import { Link, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons"; // <- Lägger till ikoner
+import { displayError, displaySuccess } from "../../../utils/toastService";
 
 function UnitScreen() {
   const router = useRouter();
@@ -22,11 +23,13 @@ function UnitScreen() {
     try {
       const data = await getUnits(); // Här får du redan enheter med alla detaljer
       setUnits(data);
+      displaySuccess("Alla enheter är hämtade");
       setLoading(false);
     } catch (error) {
       console.error("Fel vid hämtning av enheter:", error.message);
       setError(error);
       setLoading(false);
+      displayError("Fel vid hämtning av enheter");
     }
   };
 
@@ -129,7 +132,7 @@ function UnitScreen() {
               <View style={styles.linkContent}>
                 <Ionicons name="people-outline" size={20} color="#1e40af" />
                 <Text style={styles.linkText}>
-                  Specialister ({item.specialister.length})
+                  Specialstädare ({item.specialister.length})
                 </Text>
               </View>
             </Pressable>
