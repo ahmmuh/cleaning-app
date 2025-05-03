@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -7,40 +7,18 @@ import {
   Text,
   View,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { getUnits } from "../../backend/api";
+import { FontAwesome5 } from "@expo/vector-icons";
 import useFetchUnits from "../../hooks/useFetchUnits";
 import useFetchKeys from "../../hooks/useFetchKeys";
 import useFetchApartment from "../../hooks/useFetchApartment";
+
 function HomeScreen() {
   const { units, loading, error } = useFetchUnits();
-  const { keys } = useFetchUnits();
+  const { keys } = useFetchKeys();
   const { apartments } = useFetchApartment();
 
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-  // console.log("Units", units);
-
-  // const fetchUnits = async () => {
-  //   try {
-  //     const unitLis = await getUnits();
-  //     if (!Array.isArray(unitLis)) {
-  //       throw new Error("ERror");
-  //     }
-  //     if (unitLis.length === 0) {
-  //       console.log("Inga enheter finns att visa");
-  //     }
-  //     setUnits(unitLis);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("Error, vid hämtning av enheter");
-  //     setLoading(false);
-  //     setError(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   fetchUnits();
-  // }, []);
   if (loading) {
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
@@ -61,50 +39,55 @@ function HomeScreen() {
     <SafeAreaView style={styles.safeAreaContainer}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
-          {/* Enheter Section */}
+          {/* Enheter */}
           <View style={styles.card}>
+            <FontAwesome5
+              name="building"
+              size={30}
+              color="#007BFF"
+              style={styles.cardIcon}
+            />
             <Text style={styles.cardTitle}>Enheter</Text>
             <Text style={styles.cardCount}>{units.length}</Text>
-            {/* Antal enheter */}
-            <Link href="/units" style={styles.cardLink}>
-              Visa alla enheter
-            </Link>
+            <TouchableOpacity>
+              <Link href="/units" style={styles.cardLink}>
+                Visa alla enheter
+              </Link>
+            </TouchableOpacity>
           </View>
 
-          {/* Specialist Enheter Section */}
-          {/* <View style={styles.card}>
-            <Text style={styles.cardTitle}>Specialist Enheter</Text>
-            <Text style={styles.cardCount}>{units.specialister?.length}</Text>
-            <Link href="/specialists" style={styles.cardLink}>
-              Visa alla specialistenheter
-            </Link>
-          </View> */}
-
-          {/* Lägenheter Section */}
+          {/* Lägenheter */}
           <View style={styles.card}>
+            <FontAwesome5
+              name="home"
+              size={30}
+              color="#28a745"
+              style={styles.cardIcon}
+            />
             <Text style={styles.cardTitle}>Lägenheter</Text>
-            <Text style={styles.cardCount}></Text>
-            <Link href="/apartments" style={styles.cardLink}>
-              Visa alla lägenheter
-            </Link>
+            <Text style={styles.cardCount}>{apartments.length}</Text>
+            <TouchableOpacity>
+              <Link href="/apartments" style={styles.cardLink}>
+                Visa alla lägenheter
+              </Link>
+            </TouchableOpacity>
           </View>
 
-          {/* Uppgifter Section */}
-          {/* <View style={styles.card}>
-            <Text style={styles.cardTitle}>Uppgifter</Text>
-            <Text style={styles.cardCount}>{units.tasks?.length}</Text>{" "}
-            <Link href="/tasks" style={styles.cardLink}>
-              Visa alla uppgifter
-            </Link>
-          </View> */}
-
-          {/* Nycklar Section * */}
+          {/* Nycklar */}
           <View style={styles.card}>
+            <FontAwesome5
+              name="key"
+              size={30}
+              color="#ffc107"
+              style={styles.cardIcon}
+            />
             <Text style={styles.cardTitle}>Nycklar</Text>
-            <Text style={styles.cardCount}></Text>
-            <Link href="/keys" style={styles.cardLink}>
-              Visa alla nycklar
-            </Link>
+            <Text style={styles.cardCount}>{keys.length}</Text>
+            <TouchableOpacity>
+              <Link href="/keys" style={styles.cardLink}>
+                Visa alla nycklar
+              </Link>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -114,7 +97,7 @@ function HomeScreen() {
 
 const styles = StyleSheet.create({
   safeAreaContainer: {
-    flex: 1, // Tar upp hela skärmen
+    flex: 1,
     marginVertical: 20,
   },
   scrollContainer: {
@@ -132,27 +115,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 25,
     marginBottom: 20,
-    width: "90%", // Större kort
+    width: "90%",
     borderRadius: 15,
     shadowColor: "#000",
     shadowOpacity: 0.15,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 5 },
     elevation: 5,
-    height: 150, // Justerar höjden på korten för att göra dem större
+    height: 170,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  cardIcon: {
+    marginBottom: 10,
   },
   cardTitle: {
     fontSize: 22,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   cardCount: {
     fontSize: 30,
     fontWeight: "bold",
+    marginBottom: 10,
     color: "#007BFF",
-    marginBottom: 15,
   },
   cardLink: {
     fontSize: 18,

@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { updateApartment } from "../../../backend/apartmentAPI";
 import { BASE_URL } from "../../../backend/base_url";
 import useFetchApartment from "../../../hooks/useFetchApartment";
+import ToastManager, { Toast } from "toastify-react-native";
 
 export default function ApartmentDetail() {
   const { apartmentId } = useLocalSearchParams();
@@ -42,11 +43,10 @@ export default function ApartmentDetail() {
     if (updated) {
       setApartment(updated);
       fetchAllApartments();
-      Alert.alert("Status uppdaterad", `Ny status: ${selectedStatus}`, [
-        { text: "OK", onPress: () => router.back() },
-      ]);
+      Toast.success("Status har uppdaterats");
+      router.push("/apartments");
     } else {
-      Alert.alert("Fel", "Kunde inte uppdatera status");
+      Toast.error("Kunde inte uppdatera status");
     }
   };
 
@@ -68,6 +68,7 @@ export default function ApartmentDetail() {
 
   return (
     <ScrollView style={styles.container}>
+      <ToastManager />
       <View style={styles.header}>
         <Text style={styles.title}>{apartment.apartmentLocation}</Text>
         <Text style={[styles.status, getStatusStyle(selectedStatus)]}>

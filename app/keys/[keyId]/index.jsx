@@ -1,12 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import {
-  checkinKey,
-  checkoutKey,
-  getKeyByID,
-  updateKey,
-} from "../../../backend/keyAPI";
+import { checkinKey, checkoutKey, getKeyByID } from "../../../backend/keyAPI";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesome } from "@expo/vector-icons";
 import ToastManager, { Toast } from "toastify-react-native";
@@ -15,19 +10,21 @@ import useFetchUsers from "../../../hooks/useFetchUsers";
 function KeyDetail() {
   const { keyId } = useLocalSearchParams();
   const [key, setKey] = useState(null);
-  const keyStatusar = ["Inlämnad", "Utlånad"];
+
+  const keyStatusar = [
+    { label: "Inlämnad", value: "returned" },
+    { label: "Utlånad", value: "checked-out" },
+  ];
 
   const [selectedStatus, setSelectedStatus] = useState("");
   const { users, loading, error } = useFetchUsers();
   const [selectedUserId, setSelectedUserId] = useState("");
 
-  //Router
   const router = useRouter();
 
   const fetchKey = async () => {
     try {
       const keyData = await getKeyByID(keyId);
-
       if (!keyData) {
         console.log("Denna nyckel finns EJ");
         return;
@@ -46,27 +43,30 @@ function KeyDetail() {
     }
   }, [keyId]);
 
-  //functions
+  const isActionsValid = () => {
+    const isCheckingOut =
+      selectedStatus === "checked-out" && key.status === "returned";
+
+    const isCheckingIn =
+      selectedStatus === "returned" &&
+      key.status === "checked-out" &&
+      key.borrowedBy?._id === selectedUserId;
+
+    return isCheckingOut || isCheckingIn;
+  };
+
   const changeStatus = async () => {
     const selectedUser = users.find((u) => u._id === selectedUserId);
     try {
-      if (selectedStatus === "Utlånad") {
+      if (selectedStatus === "checked-out") {
         if (!selectedUserId) {
           Toast.error("Välj en användare att låna ut till.");
           return;
         }
-        console.log(
-          "Vid utlåning",
-          selectedUser.userType,
-          selectedUserId,
-          keyId
-        );
-        // Utlåning
         await checkoutKey(selectedUser.userType, selectedUserId, keyId);
-
         Toast.success("Nyckeln har lånats ut.");
-      } else if (selectedStatus === "Inlämnad") {
-        if (key.status !== "Utlånad") {
+      } else if (selectedStatus === "returned") {
+        if (key.status !== "checked-out") {
           Toast.error("Nyckeln är inte utlånad, kan inte lämnas in.");
           return;
         }
@@ -75,16 +75,7 @@ function KeyDetail() {
           Toast.error("Vald användare matchar inte nuvarande lånetagare.");
           return;
         }
-        console.log(
-          "Vid inlämning",
-          key.borrowedBy.userType,
-          key.borrowedBy._id,
-          keyId
-        );
-
-        // Inlämning
         await checkinKey(key.borrowedBy.userType, key.borrowedBy._id, keyId);
-
         Toast.success("Nyckeln har lämnats in.");
       }
 
@@ -113,24 +104,15 @@ function KeyDetail() {
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <Text>Loading</Text>
+      <View style={styles.container}>
+        <Text>Loading...</Text>
       </View>
     );
   }
+
   if (error) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
+      <View style={styles.container}>
         <Text>{error.message}</Text>
       </View>
     );
@@ -143,7 +125,7 @@ function KeyDetail() {
         <Text style={styles.title}>
           <FontAwesome
             name="key"
-            color={key.status === "Utlånad" ? "red" : "green"}
+            color={key.status === "checked-out" ? "red" : "green"}
             size={20}
           />{" "}
           {key.keyLabel}
@@ -156,51 +138,31 @@ function KeyDetail() {
           <FontAwesome name="building" size={20} color={"gray"} />:{" "}
           {key.location}
         </Text>
-
-        {/* Dynamically display dates based on key status */}
         <Text style={styles.info}>
-          {key.status === "Utlånad" && (
+          {key.status === "checked-out" && (
             <>
-              <FontAwesome
-                style={{ paddingRight: 5 }}
-                name="calendar"
-                color={"gray"}
-                size={20}
-              />
-              Lånedatum: {new Date(key.borrowedAt).toDateString()}
+              <FontAwesome name="calendar" color="gray" size={20} /> Lånedatum:{" "}
+              {new Date(key.borrowedAt).toDateString()}
             </>
           )}
-
-          {key.status === "Inlämnad" && (
+          {key.status === "returned" && (
             <>
-              <FontAwesome
-                style={{ paddingRight: 5 }}
-                name="calendar"
-                color={"green"}
-                size={20}
-              />
-              Inlämnad: {new Date(key.returnedAt).toDateString()}
+              <FontAwesome name="calendar" color="green" size={20} /> Inlämnad:{" "}
+              {new Date(key.returnedAt).toDateString()}
             </>
           )}
-
           {key.status === "available" && (
             <>
-              <FontAwesome
-                style={{ paddingRight: 5 }}
-                name="calendar"
-                color={"green"}
-                size={20}
-              />
-              Skapad: {new Date(key.createdAt).toLocaleDateString()}
+              <FontAwesome name="calendar" color="green" size={20} /> Skapad:{" "}
+              {new Date(key.createdAt).toLocaleDateString()}
             </>
           )}
         </Text>
-
         <Text style={styles.info}>
           Status: {selectedStatus}
           <FontAwesome
             name="check"
-            color={key.status === "Utlånad" ? "red" : "green"}
+            color={key.status === "checked-out" ? "red" : "green"}
           />
         </Text>
 
@@ -215,17 +177,29 @@ function KeyDetail() {
             ))}
           </Picker>
         </View>
+
         <View style={styles.pickerContainer}>
           <Text style={styles.pickerLabel}>Välj Status:</Text>
           <Picker
             style={styles.picker}
             selectedValue={selectedStatus}
-            onValueChange={(itemValue) => setSelectedStatus(itemValue)}>
+            onValueChange={(value) => setSelectedStatus(value)}>
             {keyStatusar.map((status) => (
-              <Picker.Item key={status} label={status} value={status} />
+              <Picker.Item
+                key={status.value}
+                label={status.label}
+                value={status.value}
+              />
             ))}
           </Picker>
-          <TouchableOpacity style={styles.updateButton} onPress={changeStatus}>
+
+          <TouchableOpacity
+            style={[
+              styles.updateButton,
+              !isActionsValid() && { backgroundColor: "#ccc" },
+            ]}
+            onPress={changeStatus}
+            disabled={!isActionsValid()}>
             <Text style={styles.buttonTitle}>{getButtonLabel(key.status)}</Text>
           </TouchableOpacity>
         </View>
@@ -235,8 +209,8 @@ function KeyDetail() {
 }
 
 const getButtonLabel = (status) => {
-  if (status === "Utlånad") return "Lämna in";
-  if (status === "Inlämnad" || status === "available") return "Låna ut";
+  if (status === "checked-out") return "Lämna in";
+  if (status === "returned") return "Låna ut";
   return "Uppdatera";
 };
 
@@ -309,7 +283,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-
   warningText: {
     color: "red",
     fontSize: 14,
