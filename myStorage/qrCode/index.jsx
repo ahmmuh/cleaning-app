@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { getKeyByQRCode, getUserByQRCode } from "../../../backend/keyAPI"; // API-funktioner
+import { getKeyByQRCode, getUserByQRCode } from "../../backend/keyAPI"; // API-funktioner
 import { Toast } from "toastify-react-native";
 
 export default function QRCodeScan() {
@@ -20,10 +20,10 @@ export default function QRCodeScan() {
     return (
       <View style={styles.container}>
         <Text style={styles.message}>
-          We need your permission to show the camera
+          Appen behöver din tillåtelse för att få åtkomst till kameran
         </Text>
         <TouchableOpacity onPress={requestPermission} style={styles.button}>
-          <Text style={styles.text}>Grant Permission</Text>
+          <Text style={styles.text}>Skanna</Text>
         </TouchableOpacity>
       </View>
     );

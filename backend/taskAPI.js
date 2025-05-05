@@ -41,9 +41,9 @@ export const addNewTask = async (unitId, newTask) => {
   }
 };
 
-export const getTaskByID = async (unitId, taskId) => {
+export const getTaskByID = async (taskId) => {
   try {
-    const res = await fetch(`${BASE_URL}/units/${unitId}/tasks/${taskId}`);
+    const res = await fetch(`${BASE_URL}/tasks/${taskId}`);
     if (!res.ok) {
       console.log(`Server error when fething data, status: ${res.status}`);
       return null;
@@ -58,18 +58,15 @@ export const getTaskByID = async (unitId, taskId) => {
 
 //tilldela task
 
-export const assignTaskToUnit = async (unitId, taskId, assignedTask) => {
+export const updateTaskById = async (taskId, task) => {
   try {
-    const res = await fetch(
-      `${BASE_URL}/units/${unitId}/tasks/${taskId}/assign`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(assignedTask),
-      }
-    );
+    const res = await fetch(`${BASE_URL}/tasks/${taskId}/update`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
     if (!res.ok) {
       console.error(
         `Fel vid uppdatering av task. Status: ${res.status} (${res.statusText})`
@@ -77,7 +74,7 @@ export const assignTaskToUnit = async (unitId, taskId, assignedTask) => {
       return null;
     }
     const data = await res.json();
-    console.log(`Tilldelad ${data} Utförs av enhet med ID ${unitId}`);
+    console.log(`Updated ${data} `);
     return data;
   } catch (error) {
     console.error(`Error on the Server ${error.message}`);

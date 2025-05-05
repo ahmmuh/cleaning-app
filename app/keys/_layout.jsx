@@ -8,6 +8,7 @@ function KeyLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#003366",
+        headerShown: true,
         headerStyle: {
           backgroundColor: "#bff38c",
         },

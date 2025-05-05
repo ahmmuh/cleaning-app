@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { getUnitByID } from "../../../../../backend/api";
-import { formatDate } from "../../../../../date/dateFormat";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { deleteTaskById } from "../../../../../backend/taskAPI";
 
@@ -158,13 +157,13 @@ function TodoScreen() {
                 {item.skapad && (
                   <Text>
                     <Text style={styles.bold}>Skapad:</Text>{" "}
-                    {formatDate(item.skapad)}
+                    {new Date(item.skapad).toLocaleDateString()}
                   </Text>
                 )}
                 {item.Uppdaterats && (
                   <Text>
                     <Text style={styles.bold}>Senast ändrad:</Text>{" "}
-                    {formatDate(item.Uppdaterats)}
+                    {new Date(item.Uppdaterats).toLocaleDateString()}
                   </Text>
                 )}
 

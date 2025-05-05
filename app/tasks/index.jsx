@@ -4,9 +4,16 @@ import useFetchApartment from "../../hooks/useFetchApartment";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useFetchTasks from "../../hooks/useFetchTasks";
 import TaskItem from "./taskItem";
+import { useFocusEffect } from "expo-router";
 
 function TaskList() {
-  const { tasks, loading, error } = useFetchTasks();
+  const { tasks, fetchAllTasks, loading, error } = useFetchTasks();
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllTasks();
+    }, [])
+  );
 
   //Loading
   if (loading) {

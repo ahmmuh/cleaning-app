@@ -15,3 +15,26 @@ export const getUsers = async () => {
     return null;
   }
 };
+
+//En användare
+
+export const getUserByID = async (userId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/users/${userId}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log(`Fel vid hämtning av användare: ${errorData.message}`);
+      return null;
+    }
+
+    const user = await response.json();
+    console.log("Hämtad användare:", user);
+    return user;
+  } catch (error) {
+    console.error("Nätverksfel vid hämtning av användare:", error.message);
+    return null;
+  }
+};

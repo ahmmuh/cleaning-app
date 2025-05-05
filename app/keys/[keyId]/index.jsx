@@ -7,7 +7,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import ToastManager, { Toast } from "toastify-react-native";
 import useFetchUsers from "../../../hooks/useFetchUsers";
 import { displayError, displaySuccess } from "../../../utils/toastService";
-import QRCodePage from "../qrCode";
+import QRCodePage from "../../../myStorage/qrCode";
 
 function KeyDetail() {
   const { keyId } = useLocalSearchParams();

@@ -10,11 +10,9 @@ import {
 import { getPlaces } from "../../../../../backend/googlePlaceApi";
 import { FlatList } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import MainLink from "../../../../../components/link";
 import BackButton from "../../../../../components/backButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { addNewTask } from "../../../../../backend/taskAPI";
-import usePlaces from "../../../../../hooks/usePlaces";
 import {
   displayError,
   displaySuccess,
