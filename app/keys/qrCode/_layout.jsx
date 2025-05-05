@@ -2,7 +2,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Stack, Tabs } from "expo-router";
 import React from "react";
 
-function KeyLayout() {
+function QRCodeLayout() {
   return (
     <Stack
       screenOptions={{
@@ -13,17 +13,12 @@ function KeyLayout() {
         },
 
         headerTitleStyle: "bold",
-        headerShown: false,
+        headerTitle: "Skanna",
+        headerShown: true,
       }}>
-      <Stack.Screen
-        name="index"
-        options={{
-          headerTitle: "Nycklar",
-          headerShown: true,
-        }}
-      />
+      <Stack.Screen name="index" />
     </Stack>
   );
 }
 
-export default KeyLayout;
+export default QRCodeLayout;

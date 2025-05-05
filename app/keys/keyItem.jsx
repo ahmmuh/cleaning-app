@@ -16,7 +16,7 @@ function KeyItem({ item }) {
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => router.push(`/keys/${item._id}/`)}>
+      <Pressable onPress={() => router.push(`/keys/qrCode`)}>
         <View style={styles.row}>
           <Icon name={statusIcon} size={24} color={statusColor} />
           <Text style={[styles.nyckelTitle, { color: statusColor }]}>
