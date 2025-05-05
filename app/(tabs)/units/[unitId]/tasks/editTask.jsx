@@ -398,7 +398,7 @@ function EditTask() {
       };
       updateTaskById(taskId, updatedTask);
       displaySuccess("Todo har uppdaterats");
-      router.push("/tasks");
+      router.push("/units");
     } catch (error) {
       console.log("Kan inte uppdatera", error.message);
       displayError("Det gick inte att uppdatera (todo)");

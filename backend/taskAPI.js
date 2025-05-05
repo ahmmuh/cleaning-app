@@ -16,10 +16,10 @@ export const getAllTasks = async () => {
     return null;
   }
 };
-export const addNewTask = async (unitId, newTask) => {
+export const addNewTask = async (newTask) => {
   try {
-    const res = await fetch(`${BASE_URL}/units/${unitId}/tasks/add`, {
-      method: "PATCH",
+    const res = await fetch(`${BASE_URL}/tasks/add`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -85,14 +85,11 @@ export const updateTaskById = async (taskId, task) => {
 
 // DELETE TASK
 
-export const deleteTaskById = async (unitId, taskId) => {
+export const deleteTaskById = async (taskId) => {
   try {
-    const response = await fetch(
-      `${BASE_URL}/units/${unitId}/tasks/${taskId}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+      method: "DELETE",
+    });
 
     if (!response.ok) {
       console.log(`Error deleting task: ${response.status}`);

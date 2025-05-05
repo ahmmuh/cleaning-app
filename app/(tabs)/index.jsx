@@ -74,7 +74,7 @@ function HomeScreen() {
               color="#28a745"
               style={styles.cardIcon}
             />
-            <Text style={styles.cardTitle}>Alla tasks</Text>
+            <Text style={styles.cardTitle}>Att göra</Text>
             <Text style={styles.cardCount}>{tasks.length}</Text>
             <TouchableOpacity>
               <Link href="/tasks" style={styles.cardLink}>

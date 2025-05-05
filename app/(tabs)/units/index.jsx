@@ -160,7 +160,7 @@ function UnitScreen() {
               style={styles.linkButton}
               onPress={() =>
                 router.push({
-                  pathname: `/units/${item._id}/apartments`,
+                  pathname: `/apartments`,
                   query: {
                     unitId: item._id,
                     apartments: JSON.stringify(item.apartments),

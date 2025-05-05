@@ -63,7 +63,7 @@ function TodoScreen() {
 
   const deleteHandle = async (id) => {
     try {
-      await deleteTaskById(unitId, id);
+      await deleteTaskById(id);
       const updatedTasks = tasks.filter((task) => task._id !== id);
       setTasks(updatedTasks);
     } catch (err) {

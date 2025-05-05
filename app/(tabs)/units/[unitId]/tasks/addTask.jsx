@@ -17,6 +17,7 @@ import {
   displayError,
   displaySuccess,
 } from "../../../../../utils/toastService";
+import usePlaces from "../../../../../hooks/usePlaces";
 
 function AddTask() {
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,10 @@ function AddTask() {
   const router = useRouter();
   const { unitId } = useLocalSearchParams();
   console.log("UNIT ID i AddTask", unitId);
+  const [searchText, setSearchText] = useState("");
+  const [selectedtPlace, setSelectedPlace] = useState(null);
 
+  const { places, filteredPlaces, error, fetchPlaces } = usePlaces();
   // States
   const [task, setTask] = useState({
     title: "",
@@ -32,11 +36,6 @@ function AddTask() {
     location: "",
     //Danmarksgatan 26753 23 Uppsala
   });
-
-  const [searchText, setSearchText] = useState("");
-  const [selectedtPlace, setSelectedPlace] = useState(null);
-
-  const { places, filteredPlaces, error, fetchPlaces } = usePlaces();
 
   const handleTitleChange = (searchText) => {
     setTask((prevTask) => ({
@@ -77,9 +76,9 @@ function AddTask() {
       };
 
       console.log("NY TASK i AddTask component", newTask);
-      addNewTask(unitId, newTask);
+      addNewTask(newTask);
       displaySuccess("En ny todo har skapats");
-      router.push("/tasks");
+      router.push("/units");
     } catch (error) {
       displayError("Det gick inte att skapa ny todo");
     }
@@ -116,6 +115,8 @@ function AddTask() {
       <TextInput
         name="title"
         value={searchText}
+        autoCorrect={false}
+        keyboardType="default"
         placeholder="Todo title"
         onChangeText={handleTitleChange}
         style={styles.inputStyle}
@@ -127,6 +128,8 @@ function AddTask() {
         name="description"
         placeholder="Beskriv lite om vad som ska göras"
         value={task.description}
+        autoCorrect={false}
+        keyboardType="default"
         onChangeText={(text) => setTask({ ...task, description: text })}
         multiline={true}
         style={[styles.inputStyle, styles.descriptionStyle]}

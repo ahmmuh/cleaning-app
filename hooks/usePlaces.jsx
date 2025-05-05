@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { getPlaces } from "../backend/googlePlaceApi";
 
-function UsePlaces() {
+function usePlaces() {
   const [places, setPlaces] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [error, setError] = useState(null);
@@ -26,4 +26,4 @@ function UsePlaces() {
   };
 }
 
-export default UsePlaces;
+export default usePlaces;
