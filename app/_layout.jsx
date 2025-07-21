@@ -14,7 +14,9 @@ export default function RootLayout() {
             backgroundColor: "#bff38c",
           },
 
-          headerTitleStyle: "bold",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
         }}>
         <Stack.Screen
           name="(tabs)"

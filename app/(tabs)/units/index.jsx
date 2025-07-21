@@ -21,7 +21,7 @@ function UnitScreen() {
 
   const fetchUnits = async () => {
     try {
-      const data = await getUnits(); // Här får du redan enheter med alla detaljer
+      const data = await getUnits();
       setUnits(data);
       displaySuccess("Alla enheter är hämtade");
       setLoading(false);
