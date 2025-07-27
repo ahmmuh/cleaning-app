@@ -128,9 +128,9 @@ export const addNewTask = async (newTask) => {
   }
 };
 
-export const getUnitTasks = async (unitId) => {
+export const getUnitTasks = async () => {
   try {
-    const data = await FetchWithAuth(`${BASE_URL}/units/${unitId}/tasks`);
+    const data = await FetchWithAuth(`${BASE_URL}/tasks`);
     console.log("Hämtat tasks från servern ", data);
     return data;
   } catch (error) {

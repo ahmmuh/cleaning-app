@@ -1,6 +1,6 @@
-import { Stack } from "expo-router";
-import React from "react";
-function AllaEnheterSTackLayout() {
+const { Stack } = require("expo-router");
+
+const ApartmentLayout = () => {
   return (
     <Stack
       screenOptions={{
@@ -10,17 +10,17 @@ function AllaEnheterSTackLayout() {
           backgroundColor: "#bff38c",
         },
 
-        headerTitleStyle: { fontWeight: "bold" },
+        headerTitleStyle: "bold",
       }}>
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: "Alla enheter",
+          headerTitle: "Flyttstäd",
           headerShown: true,
         }}
       />
     </Stack>
   );
-}
+};
 
-export default AllaEnheterSTackLayout;
+export default ApartmentLayout;

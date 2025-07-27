@@ -1,4 +1,4 @@
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Text,
@@ -11,8 +11,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { getUnitByID } from "../../../../../backend/api";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { deleteTaskById } from "../../../../../backend/taskAPI";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 function TodoScreen() {
   const { unitId } = useLocalSearchParams();
@@ -26,25 +26,24 @@ function TodoScreen() {
 
   const fetchTasks = async () => {
     try {
-      const taskData = await getUnitByID(unitId);
-      if (!taskData.tasks) {
-        console.log("Enheten finns inte");
-        return;
+      const unitData = await getUnitByID(unitId);
+
+      if (!unitData?.tasks) {
+        throw new Error("Inga tasks hittades för denna enhet.");
       }
 
-      const uniqueTasks = taskData.tasks.filter(
+      const uniqueTasks = unitData.tasks.filter(
         (task, index, self) =>
           index === self.findIndex((t) => t._id === task._id)
       );
 
       setTasks(uniqueTasks);
       setFilteredTasks(
-        uniqueTasks.filter((task) => task.completed === selectedStatus)
+        uniqueTasks.filter((task) => task.status === selectedStatus)
       );
-      setLoading(false);
     } catch (err) {
-      console.error("Error vid hämtning av tasks:", err.message);
       setError(err);
+    } finally {
       setLoading(false);
     }
   };
@@ -54,18 +53,16 @@ function TodoScreen() {
   }, [unitId]);
 
   useEffect(() => {
-    setFilteredTasks(tasks.filter((task) => task.completed === selectedStatus));
+    setFilteredTasks(tasks.filter((task) => task.status === selectedStatus));
   }, [selectedStatus, tasks]);
 
-  const filterTasks = (status) => {
-    setSelectedStatus(status);
-  };
+  const filterTasks = (status) => setSelectedStatus(status);
 
   const deleteHandle = async (id) => {
     try {
       await deleteTaskById(id);
-      const updatedTasks = tasks.filter((task) => task._id !== id);
-      setTasks(updatedTasks);
+      const updated = tasks.filter((task) => task._id !== id);
+      setTasks(updated);
     } catch (err) {
       console.log("Kunde inte ta bort task:", err.message);
     }
@@ -130,7 +127,7 @@ function TodoScreen() {
           <Text style={styles.addButtonText}>Ny todo</Text>
         </TouchableOpacity>
 
-        {/* List or Message */}
+        {/* Tasks */}
         {filteredTasks.length === 0 ? (
           <View style={styles.centered}>
             <Text style={styles.noTaskText}>
@@ -140,12 +137,12 @@ function TodoScreen() {
         ) : (
           <FlatList
             data={filteredTasks}
-            keyExtractor={(item) => `${item._id}-${item.title}`}
+            keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
               <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title}</Text>
-                <Text style={styles.taskStatus(item.completed)}>
-                  Status: {item.completed}
+                <Text style={styles.taskStatus(item.status)}>
+                  Status: {item.status}
                 </Text>
                 <Text>
                   <Text style={styles.bold}>Beskrivning:</Text>{" "}
@@ -167,7 +164,6 @@ function TodoScreen() {
                   </Text>
                 )}
 
-                {/* Action Buttons */}
                 <View style={styles.actionButtonsContainer}>
                   <TouchableOpacity onPress={() => editViewHandler(item._id)}>
                     <FontAwesome name="edit" size={20} color="green" />
@@ -191,14 +187,8 @@ function TodoScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    marginTop: 10,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 15,
-  },
+  safeArea: { flex: 1, marginTop: 10 },
+  container: { flex: 1, paddingHorizontal: 15 },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -212,18 +202,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  selectedButton: {
-    backgroundColor: "#84c276",
-  },
-  buttonText: {
-    fontSize: 14,
-    marginLeft: 8,
-    color: "#000",
-  },
-  iconWithText: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  selectedButton: { backgroundColor: "#84c276" },
+  buttonText: { fontSize: 14, marginLeft: 8, color: "#000" },
+  iconWithText: { flexDirection: "row", alignItems: "center" },
   addButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -249,20 +230,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
   },
-  taskTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
+  taskTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
   taskStatus: (status) => ({
     color:
       status === "Färdigt" ? "green" : status === "Påbörjat" ? "orange" : "red",
     fontWeight: "bold",
     marginBottom: 6,
   }),
-  bold: {
-    fontWeight: "bold",
-  },
+  bold: { fontWeight: "bold" },
   actionButtonsContainer: {
     flexDirection: "row",
     marginTop: 10,
@@ -278,10 +253,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     textAlign: "center",
   },
-  errorText: {
-    color: "red",
-    fontSize: 16,
-  },
+  errorText: { color: "red", fontSize: 16 },
 });
 
 export default TodoScreen;

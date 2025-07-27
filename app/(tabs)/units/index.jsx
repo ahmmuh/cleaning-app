@@ -66,6 +66,7 @@ function UnitScreen() {
           const chef = item?.users?.find((user) => user.role === "Chef");
           const specialister =
             item?.users?.filter((user) => user.role === "Specialist") || [];
+          const unitTasks = item?.tasks?.filter((task) => task);
 
           return (
             <View style={styles.card}>
@@ -113,16 +114,13 @@ function UnitScreen() {
                 onPress={() =>
                   router.push({
                     pathname: `/units/${item?._id}/tasks`,
-                    query: {
-                      unitId: item?._id,
-                      tasks: JSON.stringify(item?.tasks),
-                    },
+                    query: { unitId: item._id },
                   })
                 }>
                 <View style={styles.linkContent}>
                   <Ionicons name="list-outline" size={20} color="#1e40af" />
                   <Text style={styles.linkText}>
-                    Att göra ({item?.tasks?.length ?? 0})
+                    Att göra ({item?.tasks.length})
                   </Text>
                 </View>
               </Pressable>
@@ -132,17 +130,16 @@ function UnitScreen() {
                 style={styles.linkButton}
                 onPress={() =>
                   router.push({
-                    pathname: `/apartments`,
+                    pathname: `/units/${item?._id}/apartments`,
                     query: {
                       unitId: item?._id,
-                      apartments: JSON.stringify(item?.apartments),
                     },
                   })
                 }>
                 <View style={styles.linkContent}>
                   <Ionicons name="home-outline" size={20} color="#1e40af" />
                   <Text style={styles.linkText}>
-                    Flytstäd ({item?.apartments?.length ?? 0})
+                    Flyttstäd ({item?.apartments?.length})
                   </Text>
                 </View>
               </Pressable>
