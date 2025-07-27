@@ -9,13 +9,12 @@ function SpecialistScreen() {
   const { unitId } = useLocalSearchParams();
 
   const [specialister, setSpecialister] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchSpecialister = async () => {
     if (!unitId) return;
 
-    setLoading(true);
     try {
       const data = await getUnitByID(unitId);
       if (!data?.users) {
@@ -72,7 +71,7 @@ function SpecialistScreen() {
         <MainCard
           key={specialist._id}
           url="/units"
-          title={specialist.name}
+          role={specialist.role}
           name={specialist.name}
           email={specialist.email}
           phone={specialist.phone}

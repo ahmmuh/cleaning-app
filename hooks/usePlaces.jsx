@@ -11,6 +11,7 @@ function usePlaces() {
   const router = useRouter();
 
   const fetchPlaces = async (searchedTex) => {
+    setLoading(true);
     const tokenData = await AsyncStorage.getItem("userToken");
     const token = tokenData ? JSON.parse(tokenData)?.token : null;
     try {
@@ -19,17 +20,18 @@ function usePlaces() {
       console.log("Found places", results);
       setPlaces(results);
       setFilteredPlaces(results);
+      setLoading(false);
     } catch (error) {
       if (error.message === "Unauthorized") {
         router.replace("/auth");
       }
       console.error("Error vid sökning av platser", error.message);
-      setError(error);
-    } finally {
       setLoading(false);
+      setError(error);
     }
   };
   return {
+    loading,
     places,
     filteredPlaces,
     fetchPlaces,

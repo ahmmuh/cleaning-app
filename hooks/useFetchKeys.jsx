@@ -10,6 +10,7 @@ function useFetchKeys() {
   const router = useRouter();
 
   const fetchAllKeys = async () => {
+    setLoading(true);
     const tokenData = await AsyncStorage.getItem("userToken");
     const token = tokenData ? JSON.parse(tokenData)?.token : null;
     try {

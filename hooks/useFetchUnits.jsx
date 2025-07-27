@@ -10,6 +10,7 @@ function useFetchUnits() {
   const [error, setError] = useState(null);
   const router = useRouter();
   const getAllUnits = async () => {
+    setLoading(true);
     const tokenData = await AsyncStorage.getItem("userToken");
     const token = tokenData ? JSON.parse(tokenData)?.token : null;
     try {

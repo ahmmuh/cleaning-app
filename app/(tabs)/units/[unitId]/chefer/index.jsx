@@ -26,7 +26,6 @@ function ChefScreen() {
       return;
     }
 
-    setLoading(true);
     try {
       const chefData = await getUserById(chefId);
       if (!chefData) {
@@ -34,9 +33,9 @@ function ChefScreen() {
       }
 
       setChef(chefData);
+      setLoading(false);
     } catch (err) {
       setError(err);
-    } finally {
       setLoading(false);
     }
   };
@@ -72,7 +71,7 @@ function ChefScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <MainCard
-        title="Chef"
+        role={chef.role}
         name={chef.name}
         email={chef.email}
         phone={chef.phone}

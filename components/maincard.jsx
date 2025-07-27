@@ -55,11 +55,11 @@ import { Link } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-function MainCard({ url, title, name, email, phone, children }) {
+function MainCard({ url, title, role, name, email, phone, children }) {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardTitle}>Roll: {role}</Text>
 
         <View style={styles.infoRow}>
           <Text style={styles.label}>Namn:</Text>

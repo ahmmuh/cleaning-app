@@ -1,26 +1,30 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View, Alert } from "react-native";
 import useAuth from "../context/auth/useAuth";
+import { useRouter } from "expo-router";
 
 function LoginScreen() {
+  const router = useRouter();
   const { user, login } = useAuth();
-  // console.log("useAuth", useAuth());
+  const [loading, setLoading] = useState(false);
   const [logedUser, setUser] = useState({
     username: "",
     password: "",
   });
 
   const handleLogin = async () => {
+    setLoading(true);
     console.log("USER DATA", user);
     // const { username, password } = logedUser;
     const success = await login(logedUser);
-    console.log("Inloggningsuppgifter i LoginScreen", {
-      username: logedUser.username,
-      password: logedUser.password,
-    });
+    // console.log("Inloggningsuppgifter i LoginScreen", {
+    //   username: logedUser.username,
+    //   password: logedUser.password,
+    // });
     if (success) {
       console.log("Inloggning lyckades!");
-      // Navigera till annan sida om du använder React Navigation
+      setLoading(false);
+      router.push("/units");
     } else {
       Alert.alert("Fel", "Fel användarnamn eller lösenord");
     }
@@ -45,7 +49,11 @@ function LoginScreen() {
           secureTextEntry
         />
         <View style={styles.buttonWrapper}>
-          <Button title="Logga in" onPress={handleLogin} />
+          <Button
+            title={loading ? "Loggar" : "Logga in"}
+            disabled={loading}
+            onPress={handleLogin}
+          />
         </View>
       </View>
     </View>

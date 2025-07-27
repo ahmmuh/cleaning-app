@@ -12,7 +12,7 @@ const ApartmentLayout = () => {
         headerTitleStyle: {
           fontWeight: "bold",
         },
-        headerTitle: "Flytstäd",
+        headerTitle: "Flyttstäd",
         headerShown: true,
       }}>
       <Stack.Screen name="index" />

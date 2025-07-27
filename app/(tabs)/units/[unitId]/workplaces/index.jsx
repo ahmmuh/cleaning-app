@@ -25,10 +25,10 @@ function WorkPlaceScreen() {
         console.log("Inga arbetsplatser hittades");
       }
       setWorkplaces(workplaceList.workPlaces);
+      setLoading(false);
     } catch (error) {
       console.error("Fel vid hämtning av arbetsplatser", error.message);
       setError(error);
-    } finally {
       setLoading(false);
     }
   };

@@ -4,11 +4,9 @@ import LoginScreen from "./auth";
 import { Text, View } from "react-native";
 import AuthProvider from "./context/auth/AuthProvider";
 import useAuth from "./context/auth/useAuth";
+import { ActivityIndicator } from "react-native-web";
 
 export default function RootLayout() {
-
-
-  
   return (
     <AuthProvider>
       <LayoutContent />
@@ -17,7 +15,20 @@ export default function RootLayout() {
 }
 
 const LayoutContent = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <ActivityIndicator size={30} color="green" />
+      </View>
+    );
+  }
   return (
     <>
       <ToastManager />

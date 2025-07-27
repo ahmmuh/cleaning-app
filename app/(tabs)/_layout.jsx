@@ -17,7 +17,7 @@ function TabLayout() {
           flexDirection: "row",
           justifyContent: "space-between",
         },
-        tabBarScrollEnabled: true, // Gör tabbarna scrollbara horisontellt
+        tabBarScrollEnabled: true, 
       }}>
       <Tabs.Screen
         name="index"

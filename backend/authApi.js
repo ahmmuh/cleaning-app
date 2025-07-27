@@ -1,4 +1,4 @@
-import { fetchWithAuth } from "../app/lib/fetchWithAuth";
+import fetchWithAuth from "../app/lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 export const signUp = async (user) => {
