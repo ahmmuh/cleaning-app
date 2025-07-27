@@ -294,7 +294,7 @@
 // import { fetchWithAuth } from "@/app/lib/fetchWithAuth";
 // import { BASE_URL } from "./base_url";
 
-import { fetchWithAuth } from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../app/lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 // export const createUnit = async (newUnit) => {
 //   try {
@@ -644,7 +644,7 @@ import { BASE_URL } from "./base_url";
 // CREATE UNIT
 export const createUnit = async (newUnit) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/units`, {
+    const data = await FetchWithAuth(`${BASE_URL}/units`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -661,7 +661,7 @@ export const createUnit = async (newUnit) => {
 // GET UNITS
 export const getUnits = async () => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/units`);
+    const data = await FetchWithAuth(`${BASE_URL}/units`);
     return data;
   } catch (error) {
     console.error("Error fetching units:", error.message);
@@ -672,7 +672,7 @@ export const getUnits = async () => {
 // GET UNIT BY ID
 export const getUnitByID = async (unitId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/units/${unitId}`);
+    const data = await FetchWithAuth(`${BASE_URL}/units/${unitId}`);
     return data;
   } catch (error) {
     console.error("Error fetching unit by ID:", error.message);
@@ -683,7 +683,7 @@ export const getUnitByID = async (unitId) => {
 // GET WORKPLACE
 export const getWorkplace = async (unitId, workplaceId) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/workplaces/${workplaceId}`
     );
     return data;
@@ -696,7 +696,7 @@ export const getWorkplace = async (unitId, workplaceId) => {
 // ADD SPECIALIST
 export const addSpecialistToUnit = async (unitId, newSpecialist) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/specialister`,
       {
         method: "PUT",
@@ -716,7 +716,7 @@ export const addSpecialistToUnit = async (unitId, newSpecialist) => {
 // UPDATE SPECIALIST
 export const updateSpecialist = async (unitId, specialistId, newSpecialist) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/specialister/${specialistId}`,
       {
         method: "PUT",
@@ -736,7 +736,7 @@ export const updateSpecialist = async (unitId, specialistId, newSpecialist) => {
 // DELETE SPECIALIST
 export const deleteSpecialist = async (unitId, specialistId) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/specialister/${specialistId}`,
       {
         method: "DELETE",
@@ -752,7 +752,7 @@ export const deleteSpecialist = async (unitId, specialistId) => {
 // DELETE WORKPLACE
 export const deleteWorkplace = async (unitId, workplaceId) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/workplaces/${workplaceId}`,
       {
         method: "DELETE",
@@ -768,7 +768,7 @@ export const deleteWorkplace = async (unitId, workplaceId) => {
 // UPDATE USER
 export const updateUser = async (userId, updatedUser) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/users/${userId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/users/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -785,7 +785,7 @@ export const updateUser = async (userId, updatedUser) => {
 // ADD CHEF
 export const addChefToUnit = async (unitId, newChef) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/units/${unitId}/chefer`, {
+    const data = await FetchWithAuth(`${BASE_URL}/units/${unitId}/chefer`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -802,7 +802,7 @@ export const addChefToUnit = async (unitId, newChef) => {
 // DELETE CHEF
 export const deleteChef = async (unitId, chefId) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/chefer/${chefId}`,
       {
         method: "DELETE",
@@ -820,7 +820,7 @@ export const searchUnits = async (query) => {
   if (!query.trim()) return [];
 
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/units/search?name=${query}`);
+    const data = await FetchWithAuth(`${BASE_URL}/units/search?name=${query}`);
     return data.data;
   } catch (error) {
     if (error.message.includes("404")) return [];

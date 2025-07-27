@@ -21,6 +21,10 @@ export const signUp = async (user) => {
   }
 };
 
+export const testHandler = async () => {
+  console.log("TESING FUNCTION IS RUNNING");
+};
+
 export const signIn = async (user) => {
   try {
     const res = await fetch(`${BASE_URL}/users/auth/login`, {
@@ -34,7 +38,7 @@ export const signIn = async (user) => {
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(`${res.message} || Failed to login`);
+      throw new Error(`${data?.message} || Failed to login`);
     }
     console.log("User Data", user);
     return data;

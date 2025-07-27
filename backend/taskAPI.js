@@ -104,13 +104,13 @@
 // };
 
 //Code från nextjs (TASK API)
-import { fetchWithAuth } from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../app/lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 // Add new task to unit
 export const addNewTask = async (newTask) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/tasks/add`, {
+    const data = await FetchWithAuth(`${BASE_URL}/tasks/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -130,7 +130,7 @@ export const addNewTask = async (newTask) => {
 
 export const getUnitTasks = async (unitId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/units/${unitId}/tasks`);
+    const data = await FetchWithAuth(`${BASE_URL}/units/${unitId}/tasks`);
     console.log("Hämtat tasks från servern ", data);
     return data;
   } catch (error) {
@@ -142,7 +142,7 @@ export const getUnitTasks = async (unitId) => {
 
 export const getAllTasks = async () => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/tasks`);
+    const data = await FetchWithAuth(`${BASE_URL}/tasks`);
     console.log("Hämtat tasks från servern ", data);
     return data;
   } catch (error) {
@@ -155,7 +155,7 @@ export const getAllTasks = async () => {
 // Tilldela task med Barre
 export const assignTaskToUnit = async (unitId, taskId, assignedTask) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/tasks/${taskId}/assign`,
       {
         method: "PATCH",
@@ -177,7 +177,7 @@ export const assignTaskToUnit = async (unitId, taskId, assignedTask) => {
 // Update task
 export const updateTask = async (taskId, newTask) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/tasks/${taskId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/tasks/${taskId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -196,7 +196,7 @@ export const updateTask = async (taskId, newTask) => {
 // GET TASK STATUS
 export const getTaskStatuses = async (unitId) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/units/${unitId}/tasks/statuses`
     );
     return data;
@@ -210,7 +210,7 @@ export const getTaskStatuses = async (unitId) => {
 // DELETE TASK
 export const deleteTask = async (taskId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/tasks/${taskId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/tasks/${taskId}`, {
       method: "DELETE",
     });
     console.log(`Task deleted: ${data.message}`);
@@ -226,7 +226,7 @@ export const deleteTask = async (taskId) => {
 export const searchTasks = async (query) => {
   if (!query.trim()) return [];
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/tasks/search?title=${query}`);
+    const data = await FetchWithAuth(`${BASE_URL}/tasks/search?title=${query}`);
     return data || [];
   } catch (error) {
     if (error.message.includes("401")) return "unauthorized";

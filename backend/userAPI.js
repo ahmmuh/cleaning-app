@@ -41,12 +41,12 @@
 
 //COde från nextjs (USER API)
 
-import { fetchWithAuth } from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../app/lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 export const getUserById = async (userId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/users/${userId}`);
+    const data = await FetchWithAuth(`${BASE_URL}/users/${userId}`);
     // console.log("Hämtat USER data i getUserById: ", data);
     return data;
   } catch (error) {
@@ -61,7 +61,7 @@ export const getUserById = async (userId) => {
 // Delete user:
 export const deleteUser = async (userId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/users/${userId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/users/${userId}`, {
       method: "DELETE",
     });
     return data;
@@ -75,7 +75,7 @@ export const deleteUser = async (userId) => {
 export const searchUsers = async (query) => {
   if (!query.trim()) return [];
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/users/search?name=${query}`);
+    const data = await FetchWithAuth(`${BASE_URL}/users/search?name=${query}`);
     return data.data || [];
   } catch (error) {
     if (error.message.includes("401")) return "unauthorized";

@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { getAllApartments } from "../backend/apartmentAPI";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
+import { getApartments } from "../backend/apartmentAPI";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function useFetchApartment() {
   const [apartments, setApartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
@@ -14,8 +16,10 @@ function useFetchApartment() {
   );
 
   const fetchAllApartments = async () => {
+    const tokenData = await AsyncStorage.getItem("userToken");
+    const token = tokenData ? JSON.parse(tokenData)?.token : null;
     try {
-      const apartmentList = await getAllApartments();
+      const apartmentList = await getApartments();
 
       if (!Array.isArray(apartmentList)) {
         throw new Error("Felaktig data, apartmentList är inte en array");
@@ -25,10 +29,14 @@ function useFetchApartment() {
         return;
       }
       setApartments(apartmentList);
-      setLoading(false);
     } catch (error) {
-      console.error("Error vid hämtning av apartmentList");
+      if (error.message === "Unauthorized") {
+        router.replace("/auth");
+      } else {
+        console.error("Fel vid hämtning av apartmentList:", error);
+      }
       setError(error);
+    } finally {
       setLoading(false);
     }
   };

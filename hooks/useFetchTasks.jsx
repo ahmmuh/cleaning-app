@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { getAllTasks } from "../backend/taskAPI";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function useFetchTasks() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   //Lägg liknande till alla för att uppdatera listor hela tiden
   useFocusEffect(
@@ -15,6 +17,8 @@ function useFetchTasks() {
   );
 
   const fetchAllTasks = async () => {
+    const tokenData = await AsyncStorage.getItem("userToken");
+    const token = tokenData ? JSON.parse(tokenData)?.token : null;
     try {
       const taskList = await getAllTasks();
 
@@ -25,10 +29,13 @@ function useFetchTasks() {
         console.log("Det finns inga taskList att visa");
       }
       setTasks(taskList);
-      setLoading(false);
     } catch (error) {
-      console.error("Error vid hämtning av taskList");
+      if (error.message === "Unauthorized") {
+        router.replace("/auth");
+      }
+      console.error("Error vid hämtning av todo lista");
       setError(error);
+    } finally {
       setLoading(false);
     }
   };

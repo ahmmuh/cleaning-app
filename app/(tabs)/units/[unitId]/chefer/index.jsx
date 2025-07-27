@@ -1,66 +1,163 @@
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+} from "react-native";
 import { getChefByID, getUnitByID } from "../../../../../backend/api";
-import Card from "../../../../../components/card";
-import { Button } from "react-native";
-import MainLink from "../../../../../components/link";
 import MainCard from "../../../../../components/maincard";
-import BackButton from "../../../../../components/backButton";
+import { getUserById } from "../../../../../backend/userAPI";
 
 function ChefScreen() {
-  const [chef, setChef] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const router = useRouter();
   const { chefId, unitId } = useLocalSearchParams();
-  console.log("chefID", chefId);
-  console.log("Current URL:", router.asPath); // Loggar nuvarande URL för att kolla att query-parametern finns
+
+  const [chef, setChef] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchChef = async () => {
+    if (!unitId || !chefId) {
+      setError(new Error("Saknar unitId eller chefId"));
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     try {
-      const chefData = await getChefByID(unitId, chefId);
+      const chefData = await getUserById(chefId);
       if (!chefData) {
-        throw new Error("Chef data not found");
+        throw new Error("Kunde inte hitta chefens data");
       }
-      console.log("Chef data in chef component", chefData);
 
       setChef(chefData);
-      setLoading(false);
-    } catch (error) {
-      setError(error);
+    } catch (err) {
+      setError(err);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (chefId) {
-      fetchChef();
-    }
-  }, [chefId]);
+    fetchChef();
+  }, [chefId, unitId]);
 
-  if (loading)
+  if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color="#4dd" />
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#4dd" />
       </View>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>{error.message}</Text>
+      <View style={styles.center}>
+        <Text style={{ color: "red" }}>{error.message}</Text>
       </View>
     );
+  }
+
+  if (!chef) {
+    return (
+      <View style={styles.center}>
+        <Text style={{ color: "gray" }}>Ingen chef hittades</Text>
+      </View>
+    );
+  }
+
   return (
-    <MainCard
-      title={"Chef"}
-      name={chef.name}
-      email={chef.email}
-      phone={chef.phone}>
-      {/* <BackButton onPress={() => router.navigate("/units")} /> */}
-    </MainCard>
+    <ScrollView contentContainerStyle={styles.container}>
+      <MainCard
+        title="Chef"
+        name={chef.name}
+        email={chef.email}
+        phone={chef.phone}
+        url="/units"
+      />
+    </ScrollView>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
 export default ChefScreen;
+
+// import { Link, useLocalSearchParams, useRouter } from "expo-router";
+// import { useEffect, useState } from "react";
+// import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+// import { getChefByID, getUnitByID } from "../../../../../backend/api";
+// import Card from "../../../../../components/card";
+// import { Button } from "react-native";
+// import MainLink from "../../../../../components/link";
+// import MainCard from "../../../../../components/maincard";
+// import BackButton from "../../../../../components/backButton";
+
+// function ChefScreen() {
+//   const [chef, setChef] = useState({});
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const router = useRouter();
+//   const { chefId, unitId } = useLocalSearchParams();
+//   console.log("chefID", chefId);
+//   console.log("Current URL:", router.asPath); // Loggar nuvarande URL för att kolla att query-parametern finns
+
+//   const fetchChef = async () => {
+//     try {
+//       const chefData = await getChefByID(unitId, chefId);
+//       if (!chefData) {
+//         throw new Error("Chef data not found");
+//       }
+//       console.log("Chef data in chef component", chefData);
+
+//       setChef(chefData);
+//       setLoading(false);
+//     } catch (error) {
+//       setError(error);
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (chefId) {
+//       fetchChef();
+//     }
+//   }, [chefId]);
+
+//   if (loading)
+//     return (
+//       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+//         <ActivityIndicator size={"large"} color="#4dd" />
+//       </View>
+//     );
+
+//   if (error)
+//     return (
+//       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+//         <Text>{error.message}</Text>
+//       </View>
+//     );
+//   return (
+//     <MainCard
+//       title={"Chef"}
+//       name={chef.name}
+//       email={chef.email}
+//       phone={chef.phone}>
+//       {/* <BackButton onPress={() => router.navigate("/units")} /> */}
+//     </MainCard>
+//   );
+// }
+
+// export default ChefScreen;

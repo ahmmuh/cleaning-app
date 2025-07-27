@@ -177,13 +177,13 @@
 
 //COde från nextjs (KEY API)
 
-import { fetchWithAuth } from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../app/lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 // key with QR Code
 export const registerNewKey = async (newKey) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/keys/qrcode`, {
+    const data = await FetchWithAuth(`${BASE_URL}/keys/qrcode`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -201,7 +201,7 @@ export const registerNewKey = async (newKey) => {
 
 export const createNewKey = async (newKey) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/keys/add`, {
+    const data = await FetchWithAuth(`${BASE_URL}/keys/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -219,7 +219,7 @@ export const createNewKey = async (newKey) => {
 
 export const getAllKeys = async () => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/keys`);
+    const data = await FetchWithAuth(`${BASE_URL}/keys`);
     return data;
   } catch (error) {
     if (error.message.includes("401")) return "unauthorized";
@@ -231,7 +231,7 @@ export const getAllKeys = async () => {
 // Låna ut nyckel
 export const checkoutKey = async (userId, keyId) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/keys/${keyId}/${userId}/checkout`,
       {
         method: "PATCH",
@@ -252,7 +252,7 @@ export const checkoutKey = async (userId, keyId) => {
 // Lämna nyckel tillbaka
 export const checkinKey = async (userId, keyId) => {
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/keys/${keyId}/${userId}/checkin`,
       {
         method: "PATCH",
@@ -273,7 +273,7 @@ export const checkinKey = async (userId, keyId) => {
 // Nyckel historik
 export const getKeyLogs = async () => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/logs`);
+    const data = await FetchWithAuth(`${BASE_URL}/logs`);
     return data;
   } catch (error) {
     if (error.message.includes("401")) return "unauthorized";
@@ -285,7 +285,7 @@ export const getKeyLogs = async () => {
 // Get one key by its ID
 export const getKeyByID = async (keyId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/keys/${keyId}`);
+    const data = await FetchWithAuth(`${BASE_URL}/keys/${keyId}`);
     console.log("Hämtat KEY data från servern ", data);
     return data;
   } catch (error) {
@@ -298,7 +298,7 @@ export const getKeyByID = async (keyId) => {
 // Update key
 export const updateKey = async (keyID, updatedKey) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/keys/${keyID}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/keys/${keyID}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -319,7 +319,7 @@ export const updateKey = async (keyID, updatedKey) => {
 // Delete key (Nyckel)
 export const deleteKey = async (keyId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/keys/${keyId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/keys/${keyId}`, {
       method: "DELETE",
     });
     console.log(`Key (nyckel) deleted: ${data.message}`);
@@ -335,7 +335,7 @@ export const deleteKey = async (keyId) => {
 export const searchKeys = async (query) => {
   if (!query.trim()) return [];
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/keys/search?keyLabel=${query}`
     );
     return data.data || [];

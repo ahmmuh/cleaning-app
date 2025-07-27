@@ -1,6 +1,6 @@
 // import { BASE_URL } from "./base_url";
 
-import { fetchWithAuth } from "../app/lib/fetchWithAuth";
+import fetchWithAuth from "../app/lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 // export const getAllApartments = async () => {
@@ -225,7 +225,6 @@ export const createApartment = async (newApartment) => {
   }
 };
 
-// ✅ Hämta alla lägenheter
 export const getApartments = async () => {
   try {
     const data = await fetchWithAuth(`${BASE_URL}/apartments`, {
@@ -240,7 +239,6 @@ export const getApartments = async () => {
   }
 };
 
-// ✅ Hämta lägenhet via ID
 export const getApartmentByID = async (apartmentId) => {
   try {
     const data = await fetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
@@ -255,7 +253,6 @@ export const getApartmentByID = async (apartmentId) => {
   }
 };
 
-// ✅ Uppdatera lägenhet
 export const updateApartment = async (apartmentId, updatedApartment) => {
   try {
     const data = await fetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
@@ -274,7 +271,6 @@ export const updateApartment = async (apartmentId, updatedApartment) => {
   }
 };
 
-// ✅ Ta bort lägenhet
 export const deleteApartment = async (apartmentId) => {
   try {
     const data = await fetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
@@ -288,7 +284,6 @@ export const deleteApartment = async (apartmentId) => {
   }
 };
 
-// ✅ Sök lägenheter
 export const searchApartments = async (query) => {
   if (!query.trim()) return [];
 

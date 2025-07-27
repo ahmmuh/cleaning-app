@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { getAllKeys } from "../backend/keyAPI";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function useFetchKeys() {
   const [keys, setKeys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   const fetchAllKeys = async () => {
+    const tokenData = await AsyncStorage.getItem("userToken");
+    const token = tokenData ? JSON.parse(tokenData)?.token : null;
     try {
       const keyList = await getAllKeys();
 
@@ -18,10 +23,14 @@ function useFetchKeys() {
         return;
       }
       setKeys(keyList);
-      setLoading(false);
     } catch (error) {
-      console.error("Error vid hämtning av keys");
+      if (error.message === "Unauthorized") {
+        router.replace("/auth");
+      } else {
+        console.error("Fel vid hämtning av nycklar:", error);
+      }
       setError(error);
+    } finally {
       setLoading(false);
     }
   };

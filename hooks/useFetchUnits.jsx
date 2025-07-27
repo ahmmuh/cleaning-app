@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { getUnits } from "../backend/api";
 import { getApartments } from "../backend/apartmentAPI";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function useFetchUnits() {
   const [units, setUnits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const router = useRouter();
   const getAllUnits = async () => {
+    const tokenData = await AsyncStorage.getItem("userToken");
+    const token = tokenData ? JSON.parse(tokenData)?.token : null;
     try {
       const unitList = await getUnits();
 
@@ -19,10 +23,13 @@ function useFetchUnits() {
         return;
       }
       setUnits(unitList);
-      setLoading(false);
     } catch (error) {
+      if (error.message === "Unauthorized") {
+        router.replace("/auth");
+      }
       console.error("Error vid hämtning av enheter");
       setError(error);
+    } finally {
       setLoading(false);
     }
   };

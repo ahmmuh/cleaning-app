@@ -1,10 +1,15 @@
-export const fetchWithAuth = async (url, options = {}) => {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const FetchWithAuth = async (url, options = {}) => {
+  const token = await AsyncStorage.getItem("userToken");
+
   const mergedOptions = {
     ...options,
     credentials: "include",
     headers: {
       ...options.headers,
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   };
 
@@ -12,9 +17,7 @@ export const fetchWithAuth = async (url, options = {}) => {
     const res = await fetch(url, mergedOptions);
 
     if (res.status === 401) {
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
-      }
+      await AsyncStorage.removeItem("userToken");
       throw new Error("Unauthorized");
     }
 
@@ -24,3 +27,5 @@ export const fetchWithAuth = async (url, options = {}) => {
     throw error;
   }
 };
+
+export default FetchWithAuth;
