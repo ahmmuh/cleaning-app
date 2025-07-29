@@ -75,8 +75,15 @@ function ChefScreen() {
         name={chef.name}
         email={chef.email}
         phone={chef.phone}
-        url="/units"
-      />
+        url="/units">
+        <View style={{ flex: 1 }}>
+          {chef.keys.length > 0 && (
+            <Text style={{ color: "red" }}>
+              Du har ({chef?.keys.length}) nycklar, vänligen lämna in
+            </Text>
+          )}
+        </View>
+      </MainCard>
     </ScrollView>
   );
 }
