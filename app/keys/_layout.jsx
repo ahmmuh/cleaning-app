@@ -6,21 +6,24 @@ function KeyLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
         tabBarActiveTintColor: "#003366",
-        headerShown: true,
         headerStyle: {
           backgroundColor: "#bff38c",
         },
 
         headerTitleStyle: "bold",
-        headerShown: false,
       }}>
       <Stack.Screen
         name="index"
         options={{
           headerTitle: "Nycklar",
           headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="[keyId]/index"
+        options={{
+          headerTitle: "Uppdatera Nyckel",
         }}
       />
     </Stack>

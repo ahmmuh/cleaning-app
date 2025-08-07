@@ -29,21 +29,29 @@ function KeyItem({ item }) {
           <Text style={styles.detail}>Lånetagare: {item.borrowedBy.name}</Text>
         )}
 
+        <Text style={[styles.status, { color: statusColor }]}>
+          Status: {getStatusLabel(item.status)}
+        </Text>
+
         {normalizeStatus(item.status) === "checked-out" && item.borrowedAt && (
           <Text style={styles.detail}>
-            Utlånat: {new Date(item.borrowedAt).toLocaleDateString("sv-SE")}
+            Senast ändrad:{" "}
+            {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
           </Text>
         )}
 
         {normalizeStatus(item.status) === "returned" && item.returnedAt && (
           <Text style={styles.detail}>
-            Inlämnat: {new Date(item.returnedAt).toLocaleDateString("sv-SE")}
+            Senast ändrad:{" "}
+            {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
           </Text>
         )}
 
-        <Text style={[styles.status, { color: statusColor }]}>
-          Status: {getStatusLabel(item.status)}
-        </Text>
+        {normalizeStatus(item.status) === "available" && (
+          <Text style={styles.detail}>
+            Skapad: {new Date(item.createdAt).toLocaleDateString("sv-SE")}
+          </Text>
+        )}
       </Pressable>
     </View>
   );

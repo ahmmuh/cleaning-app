@@ -1,21 +1,5 @@
 // import { BASE_URL } from "./base_url";
 
-// export const getUsers = async () => {
-//   try {
-//     const res = await fetch(`${BASE_URL}/users`);
-//     if (!res.ok) {
-//       throw new Error(`HTTP Error! status: ${res.status}`);
-//     }
-//     const data = await res.json();
-//     console.log("users data from getUsers() ", data);
-//     return data;
-//   } catch (error) {
-//     if (error instanceof Error)
-//       console.error("Error fetching users,", error.message);
-//     return null;
-//   }
-// };
-
 // //En användare
 
 // export const getUserByID = async (userId) => {
@@ -44,6 +28,17 @@
 import FetchWithAuth from "../app/lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
+export const getUsers = async () => {
+  try {
+    const data = await FetchWithAuth(`${BASE_URL}/users`);
+    console.log("users data from getUsers() ", data);
+    return data;
+  } catch (error) {
+    if (error instanceof Error)
+      console.error("Error fetching users,", error.message);
+    return null;
+  }
+};
 export const getUserById = async (userId) => {
   try {
     const data = await FetchWithAuth(`${BASE_URL}/users/${userId}`);

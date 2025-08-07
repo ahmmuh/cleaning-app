@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { getUnitByID } from "../../../../../backend/api";
-import { deleteTaskById } from "../../../../../backend/taskAPI";
+// import { deleteTaskById } from "../../../../../backend/taskAPI";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 function TodoScreen() {
@@ -58,15 +58,15 @@ function TodoScreen() {
 
   const filterTasks = (status) => setSelectedStatus(status);
 
-  const deleteHandle = async (id) => {
-    try {
-      await deleteTaskById(id);
-      const updated = tasks.filter((task) => task._id !== id);
-      setTasks(updated);
-    } catch (err) {
-      console.log("Kunde inte ta bort task:", err.message);
-    }
-  };
+  // const deleteHandle = async (id) => {
+  //   try {
+  //     await deleteTaskById(id);
+  //     const updated = tasks.filter((task) => task._id !== id);
+  //     setTasks(updated);
+  //   } catch (err) {
+  //     console.log("Kunde inte ta bort task:", err.message);
+  //   }
+  // };
 
   const addViewHandler = () => {
     router.push(`/units/${unitId}/tasks/addTask`);
@@ -141,40 +141,34 @@ function TodoScreen() {
             renderItem={({ item }) => (
               <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title}</Text>
-                <Text style={styles.taskStatus(item.status)}>
-                  Status: {item.status}
-                </Text>
+
                 <Text>
                   <Text style={styles.bold}>Beskrivning:</Text>{" "}
                   {item.description}
                 </Text>
                 <Text>
-                  <Text style={styles.bold}>Adress:</Text> {item.location}
+                  <Text style={styles.bold}>Adress:</Text> {item.adress}
                 </Text>
-                {item.skapad && (
-                  <Text>
-                    <Text style={styles.bold}>Skapad:</Text>{" "}
-                    {new Date(item.skapad).toLocaleDateString()}
-                  </Text>
-                )}
-                {item.Uppdaterats && (
+                <Text style={styles.taskStatus(item.status)}>
+                  Status: {item.status}
+                </Text>
+                {item.status === "Påbörjat" && (
                   <Text>
                     <Text style={styles.bold}>Senast ändrad:</Text>{" "}
-                    {new Date(item.Uppdaterats).toLocaleDateString()}
+                    {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
+                  </Text>
+                )}
+
+                {item.status === "Ej påbörjat" && (
+                  <Text>
+                    <Text style={styles.bold}>Skapad:</Text>{" "}
+                    {new Date(item.createdAt).toLocaleDateString("sv-SE")}
                   </Text>
                 )}
 
                 <View style={styles.actionButtonsContainer}>
                   <TouchableOpacity onPress={() => editViewHandler(item._id)}>
                     <FontAwesome name="edit" size={20} color="green" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => deleteHandle(item._id)}>
-                    <FontAwesome
-                      name="trash"
-                      size={20}
-                      color="red"
-                      style={{ marginLeft: 20 }}
-                    />
                   </TouchableOpacity>
                 </View>
               </View>

@@ -27,14 +27,10 @@ const ApartmentItem = ({ item }) => {
         </Text>
         <Text style={styles.detail}>
           <Icon name="exclamation-circle" size={14} color="#d97706" />{" "}
-          <Text style={styles.priority}>{item.priority}</Text>
+          <Text style={styles.priority}>Prioritet: {item.priority}</Text>
         </Text>
 
-        <Text style={[styles.status, getStatusStyle(item.status)]}>
-          <Icon name="info-circle" size={14} /> {item.status}
-        </Text>
-
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.description}>{item.description} </Text>
 
         <Text style={styles.date}>
           <Icon name="calendar" size={13} /> Start:{" "}
@@ -44,6 +40,20 @@ const ApartmentItem = ({ item }) => {
           <Icon name="calendar-check-o" size={13} /> Slut:{" "}
           {new Date(item.endDate).toLocaleDateString("sv-SE")}
         </Text>
+        <Text style={[styles.status, getStatusStyle(item.status)]}>
+          <Icon name="info-circle" size={14} /> {item.status}
+        </Text>
+        {item.status === "Ej påbörjat" && (
+          <Text>
+            Skapad: {new Date(item.createdAt).toLocaleDateString("sv-SE")}
+          </Text>
+        )}
+        {(item.status === "Påbörjat" || item.status === "Färdigt") && (
+          <Text>
+            Senast ändrad:{" "}
+            {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
+          </Text>
+        )}
       </View>
     </Pressable>
   );

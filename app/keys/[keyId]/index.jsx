@@ -5,13 +5,17 @@ import { checkinKey, checkoutKey, getKeyByID } from "../../../backend/keyAPI";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesome } from "@expo/vector-icons";
 import ToastManager, { Toast } from "toastify-react-native";
-import useFetchUsers from "../../../hooks/useFetchUsers";
 import { displayError, displaySuccess } from "../../../utils/toastService";
-import QRCodePage from "../../../myStorage/qrCode";
+import useFetchUser from "../../../hooks/useFetchCurrentUser";
 
 function KeyDetail() {
   const { keyId } = useLocalSearchParams();
+  const router = useRouter();
   const [key, setKey] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState("");
+
+  const { user, loading, error } = useFetchUser();
 
   const keyStatusar = [
     { label: "Inlämnad", value: "returned" },
@@ -19,11 +23,11 @@ function KeyDetail() {
     { label: "Tillgänglig", value: "available" },
   ];
 
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const { users, loading, error } = useFetchUsers();
-  const [selectedUserId, setSelectedUserId] = useState("");
-
-  const router = useRouter();
+  useEffect(() => {
+    if (user) {
+      setSelectedUserId(user._id); // sätt inloggad användare direkt
+    }
+  }, [user]);
 
   const fetchKey = async () => {
     try {
@@ -34,7 +38,7 @@ function KeyDetail() {
       }
       setKey(keyData);
       setSelectedStatus(keyData.status || "");
-      setSelectedUserId(keyData.borrowedBy ? keyData.borrowedBy._id : "");
+      setSelectedUserId(user?._id || "");
     } catch (err) {
       console.error("Kunde inte hämta key:", err);
       displayError("Vi kunde inte hämta nyckeln");
@@ -42,56 +46,11 @@ function KeyDetail() {
   };
 
   useEffect(() => {
-    if (keyId) {
+    if (keyId && user) {
       fetchKey();
     }
-  }, [keyId]);
+  }, [keyId, user]);
 
-  // const isActionsValid = () => {
-  //   const isCheckingOut =
-  //     selectedStatus === "checked-out" && key.status === "returned";
-
-  //   const isCheckingIn =
-  //     selectedStatus === "returned" &&
-  //     key.status === "checked-out" &&
-  //     key.borrowedBy?._id === selectedUserId;
-
-  //   return isCheckingOut || isCheckingIn;
-  // };
-
-  // const changeStatus = async () => {
-  //   const selectedUser = users.find((u) => u._id === selectedUserId);
-  //   try {
-  //     if (selectedStatus === "checked-out") {
-  //       if (!selectedUserId) {
-  //         Toast.error("Välj en användare att låna ut till.");
-  //         return;
-  //       }
-  //       await checkoutKey(selectedUser.userType, selectedUserId, keyId);
-  //       Toast.success("Nyckeln har lånats ut.");
-  //     } else if (
-  //       selectedStatus === "returned" ||
-  //       selectedStatus === "available"
-  //     ) {
-  //       if (key.status !== "checked-out") {
-  //         Toast.error("Nyckeln är inte utlånad, kan inte lämnas in.");
-  //         return;
-  //       }
-
-  //       if (key.borrowedBy?._id !== selectedUserId) {
-  //         Toast.error("Vald användare matchar inte nuvarande lånetagare.");
-  //         return;
-  //       }
-  //       await checkinKey(key.borrowedBy.userType, key.borrowedBy._id, keyId);
-  //       Toast.success("Nyckeln har lämnats in.");
-  //     }
-
-  //     router.push("/keys");
-  //   } catch (err) {
-  //     console.error("Fel vid statusändring:", err);
-  //     Toast.error("Ett fel uppstod vid uppdatering.");
-  //   }
-  // };
   const isActionsValid = () => {
     const isCheckingOut =
       selectedStatus === "checked-out" &&
@@ -106,8 +65,6 @@ function KeyDetail() {
   };
 
   const changeStatus = async () => {
-    const selectedUser = users.find((u) => u._id === selectedUserId);
-
     try {
       if (selectedStatus === "checked-out") {
         if (!selectedUserId) {
@@ -122,7 +79,7 @@ function KeyDetail() {
           return;
         }
 
-        await checkoutKey(selectedUser.userType, selectedUserId, keyId);
+        await checkoutKey(user.role, user._id, keyId);
         displaySuccess("Nyckeln har lånats ut.");
       } else if (selectedStatus === "returned") {
         if (key.status !== "checked-out") {
@@ -135,7 +92,7 @@ function KeyDetail() {
           return;
         }
 
-        await checkinKey(key.borrowedBy.userType, key.borrowedBy._id, keyId);
+        await checkinKey(user.role, user._id, keyId);
         displaySuccess("Nyckeln har lämnats in.");
       }
 
@@ -154,18 +111,10 @@ function KeyDetail() {
     );
   }
 
-  if (!key) {
+  if (!key || loading) {
     return (
       <View style={styles.container}>
         <Text style={styles.loadingText}>Laddar nyckeldetaljer...</Text>
-      </View>
-    );
-  }
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
       </View>
     );
   }
@@ -202,19 +151,19 @@ function KeyDetail() {
           {key.status === "checked-out" && (
             <>
               <FontAwesome name="calendar" color="gray" size={20} /> Lånedatum:{" "}
-              {new Date(key.borrowedAt).toDateString()}
+              {new Date(key.borrowedAt).toLocaleDateString("sv-SE")}
             </>
           )}
           {key.status === "returned" && (
             <>
               <FontAwesome name="calendar" color="green" size={20} /> Inlämnad:{" "}
-              {new Date(key.returnedAt).toDateString()}
+              {new Date(key.returnedAt).toLocaleDateString("sv-SE")}
             </>
           )}
           {key.status === "available" && (
             <>
               <FontAwesome name="calendar" color="green" size={20} /> Skapad:{" "}
-              {new Date(key.createdAt).toLocaleDateString()}
+              {new Date(key.createdAt).toLocaleDateString("sv-SE")}
             </>
           )}
         </Text>
@@ -227,14 +176,16 @@ function KeyDetail() {
         </Text>
 
         <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Välj Lånetagare:</Text>
+          <Text style={styles.pickerLabel}>Lånetagare:</Text>
           <Picker
             style={styles.picker}
             selectedValue={selectedUserId}
+            enabled={false}
             onValueChange={(value) => setSelectedUserId(value)}>
-            {users.map((user) => (
-              <Picker.Item key={user._id} label={user.name} value={user._id} />
-            ))}
+            <Picker.Item
+              label={user?.name || "Inloggad användare"}
+              value={user?._id}
+            />
           </Picker>
         </View>
 
@@ -253,13 +204,7 @@ function KeyDetail() {
             ))}
           </Picker>
 
-          <TouchableOpacity
-            style={[
-              styles.updateButton,
-              !isActionsValid() && { backgroundColor: "#ccc" },
-            ]}
-            onPress={changeStatus}
-            disabled={!isActionsValid()}>
+          <TouchableOpacity style={styles.updateButton} onPress={changeStatus}>
             <Text style={styles.buttonTitle}>{getButtonLabel(key.status)}</Text>
           </TouchableOpacity>
         </View>
