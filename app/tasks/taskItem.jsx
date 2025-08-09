@@ -24,26 +24,26 @@ function TaskItem({ item }) {
       <Text style={styles.assignedTo}>Tilldelad: {item.unit?.name}</Text>
       <Text style={styles.description}>{item.description}</Text>
       <View style={styles.statusContainer}>
-        {item.completed === "Ej påbörjat" && (
+        {item.status === "Ej påbörjat" && (
           <Text style={[styles.statusText, { color: "red" }]}>
-            {item.completed}
+            {item.status}
           </Text>
         )}
 
-        {item.completed === "Påbörjat" && (
+        {item.status === "Påbörjat" && (
           <Text style={[styles.statusText, { color: "orange" }]}>
-            {item.completed}
+            {item.status}
           </Text>
         )}
 
-        {item.completed === "Färdigt" && (
+        {item.status === "Färdigt" && (
           <Text style={[styles.statusText, { color: "green" }]}>
-            {item.completed}
+            {item.status}
           </Text>
         )}
       </View>
       <Text style={styles.updatedAt}>
-        Uppdaterad: {new Date(item.updatedAt).toLocaleString("sv-SE")}
+        senast ändrat: {new Date(item.updatedAt).toLocaleString("sv-SE")}
       </Text>
     </View>
   );
@@ -79,14 +79,14 @@ const styles = StyleSheet.create({
   },
   statusContainer: {
     paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 2,
     borderRadius: 8,
     alignSelf: "flex-start",
     marginBottom: 6,
   },
   statusText: {
     fontWeight: "bold",
-    marginLeft: 0,
+    // marginLeft: 0,
   },
   assignedTo: {
     fontSize: 14,

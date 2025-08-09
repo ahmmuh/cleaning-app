@@ -26,6 +26,13 @@ function KeyLayout() {
           headerTitle: "Uppdatera Nyckel",
         }}
       />
+
+      <Stack.Screen
+        name="[keyId]/keyQrScan"
+        options={{
+          headerTitle: "Skanna nyckel",
+        }}
+      />
     </Stack>
   );
 }

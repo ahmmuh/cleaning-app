@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
+import { Touchable, TouchableHighlight } from "react-native";
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -15,8 +16,8 @@ function KeyItem({ item }) {
   // console.log("LABEL:", getStatusLabel(item.status));
 
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => router.push(`/keys/${item._id}`)}>
+    <View>
+      <View style={styles.container}>
         <View style={styles.row}>
           <Icon name={statusIcon} size={24} color={statusColor} />
           <Text style={[styles.nyckelTitle, { color: statusColor }]}>
@@ -35,24 +36,31 @@ function KeyItem({ item }) {
 
         {normalizeStatus(item.status) === "checked-out" && item.borrowedAt && (
           <Text style={styles.detail}>
-            Senast ändrad:{" "}
-            {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
+            Senast ändrad: {new Date(item.updatedAt).toLocaleString("sv-SE")}
           </Text>
         )}
 
         {normalizeStatus(item.status) === "returned" && item.returnedAt && (
           <Text style={styles.detail}>
-            Senast ändrad:{" "}
-            {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
+            Senast ändrad: {new Date(item.updatedAt).toLocaleString("sv-SE")}
           </Text>
         )}
 
         {normalizeStatus(item.status) === "available" && (
           <Text style={styles.detail}>
-            Skapad: {new Date(item.createdAt).toLocaleDateString("sv-SE")}
+            Skapad: {new Date(item.createdAt).toLocaleString("sv-SE")}
           </Text>
         )}
-      </Pressable>
+
+        <TouchableHighlight
+          style={{ marginVertical: 10 }}
+          onPress={() => router.push(`/keys/${item._id}/keyQrScan`)}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ marginRight: 4 }}>Skanna</Text>
+            <Icon name="camera" size={24} color="red" />
+          </View>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 }

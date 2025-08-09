@@ -155,14 +155,14 @@ function TodoScreen() {
                 {item.status === "Påbörjat" && (
                   <Text>
                     <Text style={styles.bold}>Senast ändrad:</Text>{" "}
-                    {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
+                    {new Date(item.updatedAt).toLocaleString("sv-SE")}
                   </Text>
                 )}
 
                 {item.status === "Ej påbörjat" && (
                   <Text>
                     <Text style={styles.bold}>Skapad:</Text>{" "}
-                    {new Date(item.createdAt).toLocaleDateString("sv-SE")}
+                    {new Date(item.createdAt).toLocaleString("sv-SE")}
                   </Text>
                 )}
 
