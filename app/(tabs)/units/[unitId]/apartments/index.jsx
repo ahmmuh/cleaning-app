@@ -97,44 +97,60 @@ function ApartmentScreen() {
                     </TouchableOpacity>
                   </View>
 
-                  {/* Här nedan är alla <Text> inuti View */}
                   <View>
-                    <Text>
-                      <Text style={styles.bold}>Beskrivning:</Text>{" "}
-                      {item.description || "-"}
+                    <Text style={styles.bold}>
+                      Beskrivning: {item.description || "-"}
                     </Text>
-                    <Text>
-                      <Text style={styles.bold}>Nyckelplats:</Text>{" "}
-                      {item.keyLocation || "-"}
+                    <Text style={styles.bold}>
+                      Nyckelplats: {item.keyLocation || "-"}
                     </Text>
-                    <Text>
-                      <Text style={styles.bold}>Status:</Text>{" "}
-                      {item.status || "-"}
+                    <Text style={styles.bold}>
+                      Status: {item.status || "-"}
                     </Text>
-                    <Text>
-                      <Text style={styles.bold}>Prioritet:</Text>{" "}
-                      {item.priority || "-"}
+                    <Text style={styles.bold}>
+                      Prioritet: {item.priority || "-"}
                     </Text>
-                    <Text>
-                      <Text style={styles.bold}>Start:</Text>{" "}
-                      {formatDate(item.startDate)}
+                    <Text style={styles.bold}>
+                      Start: {new Date(item.startDate).toLocaleString("sv-SE")}
                     </Text>
-                    <Text>
-                      <Text style={styles.bold}>Slut:</Text>{" "}
-                      {formatDate(item.endDate)}
+                    <Text style={styles.bold}>
+                      Slut: {new Date(item.endDate).toLocaleString("sv-SE")}
                     </Text>
-                    <Text>
-                      <Text style={styles.bold}>Tilldelad:</Text>{" "}
-                      {formatDate(item.assignedAt)}
+                    <Text style={styles.bold}>
+                      Tilldelad:{" "}
+                      {new Date(item.assignedAt).toLocaleString("sv-SE")}
                     </Text>
-                    <Text>
-                      <Text style={styles.bold}>Skapad:</Text>{" "}
-                      {formatDate(item.createdAt)}
-                    </Text>
-                    <Text>
-                      <Text style={styles.bold}>Uppdaterad:</Text>{" "}
-                      {formatDate(item.updatedAt)}
-                    </Text>
+                    {item.status === "Ej påbörjat" && (
+                      <Text style={styles.bold}>
+                        Skapad:{" "}
+                        {new Date(item.createdAt).toLocaleString("sv-SE")}
+                      </Text>
+                    )}
+
+                    {item.status === "Påbörjat" && (
+                      <Text
+                        style={[
+                          styles.bold,
+                          {
+                            color: "orange",
+                          },
+                        ]}>
+                        Senast ändrad:{" "}
+                        {new Date(item.updatedAt).toLocaleString("sv-SE")}
+                      </Text>
+                    )}
+                    {item.status === "Färdigt" && (
+                      <Text
+                        style={[
+                          styles.bold,
+                          {
+                            color: "green",
+                          },
+                        ]}>
+                        Senast ändrad:{" "}
+                        {new Date(item.updatedAt).toLocaleString("sv-SE")}
+                      </Text>
+                    )}
                   </View>
                 </View>
               </TouchableOpacity>

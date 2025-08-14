@@ -24,7 +24,7 @@ function UnitScreen() {
       const data = await getUnits();
       console.log("UNIT DATA I UnitScreen", data);
       setUnits(data);
-      displaySuccess("Alla enheter är hämtade");
+      // displaySuccess("Alla enheter är hämtade");
       setLoading(false);
     } catch (error) {
       console.error("Fel vid hämtning av enheter:", error.message);
@@ -63,9 +63,9 @@ function UnitScreen() {
         keyExtractor={(item) => item?._id}
         contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => {
-          const chef = item?.users?.find((user) => user.role === "Chef");
+          const chef = item?.users?.find((user) => user.role === "Enhetschef");
           const specialister =
-            item?.users?.filter((user) => user.role === "Specialist") || [];
+            item?.users?.filter((user) => user.role === "Specialare") || [];
           const unitTasks = item?.tasks?.filter((task) => task);
 
           return (
@@ -83,7 +83,15 @@ function UnitScreen() {
                       size={20}
                       color="#1e40af"
                     />
-                    <Text style={styles.linkText}>Chef: {chef.name}</Text>
+                    <View
+                      style={{
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems:"center"
+                      }}>
+                      <Text style={styles.linkText}> {chef.name}</Text>
+                      <Text style={{ fontSize: 10 }}>({chef.role})</Text>
+                    </View>
                   </View>
                 </Link>
               )}
@@ -103,7 +111,7 @@ function UnitScreen() {
                 <View style={styles.linkContent}>
                   <Ionicons name="people-outline" size={20} color="#1e40af" />
                   <Text style={styles.linkText}>
-                    Specialstädare ({specialister.length})
+                    Specialare ({specialister.length})
                   </Text>
                 </View>
               </Pressable>
