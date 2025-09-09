@@ -23,7 +23,7 @@ const ApartmentItem = ({ item }) => {
           <Icon name="key" size={14} color="#555" /> {item.keyLocation}
         </Text>
         <Text style={styles.detail}>
-          <Icon name="user" size={14} color="#555" /> {item.assignedUnit.name}
+          <Icon name="user" size={14} color="#555" /> {item?.assignedUnit?.name}
         </Text>
         <Text style={styles.detail}>
           <Icon name="exclamation-circle" size={14} color="#d97706" />{" "}

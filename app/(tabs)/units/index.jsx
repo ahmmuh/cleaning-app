@@ -63,9 +63,12 @@ function UnitScreen() {
         keyExtractor={(item) => item?._id}
         contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => {
-          const chef = item?.users?.find((user) => user.role === "Enhetschef");
+          const chef = item?.users?.find((user) =>
+            user.role.includes("Enhetschef")
+          );
           const specialister =
-            item?.users?.filter((user) => user.role === "Specialare") || [];
+            item?.users?.filter((user) => user.role.includes("Specialare")) ||
+            [];
           const unitTasks = item?.tasks?.filter((task) => task);
 
           return (
@@ -87,7 +90,7 @@ function UnitScreen() {
                       style={{
                         flexDirection: "column",
                         justifyContent: "center",
-                        alignItems:"center"
+                        alignItems: "center",
                       }}>
                       <Text style={styles.linkText}> {chef.name}</Text>
                       <Text style={{ fontSize: 10 }}>({chef.role})</Text>
@@ -128,7 +131,7 @@ function UnitScreen() {
                 <View style={styles.linkContent}>
                   <Ionicons name="list-outline" size={20} color="#1e40af" />
                   <Text style={styles.linkText}>
-                    Att göra ({item?.tasks.length})
+                    Att göra ({unitTasks.length})
                   </Text>
                 </View>
               </Pressable>

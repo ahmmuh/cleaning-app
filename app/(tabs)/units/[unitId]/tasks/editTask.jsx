@@ -397,7 +397,7 @@ function EditTask() {
         completed: selectStatus,
       };
       updateTaskById(taskId, updatedTask);
-      displaySuccess("Todo har uppdaterats");
+      displaySuccess("Uppdrag har uppdaterats");
       router.push("/units");
     } catch (error) {
       console.log("Kan inte uppdatera", error.message);

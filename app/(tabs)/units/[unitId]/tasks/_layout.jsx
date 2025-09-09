@@ -22,8 +22,8 @@ function TaskDrawerLayout() {
         <Drawer.Screen
           name="index"
           options={{
-            drawerLabel: "Todo List",
-            title: "Todo List",
+            drawerLabel: "Alla morgonjobb",
+            title: "Alla morgonjobb",
             headerRight: () => (
               <Link href={"/units"} style={{ marginRight: 10 }}>
                 <FontAwesome name="chevron-right" color={"green"} size={25} />

@@ -34,7 +34,7 @@ function useFetchTasks() {
       if (error.message === "Unauthorized") {
         router.replace("/auth");
       }
-      console.error("Error vid hämtning av todo lista");
+      console.error("Error vid hämtning av morgonjobb");
       setError(error);
     } finally {
       setLoading(false);

@@ -124,7 +124,7 @@ function TodoScreen() {
         {/* Add Button */}
         <TouchableOpacity style={styles.addButton} onPress={addViewHandler}>
           <FontAwesome name="plus" size={18} color="#000" />
-          <Text style={styles.addButtonText}>Ny todo</Text>
+          <Text style={styles.addButtonText}>Nytt morgonjobb</Text>
         </TouchableOpacity>
 
         {/* Tasks */}

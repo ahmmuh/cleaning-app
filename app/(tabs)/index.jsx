@@ -91,7 +91,7 @@ function HomeScreen() {
               color="#28a745"
               style={styles.cardIcon}
             />
-            <Text style={styles.cardTitle}>Lägenhetstäd</Text>
+            <Text style={styles.cardTitle}>Flyttstäd</Text>
             <Text style={styles.cardCount}>{apartments.length}</Text>
             <TouchableOpacity>
               <Link href="/apartments" style={styles.cardLink}>

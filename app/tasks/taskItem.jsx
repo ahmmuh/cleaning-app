@@ -21,6 +21,14 @@ function TaskItem({ item }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{item.title}</Text>
+      <Text
+        style={{
+          fontSize: 14,
+          marginBottom: 3,
+        }}>
+        {item.location}
+      </Text>
+
       <Text style={styles.assignedTo}>Tilldelad: {item.unit?.name}</Text>
       <Text style={styles.description}>{item.description}</Text>
       <View style={styles.statusContainer}>
@@ -42,9 +50,18 @@ function TaskItem({ item }) {
           </Text>
         )}
       </View>
-      <Text style={styles.updatedAt}>
-        senast ändrat: {new Date(item.updatedAt).toLocaleString("sv-SE")}
-      </Text>
+
+      {item.status === "Färdigt" && (
+        <Text style={styles.updatedAt}>
+          senast ändrat: {new Date(item.updatedAt).toLocaleString("sv-SE")}
+        </Text>
+      )}
+
+      {item.status === "Ej påbörjat" && (
+        <Text style={styles.createAt}>
+          Skapad: {new Date(item.updatedAt).toLocaleString("sv-SE")}
+        </Text>
+      )}
     </View>
   );
 }

@@ -77,10 +77,10 @@ function AddTask() {
 
       console.log("NY TASK i AddTask component", newTask);
       addNewTask(newTask);
-      displaySuccess("En ny todo har skapats");
+      displaySuccess("Nytt morgonjobb har skapats");
       router.push("/units");
     } catch (error) {
-      displayError("Det gick inte att skapa ny todo");
+      displayError("Det gick inte att skapa morgonjobb");
     }
   };
 
@@ -117,7 +117,7 @@ function AddTask() {
         value={searchText}
         autoCorrect={false}
         keyboardType="default"
-        placeholder="Todo title"
+        placeholder="Morgonjobb"
         onChangeText={handleTitleChange}
         style={styles.inputStyle}
       />
@@ -168,7 +168,7 @@ function AddTask() {
       {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <FontAwesome size={18} color={"#ded"} name="edit" />
-        <Text style={styles.submitButtonText}> Ny Todo</Text>
+        <Text style={styles.submitButtonText}> Nytt uppdrag</Text>
       </TouchableOpacity>
     </View>
   );
