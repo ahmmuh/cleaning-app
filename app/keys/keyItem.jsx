@@ -1,19 +1,21 @@
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { Touchable, TouchableHighlight } from "react-native";
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import useFetchUser from "../../hooks/useFetchCurrentUser";
 
 function KeyItem({ item }) {
+  const [status, setStatus] = useState(item?.status || "available");
+
   const router = useRouter();
   const statusIcon = getStatusIcon(item.status);
   const statusColor = getStatusColor(item.status);
-  // console.log("Navigerar till:", `/keys/${item._id}`);
-  // console.log("ReturnedAt:", item.returnedAt);
-
-  // console.log("STATUS:", item.status);
-  // console.log("COLOR:", getStatusColor(item.status));
-  // console.log("LABEL:", getStatusLabel(item.status));
+  const { user } = useFetchUser();
+  const showButton =
+    status === "available" ||
+    status === "returned" ||
+    item?.borrowedBy?._id === user?._id;
 
   return (
     <View>
@@ -52,14 +54,16 @@ function KeyItem({ item }) {
           </Text>
         )}
 
-        <TouchableHighlight
-          style={{ marginVertical: 10 }}
-          onPress={() => router.push(`/keys/${item._id}/keyQrScan`)}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ marginRight: 4 }}>Skanna</Text>
-            <Icon name="camera" size={24} color="red" />
-          </View>
-        </TouchableHighlight>
+        {showButton && (
+          <TouchableHighlight
+            style={{ marginVertical: 10 }}
+            onPress={() => router.push(`/keys/${item._id}/keyQrScan`)}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ marginRight: 4 }}>Skanna</Text>
+              <Icon name="camera" size={24} color="red" />
+            </View>
+          </TouchableHighlight>
+        )}
       </View>
     </View>
   );

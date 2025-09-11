@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { getKeyByQRCode, getUserByQRCode } from "../../backend/keyAPI"; // API-funktioner
 import { Toast } from "toastify-react-native";
@@ -49,24 +55,26 @@ export default function QRCodeScan() {
   };
 
   return (
-    <View style={styles.container}>
-      <CameraView
-        style={styles.camera}
-        onBarCodeScanned={({ data }) => handleQRCodeScan(data)}>
-        <View style={styles.overlay}>
-          <Text style={styles.text}>
-            {scannedData ? `Scanned: ${scannedData}` : "Skanna QR-kod"}
-          </Text>
-        </View>
-      </CameraView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <CameraView
+          style={styles.camera}
+          onBarCodeScanned={({ data }) => handleQRCodeScan(data)}>
+          <View style={styles.overlay}>
+            <Text style={styles.text}>
+              {scannedData ? `Scanned: ${scannedData}` : "Skanna QR-kod"}
+            </Text>
+          </View>
+        </CameraView>
 
-      {user && key && (
-        <View style={styles.infoContainer}>
-          <Text>User: {user.name}</Text>
-          <Text>Key: {key.keyLabel}</Text>
-        </View>
-      )}
-    </View>
+        {user && key && (
+          <View style={styles.infoContainer}>
+            <Text>User: {user.name}</Text>
+            <Text>Key: {key.keyLabel}</Text>
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 

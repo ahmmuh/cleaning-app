@@ -1,6 +1,6 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function CameraScreen() {
@@ -11,7 +11,7 @@ export default function CameraScreen() {
   const handleBarcodeScanned = ({ type, data }) => {
     setScanned(true);
     console.log("Kodtyp:", type);
-    console.log("Innehåll:", data);
+    console.log("Nycke information (ID):", data);
 
     // Skicka vidare t.ex. till KeyDetail
     router.push(`/keys/${data}`);
@@ -35,18 +35,20 @@ export default function CameraScreen() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <CameraView
-        style={{ flex: 1 }}
-        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr"], // Endast QR-koder
-        }}
-      />
-      {scanned && (
-        <Button title="Scanna igen" onPress={() => setScanned(false)} />
-      )}
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <CameraView
+          style={{ flex: 1 }}
+          onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ["qr"], // Endast QR-koder
+          }}
+        />
+        {scanned && (
+          <Button title="Scanna igen" onPress={() => setScanned(false)} />
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 

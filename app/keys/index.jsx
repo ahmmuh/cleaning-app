@@ -3,9 +3,11 @@ import useFetchKeys from "../../hooks/useFetchKeys";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native";
 import KeyItem from "./keyItem";
+import useFetchUser from "../../hooks/useFetchCurrentUser";
 
 function KeyScreen() {
   const { keys, loading, error } = useFetchKeys();
+  const { user } = useFetchUser();
 
   if (loading) {
     return (

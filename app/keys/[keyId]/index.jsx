@@ -1,299 +1,236 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+// // KeyDetail.js
+// import React, { useState, useEffect } from "react";
+// import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+// import { Picker } from "@react-native-picker/picker";
+// import { FontAwesome } from "@expo/vector-icons";
+// import useFetchUser from "../../../hooks/useFetchCurrentUser";
+// import { checkinKey, checkoutKey } from "../../../backend/keyAPI";
+
+// const keyStatusar = [
+//   { label: "Tillgänglig", value: "available" },
+//   { label: "Utlånad", value: "checked-out" },
+//   { label: "Inlämnad", value: "returned" },
+// ];
+// export default function KeyDetail({ keyData, onStatusChange }) {
+//   const { user } = useFetchUser();
+//   // const [selectedStatus, setSelectedStatus] = useState(keyData.status);
+//   const [selectedStatus, setSelectedStatus] = useState(
+//     keyData?.status || "available"
+//   );
+
+//   const [qrVisible, setQrVisible] = useState(false);
+
+//   const keyStatusar = [
+//     { label: "Tillgänglig", value: "available" },
+//     { label: "Utlånad", value: "checked-out" },
+//     { label: "Inlämnad", value: "returned" },
+//   ];
+
+//   // Uppdatera selectedStatus när keyData laddas
+//   useEffect(() => {
+//     if (keyData?.status) {
+//       setSelectedStatus(keyData.status);
+//     }
+//   }, [keyData]);
+
+//   const toggleQRCode = () => setQrVisible((prev) => !prev);
+
+//   const changeStatus = async () => {
+//     if (!user?._id) return alert("Ingen inloggad användare");
+
+//     try {
+//       if (selectedStatus === "checked-out")
+//         await checkoutKey(user.role, user._id, keyData._id);
+//       else if (selectedStatus === "returned")
+//         await checkinKey(user.role, user._id, keyData._id);
+
+//       onStatusChange?.();
+//     } catch (error) {
+//       console.error("Fel vid statusändring:", error);
+//     }
+//   };
+
+//   const getButtonLabel = (status) => {
+//     switch (status) {
+//       case "available":
+//         return "Låna nyckel";
+//       case "checked-out":
+//         return "Lämna tillbaka";
+//       case "returned":
+//         return "Nyckel inlämnad";
+//       default:
+//         return "Uppdatera";
+//     }
+//   };
+
+//   if (!keyData) {
+//     return (
+//       <View style={styles.card}>
+//         <Text>Laddar nyckel Ahmed </Text>
+//       </View>
+//     );
+//   }
+
+//   return (
+//     <View style={styles.card}>
+//       <Text style={styles.title}>
+//         <FontAwesome
+//           name="key"
+//           size={20}
+//           color={keyData.status === "checked-out" ? "red" : "green"}
+//         />{" "}
+//         {keyData.keyLabel}
+//       </Text>
+
+//       {user?.name && (
+//         <Text style={styles.info}>
+//           <FontAwesome name="user" size={20} color="gray" /> {user.name}
+//         </Text>
+//       )}
+
+//       {keyData.unit && (
+//         <Text style={styles.info}>
+//           <FontAwesome name="building" size={20} color="gray" />{" "}
+//           {keyData.unit.name}
+//         </Text>
+//       )}
+
+//       <Text style={styles.info}>
+//         {keyData.status === "checked-out" &&
+//           `Lånedatum: ${new Date(keyData.borrowedAt).toLocaleDateString(
+//             "sv-SE"
+//           )}`}
+//         {keyData.status === "returned" &&
+//           `Inlämnad: ${new Date(keyData.returnedAt).toLocaleDateString(
+//             "sv-SE"
+//           )}`}
+//         {keyData.status === "available" &&
+//           `Skapad: ${new Date(keyData.createdAt).toLocaleDateString("sv-SE")}`}
+//       </Text>
+
+//       <View style={styles.pickerContainer}>
+//         <Text style={styles.pickerLabel}>Välj Status:</Text>
+//         <Picker
+//           style={styles.picker}
+//           selectedValue={selectedStatus}
+//           onValueChange={setSelectedStatus}>
+//           {keyStatusar.map((s) => (
+//             <Picker.Item key={s.value} label={s.label} value={s.value} />
+//           ))}
+//         </Picker>
+//       </View>
+
+//       <TouchableOpacity style={styles.updateButton} onPress={changeStatus}>
+//         <Text style={styles.buttonTitle}>{getButtonLabel(selectedStatus)}</Text>
+//       </TouchableOpacity>
+
+//       <TouchableOpacity style={styles.qrButton} onPress={toggleQRCode}>
+//         <Text>{qrVisible ? "Dölj QR-kod" : "Visa QR-kod"}</Text>
+//       </TouchableOpacity>
+
+//       {qrVisible && keyData.qrCode && (
+//         <Image source={{ uri: keyData.qrCode }} style={styles.qrImage} />
+//       )}
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   card: {
+//     backgroundColor: "#fff",
+//     padding: 16,
+//     borderRadius: 12,
+//     marginVertical: 8,
+//     shadowColor: "#000",
+//     shadowOpacity: 0.1,
+//     shadowRadius: 6,
+//     elevation: 3,
+//   },
+//   title: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
+//   info: { fontSize: 14, marginVertical: 2 },
+//   pickerContainer: { marginTop: 12 },
+//   pickerLabel: { fontSize: 14, fontWeight: "600" },
+//   picker: { backgroundColor: "#f2f2f2", marginTop: 4 },
+//   updateButton: {
+//     backgroundColor: "#007AFF",
+//     padding: 12,
+//     borderRadius: 8,
+//     marginTop: 12,
+//     alignItems: "center",
+//   },
+//   buttonTitle: { color: "white", fontWeight: "bold" },
+//   qrButton: {
+//     marginTop: 10,
+//     padding: 10,
+//     backgroundColor: "#E0E0E0",
+//     borderRadius: 8,
+//     alignItems: "center",
+//   },
+//   qrImage: { width: 150, height: 150, marginTop: 12, alignSelf: "center" },
+// });
+// index.jsx
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { checkinKey, checkoutKey, getKeyByID } from "../../../backend/keyAPI";
-import { Picker } from "@react-native-picker/picker";
-import { FontAwesome } from "@expo/vector-icons";
-import ToastManager, { Toast } from "toastify-react-native";
-import { displayError, displaySuccess } from "../../../utils/toastService";
-import useFetchUser from "../../../hooks/useFetchCurrentUser";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { getKeyByID } from "../../../backend/keyAPI";
+import KeyDetail from "./keyDetailScreen";
 
-function KeyDetail() {
+export default function KeyDetailScreen() {
   const { keyId } = useLocalSearchParams();
-  const router = useRouter();
-  const [key, setKey] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedUserId, setSelectedUserId] = useState("");
-
-  const { user, loading, error } = useFetchUser();
-
-  const keyStatusar = [
-    { label: "Inlämnad", value: "returned" },
-    { label: "Utlånad", value: "checked-out" },
-    { label: "Tillgänglig", value: "available" },
-  ];
-
-  useEffect(() => {
-    if (user) {
-      setSelectedUserId(user._id); // sätt inloggad användare direkt
-    }
-  }, [user]);
+  const [keyData, setKeyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchKey = async () => {
+    setLoading(true);
     try {
-      const keyData = await getKeyByID(keyId);
-      if (!keyData) {
-        console.log("Denna nyckel finns EJ");
-        return;
-      }
-      setKey(keyData);
-      setSelectedStatus(keyData.status || "");
-      setSelectedUserId(user?._id || "");
+      const data = await getKeyByID(keyId);
+      if (!data) setError("Nyckel finns inte");
+      else setKeyData(data);
     } catch (err) {
-      console.error("Kunde inte hämta key:", err);
-      displayError("Vi kunde inte hämta nyckeln");
+      console.error(err);
+      setError("Fel vid hämtning av nyckel");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (keyId && user) {
-      fetchKey();
-    }
-  }, [keyId, user]);
+    if (keyId) fetchKey();
+  }, [keyId]);
 
-  const isActionsValid = () => {
-    const isCheckingOut =
-      selectedStatus === "checked-out" &&
-      (key.status === "returned" || key.status === "available");
-
-    const isCheckingIn =
-      selectedStatus === "returned" &&
-      key.status === "checked-out" &&
-      key.borrowedBy?._id === selectedUserId;
-
-    return isCheckingOut || isCheckingIn;
-  };
-
-  const changeStatus = async () => {
-    try {
-      if (selectedStatus === "checked-out") {
-        if (!selectedUserId) {
-          Toast.error("Välj en användare att låna ut till.");
-          return;
-        }
-
-        if (key.status !== "returned" && key.status !== "available") {
-          Toast.error(
-            "Nyckeln kan bara lånas ut om den är tillgänglig eller inlämnad."
-          );
-          return;
-        }
-
-        await checkoutKey(user.role, user._id, keyId);
-        displaySuccess("Nyckeln har lånats ut.");
-      } else if (selectedStatus === "returned") {
-        if (key.status !== "checked-out") {
-          displayError("Nyckeln är inte utlånad, kan inte lämnas in.");
-          return;
-        }
-
-        if (key.borrowedBy?._id !== selectedUserId) {
-          displayError("Vald användare matchar inte nuvarande lånetagare.");
-          return;
-        }
-
-        await checkinKey(user.role, user._id, keyId);
-        displaySuccess("Nyckeln har lämnats in.");
-      }
-
-      router.push("/keys");
-    } catch (err) {
-      console.error("Fel vid statusändring:", err);
-      displayError("Ett fel uppstod vid uppdatering.");
-    }
-  };
-
-  if (!keyId) {
+  if (loading)
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Det finns ingen key ID</Text>
-      </View>
+      <SafeAreaView style={styles.center}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text>Laddar nyckel...</Text>
+      </SafeAreaView>
     );
-  }
 
-  if (!key || loading) {
+  if (error)
     return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>Laddar nyckeldetaljer...</Text>
-      </View>
+      <SafeAreaView style={styles.center}>
+        <Text style={styles.errorText}>{error}</Text>
+      </SafeAreaView>
     );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text>{error.message}</Text>
-      </View>
-    );
-  }
 
   return (
-    <View style={styles.container}>
-      <ToastManager />
-      <View style={styles.card}>
-        <Text style={styles.title}>
-          <FontAwesome
-            name="key"
-            color={key.status === "checked-out" ? "red" : "green"}
-            size={20}
-          />{" "}
-          {key.keyLabel}
-        </Text>
-        <Text style={styles.info}>
-          <FontAwesome name="user" color={"gray"} size={20} />{" "}
-          {key.borrowedBy ? key.borrowedBy.name : ""}
-        </Text>
-        <Text style={styles.info}>
-          <FontAwesome name="building" size={20} color={"gray"} />:{" "}
-          {key.location}
-        </Text>
-        <Text style={styles.info}>
-          {key.status === "checked-out" && (
-            <>
-              <FontAwesome name="calendar" color="gray" size={20} /> Lånedatum:{" "}
-              {new Date(key.borrowedAt).toLocaleDateString("sv-SE")}
-            </>
-          )}
-          {key.status === "returned" && (
-            <>
-              <FontAwesome name="calendar" color="green" size={20} /> Inlämnad:{" "}
-              {new Date(key.returnedAt).toLocaleDateString("sv-SE")}
-            </>
-          )}
-          {key.status === "available" && (
-            <>
-              <FontAwesome name="calendar" color="green" size={20} /> Skapad:{" "}
-              {new Date(key.createdAt).toLocaleDateString("sv-SE")}
-            </>
-          )}
-        </Text>
-        <Text style={styles.info}>
-          Status: {selectedStatus}
-          <FontAwesome
-            name="check"
-            color={key.status === "checked-out" ? "red" : "green"}
-          />
-        </Text>
-
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Lånetagare:</Text>
-          <Picker
-            style={styles.picker}
-            selectedValue={selectedUserId}
-            enabled={false}
-            onValueChange={(value) => setSelectedUserId(value)}>
-            <Picker.Item
-              label={user?.name || "Inloggad användare"}
-              value={user?._id}
-            />
-          </Picker>
-        </View>
-
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Välj Status:</Text>
-          <Picker
-            style={styles.picker}
-            selectedValue={selectedStatus}
-            onValueChange={(value) => setSelectedStatus(value)}>
-            {keyStatusar.map((status) => (
-              <Picker.Item
-                key={status.value}
-                label={status.label}
-                value={status.value}
-              />
-            ))}
-          </Picker>
-
-          <TouchableOpacity style={styles.updateButton} onPress={changeStatus}>
-            <Text style={styles.buttonTitle}>{getButtonLabel(key.status)}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 10 }}>
+        <KeyDetail keyData={keyData} onStatusChange={fetchKey} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-const getButtonLabel = (status) => {
-  if (status === "checked-out") return "Lämna in";
-  if (status === "returned" || status === "available") return "Låna ut";
-  return "Uppdatera";
-};
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
-  },
-  card: {
-    justifyContent: "center",
-    padding: 20,
-    marginHorizontal: 10,
-    marginVertical: 10,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 5,
-    backgroundColor: "#fff",
-  },
-  pickerContainer: {
-    marginTop: 10,
-  },
-  picker: {
-    width: "100%",
-    backgroundColor: "#fff",
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#222",
-    borderRadius: 8,
-  },
-  pickerLabel: {
-    color: "#222",
-    fontSize: 14,
-    fontWeight: "bold",
-    marginTop: 10,
-    borderTopColor: "#000",
-    borderTopWidth: 1,
-    paddingTop: 10,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  info: {
-    fontSize: 16,
-    color: "#555",
-    marginBottom: 6,
-  },
-  errorText: {
-    color: "red",
-    fontSize: 16,
-  },
-  loadingText: {
-    fontSize: 16,
-    color: "#888",
-  },
-  updateButton: {
-    backgroundColor: "#4CAF50",
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 20,
-    alignItems: "center",
-  },
-  buttonTitle: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  warningText: {
-    color: "red",
-    fontSize: 14,
-    marginTop: 5,
-    fontStyle: "italic",
-  },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  errorText: { color: "red", fontSize: 16 },
 });
-
-export default KeyDetail;
