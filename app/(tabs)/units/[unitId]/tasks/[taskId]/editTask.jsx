@@ -345,12 +345,12 @@ import { Picker } from "@react-native-picker/picker";
 import {
   displayError,
   displaySuccess,
-} from "../../../../../utils/toastService";
+} from "../../../../../../utils/toastService";
 import {
   assignTaskToUnit,
   getTaskByID,
   updateTaskById,
-} from "../../../../../backend/taskAPI";
+} from "../../../../../../backend/taskAPI";
 
 function EditTask() {
   const statusar = ["Ej påbörjat", "Påbörjat", "Färdigt"];

@@ -5,7 +5,7 @@ const ApartmentLayout = () => {
     <Stack
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#003366",
+
         headerStyle: {
           backgroundColor: "#bff38c",
         },

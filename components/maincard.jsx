@@ -59,7 +59,7 @@ function MainCard({ url, title, role, name, email, phone, children }) {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Roll: {role}</Text>
+        {/* <Text style={styles.cardTitle}>Roll: {role}</Text> */}
 
         <View style={styles.infoRow}>
           <Text style={styles.label}>Namn:</Text>

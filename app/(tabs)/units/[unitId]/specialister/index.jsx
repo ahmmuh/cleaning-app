@@ -24,8 +24,8 @@ function SpecialistScreen() {
         return;
       }
 
-      const filteredSpecialister = data.users.filter(
-        (user) => user.role === "Specialist"
+      const filteredSpecialister = data?.users?.filter((user) =>
+        user.role?.includes("Specialare")
       );
 
       setSpecialister(filteredSpecialister);
@@ -60,7 +60,7 @@ function SpecialistScreen() {
   if (!specialister || specialister.length === 0) {
     return (
       <View style={styles.center}>
-        <Text style={{ fontSize: 18, color: "gray" }}>Inga specialister</Text>
+        <Text style={{ fontSize: 18, color: "gray" }}>Inga specialare</Text>
       </View>
     );
   }
@@ -71,7 +71,6 @@ function SpecialistScreen() {
         <MainCard
           key={specialist._id}
           url="/units"
-          role={specialist.role}
           name={specialist.name}
           email={specialist.email}
           phone={specialist.phone}

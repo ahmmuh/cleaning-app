@@ -7,12 +7,13 @@ function ChefLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#003366",
         headerStyle: {
           backgroundColor: "#bff38c",
         },
 
-        headerTitleStyle: "bold",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
       }}>
       <Stack.Screen
         name="index"

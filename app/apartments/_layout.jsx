@@ -5,7 +5,6 @@ const ApartmentLayout = () => {
     <Stack
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#003366",
         headerStyle: {
           backgroundColor: "#bff38c",
         },
@@ -15,7 +14,12 @@ const ApartmentLayout = () => {
         headerTitle: "Flyttstäd",
         headerShown: true,
       }}>
-      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: true,
+        }}
+      />
     </Stack>
   );
 };

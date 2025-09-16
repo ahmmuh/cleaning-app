@@ -11,13 +11,14 @@ function TabLayout() {
           backgroundColor: "#bff38c",
         },
 
-        headerTitleStyle: "bold",
-
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
         tabBarItemStyle: {
           flexDirection: "row",
           justifyContent: "space-between",
         },
-        tabBarScrollEnabled: true, 
+        tabBarScrollEnabled: true,
       }}>
       <Tabs.Screen
         name="index"

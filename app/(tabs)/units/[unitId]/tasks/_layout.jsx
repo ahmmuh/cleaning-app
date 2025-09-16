@@ -1,39 +1,63 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import Drawer from "expo-router/drawer";
 import React from "react";
 import { Button } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-function TaskDrawerLayout() {
+function TaskLayout() {
   const router = useRouter();
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer
-        screenOptions={{
-          tabBarActiveTintColor: "#003366",
-          headerStyle: {
-            backgroundColor: "#bff38c",
-          },
 
-          headerTitleStyle: "bold",
+  return (
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#bff38c",
+        },
+
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+      }}>
+      <Stack.Screen
+        name="index"
+        options={{
+          title: "Alla morgonjobb",
           headerShown: true,
-        }}>
-        <Drawer.Screen
-          name="index"
-          options={{
-            drawerLabel: "Alla morgonjobb",
-            title: "Alla morgonjobb",
-            headerRight: () => (
-              <Link href={"/units"} style={{ marginRight: 10 }}>
-                <FontAwesome name="chevron-right" color={"green"} size={25} />
-              </Link>
-            ),
-          }}
-        />
-      </Drawer>
-    </GestureHandlerRootView>
+        }}
+      />
+    </Stack>
   );
 }
 
-export default TaskDrawerLayout;
+export default TaskLayout;
+
+{
+  /* <GestureHandlerRootView style={{ flex: 1 }}>
+        <Drawer
+          screenOptions={{
+            tabBarActiveTintColor: "#003366",
+            headerStyle: {
+              backgroundColor: "#bff38c",
+            },
+
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+            headerShown: true,
+          }}>
+          <Drawer.Screen
+            name="index"
+            options={{
+              drawerLabel: "Alla morgonjobb",
+              title: "Alla morgonjobb",
+              // headerRight: () => (
+              //   <Link href={"/units"} style={{ marginRight: 10 }}>
+              //     <FontAwesome name="chevron-right" color={"green"} size={25} />
+              //   </Link>
+              // ),
+            }}
+          />
+        </Drawer>
+      </GestureHandlerRootView> */
+}

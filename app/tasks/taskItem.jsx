@@ -51,15 +51,21 @@ function TaskItem({ item }) {
         )}
       </View>
 
-      {item.status === "Färdigt" && (
-        <Text style={styles.updatedAt}>
-          senast ändrat: {new Date(item.updatedAt).toLocaleString("sv-SE")}
+      {item.status === "Ej påbörjat" && (
+        <Text style={styles.createAt}>
+          Skapad: {new Date(item.createdAt).toLocaleString("sv-SE")}
         </Text>
       )}
 
-      {item.status === "Ej påbörjat" && (
-        <Text style={styles.createAt}>
-          Skapad: {new Date(item.updatedAt).toLocaleString("sv-SE")}
+      {item.status === "Påbörjat" && (
+        <Text style={styles.updatedAt}>
+          Senast ändrat: {new Date(item.updatedAt).toLocaleString("sv-SE")}
+        </Text>
+      )}
+
+      {item.status === "Färdigt" && (
+        <Text style={styles.updatedAt}>
+          Senast ändrat: {new Date(item.updatedAt).toLocaleString("sv-SE")}
         </Text>
       )}
     </View>
@@ -113,7 +119,11 @@ const styles = StyleSheet.create({
   },
   updatedAt: {
     fontSize: 12,
-    color: "#999",
+    color: "#232020ff",
+  },
+  createAt: {
+    fontSize: 12,
+    color: "#232020ff",
   },
 });
 

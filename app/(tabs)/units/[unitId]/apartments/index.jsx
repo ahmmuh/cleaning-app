@@ -163,38 +163,78 @@ function ApartmentScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, marginTop: 10 },
-  container: { flex: 1, paddingHorizontal: 15 },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    backgroundColor: "#f4f4f5",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
-  errorText: { color: "red", fontSize: 16 },
-  noDataText: {
-    fontSize: 16,
-    color: "#777",
-    textAlign: "center",
-    paddingHorizontal: 30,
+  header: {
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#222",
+    marginBottom: 14,
   },
   card: {
-    backgroundColor: "#f9f9f9",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 18,
+    marginBottom: 16, // space mellan kort
+    borderBottomWidth: 2, // tydlig border mellan kort
+    borderBottomColor: "#ccc",
   },
-  headerRow: {
+  cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 12,
   },
-  title: { fontSize: 18, fontWeight: "bold" },
-  bold: { fontWeight: "bold" },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#111",
+  },
+  status: {
+    fontSize: 15,
+    fontWeight: "500",
+    marginTop: 2,
+  },
+  description: {
+    fontSize: 15,
+    color: "#444",
+    paddingVertical: 6,
+    borderBottomWidth: 1, // tunn border mellan beskrivning och nästa rad
+    borderBottomColor: "#e5e7eb",
+    lineHeight: 22,
+    marginBottom: 12,
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+    borderBottomWidth: 1, // tunn border mellan rader
+    borderBottomColor: "#e5e7eb",
+    marginBottom: 6,
+  },
+  detailText: {
+    fontSize: 15,
+    color: "#666",
+    marginLeft: 8,
+  },
+  updateButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginTop: 16,
+    alignItems: "center",
+  },
+  buttonTitle: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+    letterSpacing: 0.5,
+  },
 });
 
 export default ApartmentScreen;

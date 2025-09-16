@@ -6,17 +6,21 @@ function SpecialistLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: "#003366",
         headerStyle: {
           backgroundColor: "#bff38c",
         },
 
-        headerTitleStyle: "bold",
-        headerTitle: "Specialstädare",
-        headerShown: true,
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
       }}>
-      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="index"
+        options={{
+          title: "Specialstädare",
+          headerShown: true,
+        }}
+      />
     </Stack>
   );
 }
