@@ -36,7 +36,7 @@
 //     title: "",
 //     description: "",
 //     location: "",
-//     completed: "Ej påbörjat", // Startvärde för completed
+//     status: "Ej påbörjat", // Startvärde för status
 //     unit: selectedUnit,
 //   });
 //   const fetchTask = async () => {
@@ -84,10 +84,10 @@
 //   //update status
 
 //   useEffect(() => {
-//     if (!task.completed && selectStatus !== task.completed) {
-//       setSelectStatus(task.completed);
+//     if (!task.status && selectStatus !== task.status) {
+//       setSelectStatus(task.status);
 //     }
-//   }, [task.completed, selectStatus]);
+//   }, [task.status, selectStatus]);
 
 //   //update unit (enheter)
 
@@ -125,7 +125,7 @@
 //         title: task.title,
 //         description: task.description,
 //         location: task.location,
-//         completed: selectStatus,
+//         status: selectStatus,
 //         unit: selectedUnit,
 //       };
 //       console.log("Updated", updatedTask);
@@ -188,7 +188,7 @@
 //               </View>
 //               {task && (
 //                 <Picker
-//                   selectedValue={task.completed}
+//                   selectedValue={task.status}
 //                   onValueChange={setSelectStatus}
 //                   onTouchCancel={true}
 //                   style={styles.picker}>
@@ -363,7 +363,7 @@ function EditTask() {
     title: "",
     description: "",
     location: "",
-    completed: "Ej påbörjat",
+    status: "Ej påbörjat",
   });
 
   const fetchTask = async () => {
@@ -375,7 +375,7 @@ function EditTask() {
         return;
       }
       setTask(foundedTask);
-      setSelectStatus(foundedTask.completed);
+      setSelectStatus(foundedTask.status);
       setLoading(false);
     } catch (error) {
       console.error("Fel vid hämtning av task");
@@ -394,11 +394,11 @@ function EditTask() {
         title: task.title,
         description: task.description,
         location: task.location,
-        completed: selectStatus,
+        status: selectStatus,
       };
       updateTaskById(taskId, updatedTask);
       displaySuccess("Uppdrag har uppdaterats");
-      router.push("/units");
+      router.push("/tasks");
     } catch (error) {
       console.log("Kan inte uppdatera", error.message);
       displayError("Det gick inte att uppdatera (todo)");
@@ -424,9 +424,7 @@ function EditTask() {
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={styles.statusTitle}>
-          Uppdatera status för {task.title}
-        </Text>
+        {/* <Text style={styles.statusTitle}>Uppdatera status</Text> */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}

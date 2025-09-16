@@ -56,13 +56,21 @@ export default function KeyDetail({ keyData, onStatusChange }) {
       : "Lämna in";
   };
 
-  if (!keyData) {
+  // if (!keyData) {
+  //   return (
+  //     <View style={styles.card}>
+  //       <Text>Laddar nyckel...</Text>
+  //     </View>
+  //   );
+  // }
+
+  if (!keyData)
     return (
-      <View style={styles.card}>
+      <SafeAreaView style={styles.center}>
+        <ActivityIndicator size="large" color="#007AFF" />
         <Text>Laddar nyckel...</Text>
-      </View>
+      </SafeAreaView>
     );
-  }
 
   return (
     <View style={styles.card}>

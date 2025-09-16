@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -60,14 +61,27 @@ export default function ApartmentDetail() {
     setSelectedStatus(newStatus);
   };
 
+  // if (!apartment) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <Text>Laddar lägenhet {apartmentId}...</Text>
+  //     </View>
+  //   );
+  // }
+
   if (!apartment) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Laddar lägenhet {apartmentId}...</Text>
-      </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </SafeAreaView>
     );
   }
-
   return (
     <ScrollView style={styles.container}>
       <ToastManager />

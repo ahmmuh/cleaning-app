@@ -1,5 +1,12 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator,
+} from "react-native";
 import MainCard from "../../../../../components/maincard";
 import { getUnitByID } from "../../../../../backend/api";
 import { useEffect, useState } from "react";
@@ -41,11 +48,25 @@ function SpecialistScreen() {
     fetchSpecialister();
   }, [unitId]);
 
+  // if (loading) {
+  //   return (
+  //     <View style={styles.center}>
+  //       <Text>Laddar specialister...</Text>
+  //     </View>
+  //   );
+  // }
+
   if (loading) {
     return (
-      <View style={styles.center}>
-        <Text>Laddar specialister...</Text>
-      </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </SafeAreaView>
     );
   }
 
@@ -80,13 +101,13 @@ function SpecialistScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
+// const styles = StyleSheet.create({
+//   center: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+// });
 
 export default SpecialistScreen;
 

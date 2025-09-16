@@ -38,14 +38,19 @@ function UnitScreen() {
     fetchUnits();
   }, []);
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.loadingContainer}>
-  //       <ActivityIndicator size="large" color="#2a4ede" />
-  //     </View>
-  //   );
-  // }
-
+  if (loading) {
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </SafeAreaView>
+    );
+  }
   if (error) {
     return (
       <View style={styles.errorContainer}>

@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import React, { useEffect } from "react";
+import { useRouter } from "expo-router";
+import React from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -14,7 +14,10 @@ import useFetchUnits from "../../hooks/useFetchUnits";
 import useFetchKeys from "../../hooks/useFetchKeys";
 import useFetchApartment from "../../hooks/useFetchApartment";
 import useFetchTasks from "../../hooks/useFetchTasks";
+
 function HomeScreen() {
+  const router = useRouter();
+
   const { units, loading: loadingUnits, error: errorUnits } = useFetchUnits();
   const { keys, loading: loadingKeys, error: errorKeys } = useFetchKeys();
   const {
@@ -39,83 +42,72 @@ function HomeScreen() {
   if (error) {
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
-        <Text style={styles.errorText}>Fel vid hämtning av Enheter</Text>
+        <Text style={styles.errorText}>Fel vid hämtning av data</Text>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
+      <Text style={styles.dashboardTitle}>Översikt</Text>
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
+        <View style={styles.grid}>
           {/* Enheter */}
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#e3f2fd" }]}
+            onPress={() => router.push("/units")}>
             <FontAwesome5
               name="building"
-              size={30}
-              color="#28a745"
+              size={26}
+              color="#1565c0"
               style={styles.cardIcon}
             />
             <Text style={styles.cardTitle}>Enheter</Text>
             <Text style={styles.cardCount}>{units.length}</Text>
-            <TouchableOpacity>
-              <Link href="/units" style={styles.cardLink}>
-                Visa alla enheter
-              </Link>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
 
-          {/* Alla Tasks */}
-
-          <View style={styles.card}>
+          {/* Tasks */}
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#f3e5f5" }]}
+            onPress={() => router.push("/tasks")}>
             <FontAwesome5
               name="tasks"
-              size={30}
-              color="#28a745"
+              size={26}
+              color="#6a1b9a"
               style={styles.cardIcon}
             />
             <Text style={styles.cardTitle}>Att göra</Text>
             <Text style={styles.cardCount}>{tasks.length}</Text>
-            <TouchableOpacity>
-              <Link href="/tasks" style={styles.cardLink}>
-                Alla uppgifter
-              </Link>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
 
           {/* Lägenheter */}
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#e8f5e9" }]}
+            onPress={() => router.push("/apartments")}>
             <FontAwesome5
               name="soap"
-              size={30}
-              color="#28a745"
+              size={26}
+              color="#2e7d32"
               style={styles.cardIcon}
             />
             <Text style={styles.cardTitle}>Flyttstäd</Text>
             <Text style={styles.cardCount}>{apartments.length}</Text>
-            <TouchableOpacity>
-              <Link href="/apartments" style={styles.cardLink}>
-                Visa alla lägenheter
-              </Link>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
 
           {/* Nycklar */}
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#fff3e0" }]}
+            onPress={() => router.push("/keys")}>
             <FontAwesome5
               name="key"
-              size={30}
-              color="#28a745"
+              size={26}
+              color="#ef6c00"
               style={styles.cardIcon}
             />
             <Text style={styles.cardTitle}>Nycklar</Text>
             <Text style={styles.cardCount}>{keys.length}</Text>
-            <TouchableOpacity>
-              <Link href="/keys" style={styles.cardLink}>
-                Visa alla nycklar
-              </Link>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -125,58 +117,58 @@ function HomeScreen() {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    marginVertical: 20,
+    backgroundColor: "#f4f6f8",
+  },
+  dashboardTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: "center",
+    color: "#333",
   },
   scrollContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingHorizontal: 15,
+    paddingBottom: 30,
     alignItems: "center",
-    justifyContent: "center",
   },
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     width: "100%",
   },
   card: {
-    backgroundColor: "#fff",
-    padding: 25,
-    marginBottom: 20,
-    width: "90%",
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 5,
-    height: 170,
-    justifyContent: "center",
+    width: "48%",
+    borderRadius: 12,
+    paddingVertical: 20,
+    marginBottom: 15,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 4,
   },
   cardIcon: {
-    marginBottom: 10,
+    marginBottom: 8,
   },
   cardTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "600",
     color: "#333",
-    marginBottom: 5,
   },
   cardCount: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
-    color: "#007BFF",
-  },
-  cardLink: {
-    fontSize: 18,
-    color: "#007BFF",
-    textDecorationLine: "underline",
+    marginVertical: 6,
+    color: "#111",
   },
   errorText: {
     color: "red",
     fontSize: 18,
     textAlign: "center",
+    marginTop: 20,
   },
 });
 

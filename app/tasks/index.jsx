@@ -1,13 +1,23 @@
 import React, { useCallback } from "react";
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import useFetchApartment from "../../hooks/useFetchApartment";
-import { SafeAreaView } from "react-native-safe-area-context";
 import useFetchTasks from "../../hooks/useFetchTasks";
 import TaskItem from "./taskItem";
-import { useFocusEffect } from "expo-router";
+import { Link, useFocusEffect, useRouter } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 
 function TaskList() {
   const { tasks, fetchAllTasks, loading, error } = useFetchTasks();
+  const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
@@ -41,7 +51,16 @@ function TaskList() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View>
+      <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+        <TouchableOpacity
+          style={styles.addTaskButton}
+          onPress={() => router.push("/tasks/addTask")}>
+          <FontAwesome name="plus" size={18} color="#4CAF50" />
+          <Text style={styles.addTaskText}>Nytt morgonjobb</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ flex: 1 }}>
         <FlatList
           data={tasks}
           keyExtractor={(item) => item._id.toString()}
@@ -51,5 +70,24 @@ function TaskList() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  addTaskButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#e6f4ea",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    margin: 10, // ger lite yttre utrymme
+  },
+
+  addTaskText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#4CAF50",
+    marginLeft: 8, // ersätter gap
+  },
+});
 
 export default TaskList;

@@ -6,6 +6,7 @@ import {
   Text,
   View,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import { getChefByID, getUnitByID } from "../../../../../backend/api";
 import MainCard from "../../../../../components/maincard";
@@ -46,9 +47,15 @@ function ChefScreen() {
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="#4dd" />
-      </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </SafeAreaView>
     );
   }
 

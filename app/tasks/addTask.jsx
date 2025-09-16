@@ -8,12 +8,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { addNewTask } from "../../../../../backend/taskAPI";
-import {
-  displayError,
-  displaySuccess,
-} from "../../../../../utils/toastService";
-import useFetchPlaces from "../../../../../hooks/usePlaces";
+
+import { addNewTask } from "../../backend/taskAPI";
+import { displayError, displaySuccess } from "../../utils/toastService";
+import useFetchPlaces from "../../hooks/usePlaces";
 
 export default function AddTask() {
   const router = useRouter();

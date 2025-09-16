@@ -64,14 +64,27 @@ export default function ApartmentDetail() {
     setSelectedStatus(newStatus);
   };
 
+  // if (!apartment) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <Text>Laddar lägenhet {apartmentId}...</Text>
+  //     </View>
+  //   );
+  // }
+
   if (!apartment) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Laddar lägenhet {apartmentId}...</Text>
-      </View>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </SafeAreaView>
     );
   }
-
   return (
     <SafeAreaView style={{ flex: 1, padding: 40 }}>
       <KeyboardAvoidingView>

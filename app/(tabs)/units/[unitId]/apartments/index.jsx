@@ -81,7 +81,7 @@ function ApartmentScreen() {
       <View style={styles.container}>
         {apartments.length === 0 ? (
           <View style={styles.centered}>
-            <Text style={styles.noDataText}>Inga lägenheter hittades.</Text>
+            <Text style={styles.noDataText}>Inga flyttstäd hittades.</Text>
           </View>
         ) : (
           <FlatList
