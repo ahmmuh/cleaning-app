@@ -26,6 +26,23 @@ function TaskLayout() {
           headerShown: true,
         }}
       />
+
+      <Stack.Screen
+        name="addTask"
+        options={{
+          title: "Skapa nytt morgonjobb",
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="editTask"
+        options={({ route }) => ({
+          title: route?.params?.title
+            ? `Redigera: ${route.params.title}`
+            : "Uppdatera morgonjobb",
+          headerShown: true,
+        })}
+      />
     </Stack>
   );
 }

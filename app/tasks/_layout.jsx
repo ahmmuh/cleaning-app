@@ -22,6 +22,20 @@ const TaskLayout = () => {
           headerTitle: `Alla morgonjobb för ${date}`,
         }}
       />
+      <Stack.Screen
+        name="addTask"
+        options={{
+          title: "Skapa nytt morgonjobb",
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="editTask"
+        options={{
+          title: "Uppdatera morgonjobb",
+          headerShown: true,
+        }}
+      />
     </Stack>
   );
 };

@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -15,6 +15,8 @@ import { getUserById } from "../../../../../backend/userAPI";
 function ChefScreen() {
   const router = useRouter();
   const { chefId, unitId } = useLocalSearchParams();
+
+  const { title } = useLocalSearchParams();
 
   const [chef, setChef] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -77,6 +79,12 @@ function ChefScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Stack.Screen
+        options={{
+          title: chef?.name ? `${chef.name}` : "Laddar chef...",
+          headerShown: true,
+        }}
+      />
       <MainCard
         role={chef.role}
         name={chef.name}

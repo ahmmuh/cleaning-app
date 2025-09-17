@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -19,6 +19,8 @@ function EditTask() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { taskId } = useLocalSearchParams();
+
+  const { title } = useLocalSearchParams();
 
   const [selectStatus, setSelectStatus] = useState("");
   const [task, setTask] = useState({
@@ -87,9 +89,13 @@ function EditTask() {
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
-        {/* <Text style={styles.statusTitle}>
-          Uppdatera status för {task.title}
-        </Text> */}
+        <Stack.Screen
+          options={{
+            title: task?.title
+              ? `Redigera: ${task.title}`
+              : "Uppdatera morgonjobb",
+          }}
+        />
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}

@@ -410,6 +410,7 @@ function TodoScreen() {
                 )}
 
                 {/* Action button */}
+                
                 <View style={styles.actionButtonsContainer}>
                   <TouchableOpacity
                     style={styles.editButton}

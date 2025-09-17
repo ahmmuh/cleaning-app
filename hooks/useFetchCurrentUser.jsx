@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { getCurrentUser } from "../backend/authApi";
 
-function useFetchUser() {
+function useFetchCurrentUser() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,4 +44,4 @@ function useFetchUser() {
   };
 }
 
-export default useFetchUser;
+export default useFetchCurrentUser;

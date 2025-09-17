@@ -6,23 +6,25 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   KeyboardAvoidingView,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
-import ToastManager, { Toast } from "toastify-react-native";
+import ToastManager from "toastify-react-native";
 import {
   getApartmentByID,
   updateApartment,
 } from "../../../../../../backend/apartmentAPI";
 import useFetchApartment from "../../../../../../hooks/useFetchApartment";
+import useFetchCurrentUser from "../../../../../../hooks/useFetchCurrentUser";
 
 export default function ApartmentDetail() {
+  const { user } = useFetchCurrentUser();
   const { apartmentId } = useLocalSearchParams();
-  console.log("apartmentId", apartmentId);
   const router = useRouter();
+
   const [apartment, setApartment] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
   const statusar = ["Ej påbörjat", "Påbörjat", "Färdigt"];
@@ -32,12 +34,11 @@ export default function ApartmentDetail() {
   const fetchApartment = async () => {
     try {
       const data = await getApartmentByID(apartmentId);
-      console.log("APARTMENT DATA VIA APARTMENTID", data);
       setApartment(data);
       setSelectedStatus(data.status);
     } catch (err) {
       console.error("Kunde inte hämta apartment:", err);
-      displayError("Det gick inte att hämta lägenheten");
+      alert("Det gick inte att hämta lägenheten");
     }
   };
 
@@ -49,10 +50,10 @@ export default function ApartmentDetail() {
     if (updated) {
       setApartment(updated);
       fetchAllApartments();
-      displaySuccess("Status har uppdaterats");
+      alert("Status har uppdaterats");
       router.push("/apartments");
     } else {
-      displayError("Kunde inte uppdatera status");
+      alert("Kunde inte uppdatera status");
     }
   };
 
@@ -64,27 +65,37 @@ export default function ApartmentDetail() {
     setSelectedStatus(newStatus);
   };
 
-  // if (!apartment) {
-  //   return (
-  //     <View style={styles.loadingContainer}>
-  //       <Text>Laddar lägenhet {apartmentId}...</Text>
-  //     </View>
-  //   );
-  // }
+  // Kontrollera om användaren kan ändra status
+  const canChangeStatus = (user, apartment) => {
+    console.log("user.unit:", user?.unit);
+    console.log("apartment.assignedUnit:", apartment?.assignedUnit);
+    console.log("user.role:", user?.role);
+    if (!user || !apartment) return false;
+
+    const roles = ["Områdeschef", "Avdelningschef", "Flyttstädansvarig"];
+
+    const sameUnit =
+      user.unit &&
+      apartment.assignedUnit &&
+      user.unit.toString() === apartment.assignedUnit.toString();
+
+    const hasRole = roles.some((role) => {
+      if (Array.isArray(user.role)) return user.role.includes(role);
+      if (typeof user.role === "string") return user.role === role;
+      return false;
+    });
+
+    return sameUnit || hasRole;
+  };
 
   if (!apartment) {
     return (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 20,
-        }}>
+      <SafeAreaView style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#007BFF" />
       </SafeAreaView>
     );
   }
+
   return (
     <SafeAreaView style={{ flex: 1, padding: 40 }}>
       <KeyboardAvoidingView>
@@ -96,7 +107,7 @@ export default function ApartmentDetail() {
               <Icon name="info-circle" size={16} /> {selectedStatus}
             </Text>
           </View>
-
+          {apartment && <Text>{apartment?.assignedUnit?.name}</Text>}
           <Text style={styles.description}>{apartment.description}</Text>
 
           <View style={styles.detailContainer}>
@@ -114,23 +125,27 @@ export default function ApartmentDetail() {
               {new Date(apartment.endDate).toLocaleDateString("sv-SE")}
             </Text>
 
-            <View style={styles.pickerContainer}>
-              <Text style={styles.pickerLabel}>Välj Status:</Text>
-              <Picker
-                selectedValue={selectedStatus}
-                onValueChange={handleStatusChange}
-                style={styles.picker}>
-                {statusar.map((status) => (
-                  <Picker.Item key={status} label={status} value={status} />
-                ))}
-              </Picker>
-            </View>
+            {canChangeStatus(user, apartment) && (
+              <>
+                <View style={styles.pickerContainer}>
+                  <Text style={styles.pickerLabel}>Välj Status:</Text>
+                  <Picker
+                    selectedValue={selectedStatus}
+                    onValueChange={handleStatusChange}
+                    style={styles.picker}>
+                    {statusar.map((status) => (
+                      <Picker.Item key={status} label={status} value={status} />
+                    ))}
+                  </Picker>
+                </View>
 
-            <TouchableOpacity
-              style={styles.updateButton}
-              onPress={changeStatus}>
-              <Text style={styles.buttonTitle}>Byt status</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.updateButton}
+                  onPress={changeStatus}>
+                  <Text style={styles.buttonTitle}>Byt status</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

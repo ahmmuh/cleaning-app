@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -16,8 +17,33 @@ import { BASE_URL } from "../../../backend/base_url";
 import useFetchApartment from "../../../hooks/useFetchApartment";
 import ToastManager, { Toast } from "toastify-react-native";
 import { displayError, displaySuccess } from "../../../utils/toastService";
+import useFetchCurrentUser from "../../../hooks/useFetchCurrentUser";
 
+//Kolla rättigheter
+export const canChangeStatus = (user, apartment) => {
+  console.log("user.unit:", user?.unit);
+  console.log("apartment.assignedUnit:", apartment?.assignedUnit);
+  console.log("user.role:", user?.role);
+  if (!user || !apartment) return false;
+
+  const roles = ["Områdeschef", "Avdelningschef", "Flyttstädansvarig"];
+
+  const sameUnit =
+    user.unit &&
+    apartment.assignedUnit &&
+    user.unit.toString() === apartment.assignedUnit.toString();
+
+  const hasRole = roles.some((role) => {
+    if (Array.isArray(user.role)) return user.role.includes(role);
+    if (typeof user.role === "string") return user.role === role;
+    return false;
+  });
+
+  return sameUnit || hasRole;
+};
 export default function ApartmentDetail() {
+  const { user } = useFetchCurrentUser();
+
   const { apartmentId } = useLocalSearchParams();
   const router = useRouter();
   const [apartment, setApartment] = useState(null);
@@ -61,14 +87,6 @@ export default function ApartmentDetail() {
     setSelectedStatus(newStatus);
   };
 
-  // if (!apartment) {
-  //   return (
-  //     <View style={styles.loadingContainer}>
-  //       <Text>Laddar lägenhet {apartmentId}...</Text>
-  //     </View>
-  //   );
-  // }
-
   if (!apartment) {
     return (
       <SafeAreaView
@@ -82,6 +100,7 @@ export default function ApartmentDetail() {
       </SafeAreaView>
     );
   }
+
   return (
     <ScrollView style={styles.container}>
       <ToastManager />
@@ -91,7 +110,7 @@ export default function ApartmentDetail() {
           <Icon name="info-circle" size={16} /> {selectedStatus}
         </Text>
       </View>
-
+      {apartment && <Text>{apartment?.assignedUnit?.name}</Text>}
       <Text style={styles.description}>{apartment.description}</Text>
 
       <View style={styles.detailContainer}>
@@ -109,21 +128,27 @@ export default function ApartmentDetail() {
           {new Date(apartment.endDate).toLocaleDateString("sv-SE")}
         </Text>
 
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Välj Status:</Text>
-          <Picker
-            selectedValue={selectedStatus}
-            onValueChange={handleStatusChange}
-            style={styles.picker}>
-            {statusar.map((status) => (
-              <Picker.Item key={status} label={status} value={status} />
-            ))}
-          </Picker>
-        </View>
+        {canChangeStatus(user, apartment) && (
+          <>
+            <View style={styles.pickerContainer}>
+              <Text style={styles.pickerLabel}>Välj Status:</Text>
+              <Picker
+                selectedValue={selectedStatus}
+                onValueChange={handleStatusChange}
+                style={styles.picker}>
+                {statusar.map((status) => (
+                  <Picker.Item key={status} label={status} value={status} />
+                ))}
+              </Picker>
+            </View>
 
-        <TouchableOpacity style={styles.updateButton} onPress={changeStatus}>
-          <Text style={styles.buttonTitle}>Byt status</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.updateButton}
+              onPress={changeStatus}>
+              <Text style={styles.buttonTitle}>Byt status</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </ScrollView>
   );

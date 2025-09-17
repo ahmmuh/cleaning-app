@@ -11,6 +11,8 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { getUnitByID } from "../../../../../backend/api";
 import { FontAwesome } from "@expo/vector-icons";
+import useFetchCurrentUser from "../../../../../hooks/useFetchCurrentUser";
+import useFetchUsers from "../../../../../hooks/useFetchUsers";
 
 function ApartmentScreen() {
   const { unitId } = useLocalSearchParams();
@@ -19,6 +21,9 @@ function ApartmentScreen() {
   const [apartments, setApartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { users } = useFetchUsers();
+
+  const { user } = useFetchCurrentUser();
 
   const fetchApartments = async () => {
     try {

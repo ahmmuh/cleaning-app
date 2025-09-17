@@ -18,7 +18,7 @@ function ChefLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: "Chef",
+          // title: "Chef",
           headerShown: true,
         }}
       />
