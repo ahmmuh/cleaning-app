@@ -2,8 +2,10 @@ import React from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+import useFetchCurrentUser from "../../hooks/useFetchCurrentUser";
 
 function TaskItem({ item }) {
+  const { user } = useFetchCurrentUser();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{item.title}</Text>
@@ -43,12 +45,16 @@ function TaskItem({ item }) {
       )}
 
       {/* Länk till redigering */}
-      <View style={styles.linkContainer}>
-        <Link href={`/tasks/${item._id}/editTask`} style={styles.editLink}>
-          <FontAwesome name="edit" size={16} color="white" />
-          <Text style={styles.editLinkText}> Redigera</Text>
-        </Link>
-      </View>
+      {user &&
+        user.unit ===
+          (typeof item.unit === "string" ? item.unit : item.unit?._id) && (
+          <View style={styles.linkContainer}>
+            <Link href={`/tasks/${item._id}/editTask`} style={styles.editLink}>
+              <FontAwesome name="edit" size={16} color="white" />
+              <Text style={styles.editLinkText}> Redigera</Text>
+            </Link>
+          </View>
+        )}
     </View>
   );
 }
