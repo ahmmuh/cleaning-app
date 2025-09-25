@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../utils/registerForPushNotifications";
+import useFetchCurrentUser from "./useFetchCurrentUser";
+import { saveExpoPushToken } from "../backend/userAPI";
 
 export default function usePushNotifications() {
   const [expoPushToken, setExpoPushToken] = useState(null);
   const [notification, setNotification] = useState(null);
+  const { user } = useFetchCurrentUser();
 
   useEffect(() => {
+    // if (!user) return;
     registerForPushNotificationsAsync().then((token) => {
+      console.log("Expo push token:", token);
       setExpoPushToken(token);
-
-      // 👇 här kan du spara token i backend
-      // fetch("http://localhost:8000/api/save-token", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ token }),
-      // });
+      saveExpoPushToken(token);
     });
 
     const subscription = Notifications.addNotificationReceivedListener((n) => {
@@ -23,7 +22,7 @@ export default function usePushNotifications() {
     });
 
     return () => subscription.remove();
-  }, []);
+  }, [user]);
 
   return { expoPushToken, notification };
 }

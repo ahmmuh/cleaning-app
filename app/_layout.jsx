@@ -1,20 +1,15 @@
 import { Stack, Tabs } from "expo-router";
 import ToastManager, { Toast } from "toastify-react-native";
 import LoginScreen from "./auth";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import AuthProvider from "./context/auth/AuthProvider";
 import useAuth from "./context/auth/useAuth";
-import { ActivityIndicator } from "react-native-web";
-import usePushNotifications from "../hooks/usePushNotifications";
+import PushTokenManager from "../utils/pushTokenManager";
 
 export default function RootLayout() {
-  const { expoPushToken, notification } = usePushNotifications();
   return (
     <AuthProvider>
-      <LayoutContent
-        expoPushToken={expoPushToken}
-        notification={notification}
-      />
+      <LayoutContent />
     </AuthProvider>
   );
 }
@@ -35,22 +30,22 @@ const LayoutContent = () => {
     );
   }
 
-  console.log("expoPushToken: ", expoPushToken);
-  console.log("notification: ", notification);
-
   return (
     <>
       <ToastManager />
+      {user && <PushTokenManager />}
       {user ? (
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}>
-          <Stack.Screen
-            name="(tabs)"
-            options={{ headerTitle: "", headerShown: false }}
-          />
-        </Stack>
+        <>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}>
+            <Stack.Screen
+              name="(tabs)"
+              options={{ headerTitle: "", headerShown: false }}
+            />
+          </Stack>
+        </>
       ) : (
         <LoginScreen />
       )}
