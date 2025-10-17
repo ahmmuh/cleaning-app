@@ -1,4 +1,4 @@
-import fetchWithAuth from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 export const signUp = async (user) => {
@@ -50,7 +50,7 @@ export const signIn = async (user) => {
 // Logout
 export const logout = async () => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/users/auth/logout`, {
+    const data = await FetchWithAuth(`${BASE_URL}/users/auth/logout`, {
       method: "POST",
     });
 
@@ -64,7 +64,7 @@ export const logout = async () => {
 // Current user
 export const getCurrentUser = async () => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/users/me`, {
+    const data = await FetchWithAuth(`${BASE_URL}/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

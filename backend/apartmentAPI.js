@@ -1,6 +1,6 @@
 // import { BASE_URL } from "./base_url";
 
-import fetchWithAuth from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 // export const getAllApartments = async () => {
@@ -209,7 +209,7 @@ import { BASE_URL } from "./base_url";
 // ✅ Skapa lägenhet
 export const createApartment = async (newApartment) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/apartments`, {
+    const data = await FetchWithAuth(`${BASE_URL}/apartments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

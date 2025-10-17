@@ -1,36 +1,28 @@
 {
   "expo": {
-    "name": "cleaning-app",
-    "slug": "cleaning-app",
+    "name": "new-project",
+    "slug": "new-project",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "newproject",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
-    "jsEngine": "hermes",
+    "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.ahmmuh.cleaningapp",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
+      "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.ahmmuh.cleaningapp"
+      //   "adaptiveIcon": {
+      //     "backgroundColor": "#E6F4FE",
+      //     "foregroundImage": "./assets/images/android-icon-foreground.png",
+      //     "backgroundImage": "./assets/images/android-icon-background.png",
+      //     "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      //   },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ahmmuh.newproject"
     },
     "web": {
-      "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
@@ -42,28 +34,16 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
         }
-      ],
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
-        }
-      ],
-      "expo-font",
-      "expo-web-browser"
+      ]
     ],
     "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "de4db57d-bcf2-4ef2-bbb7-8e75f106d125"
-      }
+      "typedRoutes": true,
+      "reactCompiler": true
     }
   }
 }

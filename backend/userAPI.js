@@ -25,7 +25,7 @@
 
 //Code från nextjs (USER API)
 
-import FetchWithAuth from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 export const getUsers = async () => {

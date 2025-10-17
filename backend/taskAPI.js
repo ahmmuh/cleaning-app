@@ -1,4 +1,4 @@
-import FetchWithAuth from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 // Add new task to unit

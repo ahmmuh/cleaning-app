@@ -1,10 +1,11 @@
 //workplaceRoute.get("/units/:unitId/workplaces", getAllWorkPlaces);
 
+import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 export const getWorkplaces = async (unitId) => {
   try {
-    const res = await fetch(`${BASE_URL}/units/${unitId}/workplaces`);
+    const res = await FetchWithAuth(`${BASE_URL}/units/${unitId}/workplaces`);
     if (!res.ok) {
       throw new Error(`HTTP Error! status: ${res.status}`);
     }

@@ -294,7 +294,7 @@
 // import { fetchWithAuth } from "@/app/lib/fetchWithAuth";
 // import { BASE_URL } from "./base_url";
 
-import FetchWithAuth from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 // export const createUnit = async (newUnit) => {
 //   try {

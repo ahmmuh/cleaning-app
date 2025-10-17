@@ -1,4 +1,4 @@
-package com.ahmmuh.cleaningapp
+package com.ahmmuh.newproject
 
 import android.app.Application
 import android.content.res.Configuration

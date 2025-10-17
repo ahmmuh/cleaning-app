@@ -177,7 +177,7 @@
 
 //COde från nextjs (KEY API)
 
-import FetchWithAuth from "../app/lib/fetchWithAuth";
+import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
 // key with QR Code
