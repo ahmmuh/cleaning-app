@@ -227,7 +227,7 @@ export const createApartment = async (newApartment) => {
 
 export const getApartments = async () => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/apartments`, {
+    const data = await FetchWithAuth(`${BASE_URL}/apartments`, {
       method: "GET",
     });
 
@@ -241,7 +241,7 @@ export const getApartments = async () => {
 
 export const getApartmentByID = async (apartmentId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
       method: "GET",
     });
 
@@ -255,7 +255,7 @@ export const getApartmentByID = async (apartmentId) => {
 
 export const updateApartment = async (apartmentId, updatedApartment) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -273,7 +273,7 @@ export const updateApartment = async (apartmentId, updatedApartment) => {
 
 export const deleteApartment = async (apartmentId) => {
   try {
-    const data = await fetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
+    const data = await FetchWithAuth(`${BASE_URL}/apartments/${apartmentId}`, {
       method: "DELETE",
     });
 
@@ -288,7 +288,7 @@ export const searchApartments = async (query) => {
   if (!query.trim()) return [];
 
   try {
-    const data = await fetchWithAuth(
+    const data = await FetchWithAuth(
       `${BASE_URL}/apartments/search?apartmentLocation=${query}`,
       {
         method: "GET",

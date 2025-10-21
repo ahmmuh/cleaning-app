@@ -14,12 +14,19 @@ import useFetchUnits from "../../hooks/useFetchUnits";
 import useFetchKeys from "../../hooks/useFetchKeys";
 import useFetchApartment from "../../hooks/useFetchApartment";
 import useFetchTasks from "../../hooks/useFetchTasks";
+import useFetchMachines from "../../hooks/useFetchMachines";
 
 function HomeScreen() {
   const router = useRouter();
 
   const { units, loading: loadingUnits, error: errorUnits } = useFetchUnits();
   const { keys, loading: loadingKeys, error: errorKeys } = useFetchKeys();
+  const {
+    machines,
+    loading: loadingMachines,
+    error: errorMachines,
+  } = useFetchMachines();
+
   const {
     apartments,
     loading: loadingApartments,
@@ -28,8 +35,13 @@ function HomeScreen() {
   const { tasks, loading: loadingTasks, error: errorTasks } = useFetchTasks();
 
   const loading =
-    loadingUnits || loadingKeys || loadingApartments || loadingTasks;
-  const error = errorUnits || errorKeys || errorApartments || errorTasks;
+    loadingUnits ||
+    loadingKeys ||
+    loadingApartments ||
+    loadingTasks ||
+    loadingMachines;
+  const error =
+    errorUnits || errorKeys || errorApartments || errorTasks || errorMachines;
 
   if (loading) {
     return (
@@ -107,6 +119,19 @@ function HomeScreen() {
             />
             <Text style={styles.cardTitle}>Nycklar</Text>
             <Text style={styles.cardCount}>{keys.length}</Text>
+          </TouchableOpacity>
+          {/* Maskiner */}
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#fff3e0" }]}
+            onPress={() => router.push("/machines")}>
+            <FontAwesome5
+              name="cog"
+              size={26}
+              color="#ef6c00"
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardTitle}>Maskiner</Text>
+            <Text style={styles.cardCount}>{machines?.length}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

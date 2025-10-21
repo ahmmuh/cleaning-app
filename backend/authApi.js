@@ -102,7 +102,7 @@ export const getCurrentUser = async () => {
 //     throw new Error(`Logout-fel: ${error.message}`);
 //   }
 // };
-
+  
 // //Current user
 // export const getCurrentUser = async () => {
 //   try {

@@ -9,7 +9,7 @@ function TaskItem({ item }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.location}>{item.location}</Text>
+      <Text style={styles.location}>{item.address}</Text>
 
       <Text style={styles.assignedTo}>Tilldelad: {item.unit?.name}</Text>
       <Text style={styles.description}>{item.description}</Text>
