@@ -105,12 +105,11 @@ export default function MachineIndex() {
   const { machines, loading, error } = useFetchMachines();
   const [selectedUnit, setSelectedUnit] = useState("");
 
-  // Memoize unika enheter för att undvika onödiga renders
   const units = useMemo(() => {
     if (!machines) return [];
     const seen = new Set();
     return machines
-      .map((m) => m.unitId)
+      ?.map((m) => m.unitId)
       .filter((u) => u && u._id && !seen.has(u._id) && seen.add(u._id));
   }, [machines]);
 
@@ -118,7 +117,7 @@ export default function MachineIndex() {
   const filteredMachines = useMemo(() => {
     if (!machines) return [];
     return selectedUnit
-      ? machines.filter((m) => m.unitId?._id === selectedUnit)
+      ? machines?.filter((m) => m.unitId?._id === selectedUnit)
       : machines;
   }, [machines, selectedUnit]);
 
@@ -146,7 +145,7 @@ export default function MachineIndex() {
           onValueChange={(itemValue) => setSelectedUnit(itemValue)}
           mode="dropdown">
           <Picker.Item label="Alla enheter" value="" />
-          {units.map((unit) => (
+          {units?.map((unit) => (
             <Picker.Item
               key={unit._id}
               label={unit.name || "Okänd"}
@@ -159,7 +158,16 @@ export default function MachineIndex() {
       <FlatList
         data={filteredMachines}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <MachineItem item={item} />}
+        renderItem={({ item }) => (
+          <MachineItem
+            item={item}
+            ListEmptyComponent={() => (
+              <Text style={{ textAlign: "center", marginTop: 20 }}>
+                Inga maskiner hittades
+              </Text>
+            )}
+          />
+        )}
       />
     </SafeAreaView>
   );

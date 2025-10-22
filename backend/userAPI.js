@@ -70,7 +70,7 @@ export const deleteUser = async (userId) => {
 
 export const saveExpoPushToken = async (expoPushToken) => {
   try {
-    const res = await FetchWithAuth(`${BASE_URL}/save-token`, {
+    const res = await FetchWithAuth(`${BASE_URL}/users/save-token`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

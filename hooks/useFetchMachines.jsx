@@ -10,10 +10,28 @@ function useFetchMachines() {
   // Hämta alla maskiner
   const fetchMachines = useCallback(async () => {
     setLoading(true);
-    const data = await getAllMachines();
-    if (data === "unauthorized") setError("Unauthorized");
-    else setMachines(data || []);
-    setLoading(false);
+
+    try {
+      const data = await getAllMachines(); // kan kasta Error("Unauthorized")
+
+      if (!Array.isArray(data)) {
+        throw new Error("Felaktig data, data är inte en array");
+      }
+      if (data?.length === 0) {
+        console.log("Det finns inga maskiner att visa");
+        return;
+      }
+      setMachines(Array.isArray(data) ? data : []);
+    } catch (error) {
+      if (error.message === "Unauthorized") {
+        setError("Du är inte inloggad eller har inte behörighet.");
+      } else {
+        setError(error.message || "Fel vid hämtning av maskiner");
+      }
+      console.log("Fel vid hämtning av maskiner:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   // Skapa maskin

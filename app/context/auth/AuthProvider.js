@@ -4,6 +4,8 @@ import { getCurrentUser, signIn, testHandler } from "../../../backend/authApi";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, View } from "react-native";
+import NotificationScreen from "../../expo-notifications";
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
@@ -25,29 +27,6 @@ const AuthProvider = ({ children }) => {
 
     loadUser();
   }, []);
-
-  // const login = async (userData) => {
-  //   try {
-  //     const data = await signIn(userData);
-
-  //     if (data.token) {
-  //       await AsyncStorage.setItem("userToken", JSON.stringify(data));
-  //       setUser(data);
-  //       return true;
-  //     } else {
-  //       throw new Error("Ingen token mottagen");
-  //     }
-  //   } catch (error) {
-  //     console.log("Fel vid inloggning", error);
-  //     if (error.message === "Unauthorized") {
-  //       router.push("/auth");
-  //     }
-  //     setError(error);
-  //     return false;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const login = async (userData) => {
     try {
@@ -86,8 +65,107 @@ const AuthProvider = ({ children }) => {
   }
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
+      {/* {user && <NotificationScreen />} */}
+
       {children}
     </AuthContext.Provider>
   );
 };
 export default AuthProvider;
+
+// //NY KOD:
+
+// import React, { useEffect, useState } from "react";
+// import AuthContext from "./AuthContext";
+// import { getCurrentUser, signIn } from "../../../backend/authApi";
+// import { useRouter } from "expo-router";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { ActivityIndicator, View } from "react-native";
+// // import NotificationScreen from "../../expo-notifications";
+
+// const AuthProvider = ({ children }) => {
+//   const [user, setUser] = useState(null);
+//   const [error, setError] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const router = useRouter();
+
+//   // 🟢 Vid appstart: hämta token från AsyncStorage
+//   useEffect(() => {
+//     const loadUser = async () => {
+//       try {
+//         const savedToken = await AsyncStorage.getItem("userToken");
+//         if (savedToken) {
+//           // 🔹 Här kan du verifiera token eller hämta aktuell användare
+//           const currentUser = await getCurrentUser(savedToken);
+//           if (currentUser) {
+//             setUser(currentUser);
+//             console.log("✅ Laddade användare från AsyncStorage:", currentUser);
+//           }
+//         }
+//       } catch (error) {
+//         console.log("⚠️ Fel vid laddning av användare:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     loadUser();
+//   }, []);
+
+//   // 🟢 Login och spara token
+//   const login = async (userData) => {
+//     setLoading(true);
+//     try {
+//       const data = await signIn(userData);
+
+//       if (data?.token) {
+//         // Spara token i AsyncStorage
+//         await AsyncStorage.setItem("userToken", data.token);
+
+//         // Hämta användarinfo baserat på token
+//         const currentUser = await getCurrentUser(data.token);
+//         setUser(currentUser);
+
+//         console.log("🔐 Inloggad användare:", currentUser);
+//         return true;
+//       } else {
+//         throw new Error("Ingen token mottagen");
+//       }
+//     } catch (error) {
+//       console.log("❌ Fel vid inloggning:", error);
+//       setError(error);
+//       return false;
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // 🔴 Logout
+//   const logout = async () => {
+//     await AsyncStorage.removeItem("userToken");
+//     setUser(null);
+//     router.replace("/auth"); // navigera till login
+//   };
+
+//   if (loading) {
+//     return (
+//       <View
+//         style={{
+//           flex: 1,
+//           justifyContent: "center",
+//           alignItems: "center",
+//         }}>
+//         <ActivityIndicator size={30} color={"green"} />
+//       </View>
+//     );
+//   }
+
+//   return (
+//     <AuthContext.Provider value={{ user, loading, login, logout, error }}>
+//       {/* {user && <NotificationScreen />} */}
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// export default AuthProvider;

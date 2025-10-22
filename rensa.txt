@@ -1,0 +1,39 @@
+# Ta bort node_modules
+rd /s /q node_modules
+
+# Ta bort package-lock.json (eller yarn.lock)
+del package-lock.json
+# del yarn.lock   # om du använder yarn
+
+# Ta bort Android builds
+rd /s /q android\build
+rd /s /q android\app\build
+rd /s /q android\.cxx
+rd /s /q android\app\.cxx
+
+# Ta bort ev. genererade mappar för autolinking
+rd /s /q android\app\build\generated
+npm install
+
+
+cd android
+gradlew clean
+cd ..
+
+
+Rensa React Native cache
+npx react-native-clean-project --remove-builds --remove-node-modules
+
+npx react-native run-android
+
+// ELLER Expo client
+npx expo run:android
+
+
+//
+rm -rf node_modules
+rm -rf .expo
+rm -rf package-lock.json
+npm install
+expo install expo-location
+

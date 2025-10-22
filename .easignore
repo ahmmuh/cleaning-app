@@ -1,0 +1,42 @@
+# Node modules installeras på build-servern
+node_modules/
+
+# Expo cache
+.expo/
+.expo-shared/
+.expo-local/
+.expo-cache/
+
+# Android och iOS build-filer
+android/build/
+android/.gradle/
+ios/build/
+ios/Pods/
+
+# Genererade mappar
+dist/
+build/
+
+# IDE och loggar
+.vscode/
+.idea/
+*.log
+*.tmp
+*.bak
+*.old
+
+# Git
+.git/
+.gitignore
+
+# Stora lokala filer
+*.zip
+*.rar
+*.7z
+*.psd
+*.ai
+
+# Eventuella testdata eller dokumentation
+tests/
+mock-data/
+docs/

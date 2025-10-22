@@ -40,8 +40,7 @@ function HomeScreen() {
     loadingApartments ||
     loadingTasks ||
     loadingMachines;
-  const error =
-    errorUnits || errorKeys || errorApartments || errorTasks || errorMachines;
+  const error = errorUnits || errorKeys || errorApartments || errorTasks;
 
   if (loading) {
     return (
@@ -132,6 +131,20 @@ function HomeScreen() {
             />
             <Text style={styles.cardTitle}>Maskiner</Text>
             <Text style={styles.cardCount}>{machines?.length}</Text>
+          </TouchableOpacity>
+
+          {/* Stämpla in/ut */}
+
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#ddf3cc" }]}
+            onPress={() => router.push("/clocks")}>
+            <FontAwesome5
+              name="clock"
+              size={26}
+              color="#ef6c00"
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardTitle}>Stämpla in/ut</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

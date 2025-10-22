@@ -4,9 +4,11 @@ import LoginScreen from "./auth";
 import { ActivityIndicator, Text, View } from "react-native";
 import AuthProvider from "./context/auth/AuthProvider";
 import useAuth from "./context/auth/useAuth";
-import PushTokenManager from "../utils/pushTokenManager";
+// import { useKeepAwake } from "expo-keep-awake";
+import NotificationScreen from "./expo-notifications";
 
 export default function RootLayout() {
+  // useKeepAwake();
   return (
     <AuthProvider>
       <LayoutContent />
@@ -33,7 +35,6 @@ const LayoutContent = () => {
   return (
     <>
       <ToastManager />
-      {user && <PushTokenManager />}
       {user ? (
         <>
           <Stack

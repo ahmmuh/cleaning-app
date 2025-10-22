@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as Notifications from "expo-notifications";
-import { registerForPushNotificationsAsync } from "../utils/registerForPushNotifications";
 import useFetchCurrentUser from "./useFetchCurrentUser";
+import { registerForPushNotificationsAsync } from "../utils/registerForPushNotifications";
 import { saveExpoPushToken } from "../backend/userAPI";
 
 export default function usePushNotifications() {
@@ -10,7 +10,7 @@ export default function usePushNotifications() {
   const { user } = useFetchCurrentUser();
 
   useEffect(() => {
-    // if (!user) return;
+    if (!user) return;
     registerForPushNotificationsAsync().then((token) => {
       console.log("Expo push token:", token);
       setExpoPushToken(token);
