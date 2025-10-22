@@ -1,90 +1,137 @@
+// import * as Location from "expo-location";
+// import FetchWithAuth from "../lib/fetchWithAuth";
+// import { BASE_URL } from "./base_url";
+
+// // 📍 Hämta användarens position
+// const getCurrentPosition = async () => {
+//   const { status } = await Location.requestForegroundPermissionsAsync();
+//   if (status !== "granted") throw new Error("Geolocation-behörighet nekad.");
+
+//   const coords = await Location.getCurrentPositionAsync({});
+//   return coords.coords;
+// };
+
+// // 🟢 STÄMPLA IN
+// export const clockIn = async (lastFour) => {
+//   try {
+//     const coords = await getCurrentPosition();
+//     const location = {
+//       type: "Point",
+//       coordinates: [coords.longitude, coords.latitude],
+//     };
+
+//     console.log("Användarens location  i clockIn", location);
+
+//     const data = await FetchWithAuth(`${BASE_URL}/clocks/in`, {
+//       method: "POST",
+//       body: JSON.stringify({ lastFour, location }),
+//     });
+
+//     // Returnera hela objektet med message + isError
+//     return data;
+//   } catch (error) {
+//     try {
+//       const parsed = JSON.parse(error.message);
+//       return { isError: true, message: parsed?.message || "Något gick fel" };
+//     } catch {
+//       return { isError: true, message: "Något gick fel" };
+//     }
+//   }
+// };
+
+// // 🔵 STÄMPLA UT
+// export const clockOut = async (lastFour) => {
+//   try {
+//     const coords = await getCurrentPosition();
+//     const location = {
+//       type: "Point",
+//       coordinates: [coords.longitude, coords.latitude],
+//     };
+
+//     console.log("Användarens location i clockOut", location);
+
+//     const data = await FetchWithAuth(`${BASE_URL}/clocks/out`, {
+//       method: "POST",
+//       body: JSON.stringify({ lastFour, location }),
+//     });
+
+//     // Lägg till isError fallback
+//     return {
+//       message: data?.message || "Stämpling ut lyckades",
+//       isError: data?.isError || false,
+//     };
+//   } catch (error) {
+//     try {
+//       const parsed = JSON.parse(error.message);
+//       return { isError: true, message: parsed?.message || "Något gick fel" };
+//     } catch {
+//       return { isError: true, message: "Något gick fel" };
+//     }
+//   }
+// };
+
 import * as Location from "expo-location";
 import FetchWithAuth from "../lib/fetchWithAuth";
 import { BASE_URL } from "./base_url";
 
+const MAX_ACCURACY = 200; // meter, max osäkerhet
+
 const getCurrentPosition = async () => {
   const { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") {
-    throw new Error("Geolocation behörighet nekad.");
+    return { isError: true, message: "Geolocation-behörighet nekad." };
   }
 
   const coords = await Location.getCurrentPositionAsync({});
+
+  if (coords.coords.accuracy > MAX_ACCURACY) {
+    return {
+      isError: true,
+      message: "GPS är inte tillräckligt exakt. Slå på Precise Location.",
+    };
+  }
+
   return coords.coords;
 };
 
-// ===============================
-// 🟢 STÄMPLA IN
-// ===============================
 export const clockIn = async (lastFour) => {
-  console.log("▶️ clockIn startar...", lastFour);
-
   try {
     const coords = await getCurrentPosition();
-    console.log("📍 Position hämtad:", coords);
+    if (coords.isError) return coords;
 
     const location = {
       type: "Point",
       coordinates: [coords.longitude, coords.latitude],
     };
 
-    const res = await FetchWithAuth(`${BASE_URL}/clocks/in`, {
+    const data = await FetchWithAuth(`${BASE_URL}/clocks/in`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ lastFour, location }),
     });
 
-    console.log("📡 clockIn svarstatus:", res.status);
-
-    if (!res.ok) {
-      // const errorText = await res.text();
-      // console.error("⚠️ clockIn misslyckades:", errorText);
-      // throw new Error(errorText || "Misslyckades med clock in");
-      return;
-    }
-
-    const data = await res.json();
-    console.log("✅ clockIn data:", data);
     return data;
   } catch (error) {
-    // console.error("💥 clockIn error:", error.message);
-    return;
+    return { isError: true, message: error.message || "Något gick fel" };
   }
 };
 
-// ===============================
-// 🔵 STÄMPLA UT
-// ===============================
 export const clockOut = async (lastFour) => {
-  console.log("▶️ clockOut startar...", lastFour);
-
   try {
     const coords = await getCurrentPosition();
-    console.log("📍 Position hämtad:", coords);
+    if (coords.isError) return coords;
 
     const location = {
       type: "Point",
       coordinates: [coords.longitude, coords.latitude],
     };
 
-    const res = await FetchWithAuth(`${BASE_URL}/clocks/out`, {
+    const data = await FetchWithAuth(`${BASE_URL}/clocks/out`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ lastFour, location }),
     });
 
-    console.log("📡 clockOut svarstatus:", res.status);
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("⚠️ clockOut misslyckades:", errorText);
-      throw new Error(errorText || "Misslyckades med clock out");
-    }
-
-    const data = await res.json();
-    console.log("✅ clockOut data:", data);
     return data;
   } catch (error) {
-    console.error("💥 clockOut error:", error.message);
-    throw error;
+    return { isError: true, message: error.message || "Något gick fel" };
   }
 };

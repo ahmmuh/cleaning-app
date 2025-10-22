@@ -6,13 +6,21 @@ import AuthProvider from "./context/auth/AuthProvider";
 import useAuth from "./context/auth/useAuth";
 // import { useKeepAwake } from "expo-keep-awake";
 import NotificationScreen from "./expo-notifications";
+import { QueryClientProvider } from "@tanstack/react-query";
+import queryClient from "../rensa_cache/clear_cache";
+import { useEffect } from "react";
 
 export default function RootLayout() {
   // useKeepAwake();
+  useEffect(() => {
+    queryClient.clear();
+  }, []);
   return (
-    <AuthProvider>
-      <LayoutContent />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <LayoutContent />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 
