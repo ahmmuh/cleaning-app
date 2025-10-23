@@ -37,3 +37,7 @@ rm -rf package-lock.json
 npm install
 expo install expo-location
 
+// bygga om appen
+eas build --platform android --profile development
+
+
