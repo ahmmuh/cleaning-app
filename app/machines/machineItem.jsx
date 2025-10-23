@@ -1,4 +1,3 @@
-
 //NI kod:
 
 import React from "react";
@@ -23,9 +22,12 @@ export default function MachineItem({ item }) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.detail}>Enhet: {item.unitId?.name || "Okänd"}</Text>
+      <Text style={styles.detail}> {item.unitId?.name || "Okänd"}</Text>
       <Text style={[styles.detail, { color: isAvailable ? "green" : "red" }]}>
         Status: {isAvailable ? "Inne" : "Utlånad"}
+      </Text>
+      <Text style={styles.detail}>
+        Senast ändrad: {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
       </Text>
     </View>
   );

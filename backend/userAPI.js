@@ -68,9 +68,29 @@ export const deleteUser = async (userId) => {
 
 //Skika notis till backend
 
+// export const saveExpoPushToken = async (expoPushToken) => {
+//   try {
+//     const res = await FetchWithAuth(`${BASE_URL}/users/save-token`, {
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         expoPushToken,
+//       }),
+//     });
+
+//     const result = await res.json();
+//     return result;
+//   } catch (error) {
+//     console.error("Fel vid skickande av push-notis:", error);
+//     return { success: false, message: "Kunde inte skicka push-notis" };
+//   }
+// };
+
 export const saveExpoPushToken = async (expoPushToken) => {
   try {
-    const res = await FetchWithAuth(`${BASE_URL}/users/save-token`, {
+    const result = await FetchWithAuth(`${BASE_URL}/users/save-token`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -80,8 +100,7 @@ export const saveExpoPushToken = async (expoPushToken) => {
       }),
     });
 
-    const result = await res.json();
-    return result;
+    return result; // redan JSON
   } catch (error) {
     console.error("Fel vid skickande av push-notis:", error);
     return { success: false, message: "Kunde inte skicka push-notis" };

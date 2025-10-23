@@ -19,7 +19,7 @@ export async function registerForPushNotificationsAsync() {
       alert("Du måste ge tillåtelse för att ta emot notiser!");
       return null;
     }
-
+    
     token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
     alert("Du måste använda en fysisk enhet för att få push-notiser.");

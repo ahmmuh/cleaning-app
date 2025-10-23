@@ -2,244 +2,144 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
+  StyleSheet,
   SafeAreaView,
-  ActivityIndicator,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { getUnitByID } from "../../../../../backend/api";
 import { FontAwesome } from "@expo/vector-icons";
-import useFetchCurrentUser from "../../../../../hooks/useFetchCurrentUser";
-import useFetchUsers from "../../../../../hooks/useFetchUsers";
+import { getUnitByID } from "../../../../../backend/api";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
-function ApartmentScreen() {
-  const { unitId } = useLocalSearchParams();
+export default function ApartmentScreen() {
   const router = useRouter();
-
-  const [apartments, setApartments] = useState([]);
+  const { unitId } = useLocalSearchParams();
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { users } = useFetchUsers();
-
-  const { user } = useFetchCurrentUser();
-
-  const fetchApartments = async () => {
-    try {
-      const unitData = await getUnitByID(unitId);
-
-      if (!unitData?.apartments || unitData.apartments.length === 0) {
-        setApartments([]);
-        return;
-      }
-
-      const uniqueApartments = unitData.apartments.filter(
-        (apartment, index, self) =>
-          index === self.findIndex((a) => a._id === apartment._id)
-      );
-
-      setApartments(uniqueApartments);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchApartments = async () => {
+      if (!unitId) return;
+      setLoading(true);
+      try {
+        const unitData = await getUnitByID(unitId);
+        console.log("Unit data:", unitData);
+        if (unitData && Array.isArray(unitData.apartments)) {
+          setData(unitData.apartments);
+        } else {
+          setData([]);
+        }
+      } catch (err) {
+        console.error("Kunde inte hämta unit:", err);
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchApartments();
   }, [unitId]);
 
+  console.log("Data", data);
+
   const editHandler = (apartmentId) => {
-    router.push(
-      //   `/units/${unitId}/apartments/editApartment?apartmentId=${apartmentId}``/units/${unitId}/apartments/${apartmentId}`
-      `/units/${unitId}/apartments/${apartmentId}`
-    );
+    router.push(`/units/${unitId}/apartments/${apartmentId}`);
   };
 
   const detailHandler = (apartmentId) => {
     router.push(`/units/${unitId}/apartments/${apartmentId}`);
   };
 
-  const formatDate = (date) =>
-    date ? new Date(date).toLocaleDateString("sv-SE") : "-";
-
   if (loading) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#84c276" />
+        <Text>Laddar flyttstäd...</Text>
       </View>
     );
   }
 
-  if (error) {
+  if (data.length === 0) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>{error.message}</Text>
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.centered}>
+          <Text style={styles.noDataText}>Inga flyttstäd hittades.</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {apartments.length === 0 ? (
-          <View style={styles.centered}>
-            <Text style={styles.noDataText}>Inga flyttstäd hittades.</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={apartments}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => detailHandler(item._id)}>
-                <View style={styles.card}>
-                  <View style={styles.headerRow}>
-                    <Text style={styles.title}>{item.apartmentLocation}</Text>
-                    <TouchableOpacity onPress={() => editHandler(item._id)}>
-                      <FontAwesome name="pencil" size={20} color="#1e40af" />
-                    </TouchableOpacity>
-                  </View>
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item._id}
+        contentContainerStyle={{ padding: 16 }}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => detailHandler(item._id)}>
+            <View style={styles.card}>
+              <View style={styles.headerRow}>
+                <Text style={styles.title}>{item.apartmentLocation}</Text>
+                <TouchableOpacity onPress={() => editHandler(item._id)}>
+                  <FontAwesome name="pencil" size={20} color="#1e40af" />
+                </TouchableOpacity>
+              </View>
 
-                  <View>
-                    <Text style={styles.bold}>
-                      Beskrivning: {item.description || "-"}
-                    </Text>
-                    <Text style={styles.bold}>
-                      Nyckelplats: {item.keyLocation || "-"}
-                    </Text>
-                    <Text style={styles.bold}>
-                      Status: {item.status || "-"}
-                    </Text>
-                    <Text style={styles.bold}>
-                      Prioritet: {item.priority || "-"}
-                    </Text>
-                    <Text style={styles.bold}>
-                      Start: {new Date(item.startDate).toLocaleString("sv-SE")}
-                    </Text>
-                    <Text style={styles.bold}>
-                      Slut: {new Date(item.endDate).toLocaleString("sv-SE")}
-                    </Text>
-                    <Text style={styles.bold}>
-                      Tilldelad:{" "}
-                      {new Date(item.assignedAt).toLocaleString("sv-SE")}
-                    </Text>
-                    {item.status === "Ej påbörjat" && (
-                      <Text style={styles.bold}>
-                        Skapad:{" "}
-                        {new Date(item.createdAt).toLocaleString("sv-SE")}
-                      </Text>
-                    )}
-
-                    {item.status === "Påbörjat" && (
-                      <Text
-                        style={[
-                          styles.bold,
-                          {
-                            color: "orange",
-                          },
-                        ]}>
-                        Senast ändrad:{" "}
-                        {new Date(item.updatedAt).toLocaleString("sv-SE")}
-                      </Text>
-                    )}
-                    {item.status === "Färdigt" && (
-                      <Text
-                        style={[
-                          styles.bold,
-                          {
-                            color: "green",
-                          },
-                        ]}>
-                        Senast ändrad:{" "}
-                        {new Date(item.updatedAt).toLocaleString("sv-SE")}
-                      </Text>
-                    )}
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
+              <View style={styles.infoBlock}>
+                <Text style={styles.bold}>
+                  Beskrivning: {item.description || "-"}
+                </Text>
+                <Text style={styles.bold}>
+                  Nyckelplats: {item.keyLocation || "-"}
+                </Text>
+                <Text style={styles.bold}>Status: {item.status || "-"}</Text>
+                <Text style={styles.bold}>
+                  Prioritet: {item.priority || "-"}
+                </Text>
+                <Text style={styles.bold}>
+                  Start:{" "}
+                  {item.startDate
+                    ? new Date(item.startDate).toLocaleString("sv-SE")
+                    : "-"}
+                </Text>
+                <Text style={styles.bold}>
+                  Slut:{" "}
+                  {item.endDate
+                    ? new Date(item.endDate).toLocaleString("sv-SE")
+                    : "-"}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
         )}
-      </View>
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#f4f4f5",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  header: {
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: "#222",
-    marginBottom: 14,
-  },
+  safeArea: { flex: 1, backgroundColor: "#f4f4f5" },
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
   card: {
     backgroundColor: "#fff",
     borderRadius: 12,
     padding: 18,
-    marginBottom: 16, // space mellan kort
-    borderBottomWidth: 2, // tydlig border mellan kort
+    marginBottom: 16,
+    borderBottomWidth: 2,
     borderBottomColor: "#ccc",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
-  cardHeader: {
+  headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 12,
+    marginBottom: 10,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#111",
-  },
-  status: {
-    fontSize: 15,
-    fontWeight: "500",
-    marginTop: 2,
-  },
-  description: {
-    fontSize: 15,
-    color: "#444",
-    paddingVertical: 6,
-    borderBottomWidth: 1, // tunn border mellan beskrivning och nästa rad
-    borderBottomColor: "#e5e7eb",
-    lineHeight: 22,
-    marginBottom: 12,
-  },
-  detailRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 6,
-    borderBottomWidth: 1, // tunn border mellan rader
-    borderBottomColor: "#e5e7eb",
-    marginBottom: 6,
-  },
-  detailText: {
-    fontSize: 15,
-    color: "#666",
-    marginLeft: 8,
-  },
-  updateButton: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 14,
-    borderRadius: 12,
-    marginTop: 16,
-    alignItems: "center",
-  },
-  buttonTitle: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
-    letterSpacing: 0.5,
-  },
+  title: { fontSize: 18, fontWeight: "600", color: "#111" },
+  bold: { fontSize: 15, color: "#333", marginBottom: 4 },
+  infoBlock: { marginTop: 8 },
+  noDataText: { fontSize: 16, color: "#666" },
 });
-
-export default ApartmentScreen;

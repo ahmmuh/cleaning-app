@@ -673,6 +673,7 @@ export const getUnits = async () => {
 export const getUnitByID = async (unitId) => {
   try {
     const data = await FetchWithAuth(`${BASE_URL}/units/${unitId}`);
+    console.log("Data från getUnitByID", data);
     return data;
   } catch (error) {
     console.error("Error fetching unit by ID:", error.message);

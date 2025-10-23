@@ -11,6 +11,7 @@ const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -65,8 +66,7 @@ const AuthProvider = ({ children }) => {
   }
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
-      {/* {user && <NotificationScreen />} */}
-
+      {user && <NotificationScreen />}
       {children}
     </AuthContext.Provider>
   );

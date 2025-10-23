@@ -65,7 +65,7 @@ function UnitScreen() {
     <SafeAreaView style={styles.safeAreaContainer}>
       <FlatList
         data={units}
-        keyExtractor={(item) => item?._id}
+        keyExtractor={(item, index) => item?._id ?? index.toString()}
         contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => {
           const chef = item?.users?.find((user) =>
@@ -146,10 +146,8 @@ function UnitScreen() {
                 style={styles.linkButton}
                 onPress={() =>
                   router.push({
-                    pathname: `/units/${item?._id}/apartments`,
-                    query: {
-                      unitId: item?._id,
-                    },
+                    pathname: `/units/${item._id}/apartments`,
+                    query: { unitId: item._id },
                   })
                 }>
                 <View style={styles.linkContent}>

@@ -1,7 +1,7 @@
 import { Stack, Tabs } from "expo-router";
 import ToastManager, { Toast } from "toastify-react-native";
 import LoginScreen from "./auth";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, StatusBar, Text, View } from "react-native";
 import AuthProvider from "./context/auth/AuthProvider";
 import useAuth from "./context/auth/useAuth";
 // import { useKeepAwake } from "expo-keep-awake";
@@ -42,6 +42,7 @@ const LayoutContent = () => {
 
   return (
     <>
+      <StatusBar backgroundColor="#bff38c" barStyle="dark-content" />
       <ToastManager />
       {user ? (
         <>

@@ -146,6 +146,30 @@ function HomeScreen() {
             />
             <Text style={styles.cardTitle}>Stämpla in/ut</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#ddf3cc" }]}
+            onPress={() => router.push("/users")}>
+            <FontAwesome5
+              name="users"
+              size={26}
+              color="#322626ff"
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardTitle}>Medarbetare</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#e7ede2ff" }]}
+            onPress={() => router.push("/workplaces")}>
+            <FontAwesome5
+              name="building"
+              size={26}
+              color="#0c5aa8ff"
+              style={styles.cardIcon}
+            />
+            <Text style={styles.cardTitle}>Alla objekt</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
