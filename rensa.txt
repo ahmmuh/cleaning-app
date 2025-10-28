@@ -1,9 +1,9 @@
-# Ta bort node_modules
-rd /s /q node_modules
 
-# Ta bort package-lock.json (eller yarn.lock)
+
+# Ta bort  node_modules & package-lock.json (eller yarn.lock)
+rd /s /q node_modules
 del package-lock.json
-# del yarn.lock   # om du använder yarn
+npm install
 
 # Ta bort Android builds
 rd /s /q android\build
@@ -30,14 +30,9 @@ npx react-native run-android
 npx expo run:android
 
 
-//
-rm -rf node_modules
-rm -rf .expo
-rm -rf package-lock.json
-npm install
-expo install expo-location
-
 // bygga om appen
 eas build --platform android --profile development
 
 
+//Start appen:
+npx expo --dev-client

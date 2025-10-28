@@ -14,7 +14,7 @@ export default function usePushNotifications() {
     registerForPushNotificationsAsync().then((token) => {
       console.log("Expo push token:", token);
       setExpoPushToken(token);
-      saveExpoPushToken(token);
+      saveExpoPushToken({ expoPushToken: token.data });
     });
 
     const subscription = Notifications.addNotificationReceivedListener((n) => {

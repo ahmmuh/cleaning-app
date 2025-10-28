@@ -1,6 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
+import ProfileScreen from "./profile";
 
 function TabLayout() {
   return (
@@ -38,6 +39,17 @@ function TabLayout() {
             <FontAwesome size={25} name="building" color={color} />
           ),
           headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Min profil",
+          headerTitle: "Min profil",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome size={25} name="user" color={color} />
+          ),
         }}
       />
     </Tabs>

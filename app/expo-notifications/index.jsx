@@ -6,7 +6,7 @@ function NotificationScreen() {
 
   return (
     <View style={{ padding: 10 }}>
-      <Text>Expo Push Token: {expoPushToken}</Text>
+      {/* <Text>Expo Push Token: {expoPushToken}</Text> */}
       {notification && (
         <Text>Senaste notis: {notification.request.content.body}</Text>
       )}
