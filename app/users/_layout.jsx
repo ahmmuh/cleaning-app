@@ -19,7 +19,7 @@ export default function UsersLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Användare",
+          title: "Medarbetare",
         }}
       />
       <Stack.Screen

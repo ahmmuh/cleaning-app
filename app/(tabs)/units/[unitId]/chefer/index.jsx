@@ -31,11 +31,15 @@ function ChefScreen() {
 
     try {
       const chefData = await getUserById(chefId);
-      if (!chefData) {
+
+      console.log("Fetching chef with ID:", chefId);
+      console.log("Hämtad chefData:", chefData);
+
+      if (!chefData.user) {
         throw new Error("Kunde inte hitta chefens data");
       }
 
-      setChef(chefData);
+      setChef(chefData.user);
       setLoading(false);
     } catch (err) {
       setError(err);
@@ -92,9 +96,9 @@ function ChefScreen() {
         phone={chef.phone}
         url="/units">
         <View style={{ flex: 1 }}>
-          {chef.keys.length > 0 && (
+          {Array.isArray(chef?.keys) && chef.keys.length > 0 && (
             <Text style={{ color: "red" }}>
-              Du har ({chef?.keys.length}) nycklar, vänligen lämna in
+              Du har ({chef.keys.length}) nycklar, vänligen lämna in
             </Text>
           )}
         </View>

@@ -1,15 +1,17 @@
-// import React from "react";
+// import React, { useState } from "react";
 // import {
 //   View,
 //   Text,
 //   FlatList,
 //   StyleSheet,
 //   ActivityIndicator,
+//   TextInput,
 // } from "react-native";
 // import useFetchUsers from "../../hooks/useFetchUsers";
 
 // export default function UsersIndexScreen() {
 //   const { users, loading, error } = useFetchUsers();
+//   const [searchTerm, setSearchTerm] = useState("");
 
 //   if (loading) {
 //     return (
@@ -28,42 +30,57 @@
 //     );
 //   }
 
+//   // Filtrera användare baserat på söktermen
+//   const filteredUsers = users.filter((user) => {
+//     const term = searchTerm.toLowerCase();
+//     const name = user.name?.toLowerCase() || "";
+//     const email = user.email?.toLowerCase() || "";
+//     const roles = Array.isArray(user.role)
+//       ? user.role.join(", ").toLowerCase()
+//       : "";
+//     return name.includes(term) || email.includes(term) || roles.includes(term);
+//   });
+
 //   const renderItem = ({ item }) => (
 //     <View style={styles.card}>
-//       <View style={styles.rowBetween}>
-//         <Text style={styles.name}>{item.name || "Namn saknas"}</Text>
+//       <Text style={styles.name}>{item.name || "Namn saknas"}</Text>
+
+//       {/* Roll */}
+//       <View style={styles.infoRow}>
+//         <Text style={styles.label}>Roll:</Text>
+//         <Text style={styles.value}>
+//           {Array.isArray(item.role) && item.role.length > 0
+//             ? item.role.join(", ")
+//             : "–"}
+//         </Text>
 //       </View>
 
-//       {/* Roller (kan vara flera) */}
-//       {Array.isArray(item.role) && item.role.length > 0 ? (
-//         <View style={styles.rolesContainer}>
-//           {item.role.map((r, index) => (
-//             <Text key={index} style={styles.roleText}>
-//               {r}
-//             </Text>
-//           ))}
-//         </View>
-//       ) : (
-//         <Text style={styles.roleText}>–</Text>
-//       )}
+//       {/* E-post */}
+//       <View style={styles.infoRow}>
+//         <Text style={styles.label}>E-post:</Text>
+//         <Text style={styles.value}>{item.email || "Ingen e-post"}</Text>
+//       </View>
 
-//       {/* E-post och telefon */}
-//       <Text style={styles.email}>{item.email || "Ingen e-post"}</Text>
-//       <Text style={styles.phone}>{item.phone || "–"}</Text>
-
-//       {/* Arbetsplats */}
-//       <View style={styles.placeContainer}>
-//         <Text style={styles.placeLabel}>Arbetsplats:</Text>
-//         <Text style={styles.placeText}>{item.workplace?.name || "–"}</Text>
+//       {/* Telefon */}
+//       <View style={styles.infoRow}>
+//         <Text style={styles.label}>Telefon:</Text>
+//         <Text style={styles.value}>{item.phone || "–"}</Text>
 //       </View>
 //     </View>
 //   );
 
 //   return (
 //     <View style={styles.container}>
-//       <Text style={styles.title}>Användare</Text>
+//       {/* Sökfält */}
+//       <TextInput
+//         style={styles.searchInput}
+//         placeholder="Sök medarbetare..."
+//         value={searchTerm}
+//         onChangeText={setSearchTerm}
+//       />
+
 //       <FlatList
-//         data={users}
+//         data={filteredUsers}
 //         keyExtractor={(item) => item._id}
 //         renderItem={renderItem}
 //         contentContainerStyle={{ paddingBottom: 40 }}
@@ -79,11 +96,13 @@
 //     paddingHorizontal: 15,
 //     paddingTop: 20,
 //   },
-//   title: {
-//     fontSize: 22,
-//     fontWeight: "700",
-//     color: "#1E293B",
+//   searchInput: {
+//     backgroundColor: "#FFF",
+//     padding: 10,
+//     borderRadius: 10,
 //     marginBottom: 15,
+//     borderColor: "#CCC",
+//     borderWidth: 1,
 //   },
 //   card: {
 //     backgroundColor: "#FFFFFF",
@@ -95,47 +114,23 @@
 //     shadowRadius: 5,
 //     elevation: 2,
 //   },
-//   rowBetween: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//   },
 //   name: {
 //     fontSize: 18,
 //     fontWeight: "600",
 //     color: "#0F172A",
 //   },
-//   rolesContainer: {
-//     marginTop: 4,
-//     flexDirection: "column", // Viktigt: visar roller under varandra
-//   },
-//   roleText: {
-//     fontSize: 14,
-//     color: "#475569",
-//   },
-//   email: {
-//     fontSize: 14,
-//     color: "#334155",
-//     marginTop: 6,
-//   },
-//   phone: {
-//     fontSize: 14,
-//     color: "#334155",
-//     marginTop: 2,
-//   },
-//   placeContainer: {
+//   infoRow: {
 //     flexDirection: "row",
-//     alignItems: "center",
-//     marginTop: 6,
+//     marginTop: 4,
 //   },
-//   placeLabel: {
-//     fontSize: 14,
-//     fontWeight: "500",
+//   label: {
+//     fontWeight: "600",
 //     color: "#475569",
-//     marginRight: 5,
+//     width: 80,
 //   },
-//   placeText: {
-//     fontSize: 14,
+//   value: {
 //     color: "#0F172A",
+//     flexShrink: 1,
 //   },
 //   center: {
 //     flex: 1,
@@ -151,18 +146,20 @@
 //   },
 // });
 
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import useFetchUsers from "../../hooks/useFetchUsers";
 
 export default function UsersIndexScreen() {
   const { users, loading, error } = useFetchUsers();
+  const [searchTerm, setSearchTerm] = useState("");
 
   if (loading) {
     return (
@@ -181,57 +178,87 @@ export default function UsersIndexScreen() {
     );
   }
 
+  // Filtrera användare baserat på söktermen
+  const filteredUsers = users.filter((user) => {
+    const term = searchTerm.toLowerCase();
+    const name = user.name?.toLowerCase() || "";
+    const email = user.email?.toLowerCase() || "";
+    const roles = Array.isArray(user.role)
+      ? user.role.join(", ").toLowerCase()
+      : "";
+    const unitName = user.unit?.name?.toLowerCase() || "";
+    return (
+      name.includes(term) ||
+      email.includes(term) ||
+      roles.includes(term) ||
+      unitName.includes(term)
+    );
+  });
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
-      <View style={styles.rowBetween}>
-        <Text style={styles.name}>{item.name || "Namn saknas"}</Text>
+      <Text style={styles.name}>{item.name || "Namn saknas"}</Text>
+
+      {/* Roll */}
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Roll:</Text>
+        <Text style={styles.value}>
+          {Array.isArray(item.role) && item.role.length > 0
+            ? item.role.join(", ")
+            : "–"}
+        </Text>
       </View>
 
-      {/* Roller */}
-      {Array.isArray(item.role) && item.role.length > 0 ? (
-        <View style={styles.rolesContainer}>
-          {item.role.map((r, index) => (
-            <Text key={index} style={styles.roleText}>
-              {r}
-            </Text>
-          ))}
-        </View>
-      ) : (
-        <Text style={styles.roleText}>–</Text>
-      )}
+      {/* E-post */}
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>E-post:</Text>
+        <Text style={styles.value}>{item.email || "Ingen e-post"}</Text>
+      </View>
 
-      {/* E-post och telefon */}
-      <Text style={styles.email}>{item.email || "Ingen e-post"}</Text>
-      <Text style={styles.phone}>{item.phone || "–"}</Text>
+      {/* Telefon */}
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Telefon:</Text>
+        <Text style={styles.value}>{item.phone || "–"}</Text>
+      </View>
 
-      {/* Assigned Workplaces */}
-      <View style={styles.placeContainer}>
-        <Text style={styles.placeLabel}>Arbetsplatser:</Text>
-        <View style={styles.workplacesContainer}>
-          {Array.isArray(item.assignedWorkplaces) &&
-          item.assignedWorkplaces.length > 0 ? (
-            item.assignedWorkplaces.map((wp) => (
-              <Text key={wp._id} style={styles.placeText}>
-                {wp.name}
-              </Text>
-            ))
-          ) : (
-            <Text style={styles.placeText}>–</Text>
-          )}
-        </View>
+      {/* Enhet */}
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Enhet:</Text>
+        <Text style={styles.value}>{item.unit?.name || "–"}</Text>
       </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Användare</Text>
-      <FlatList
-        data={users}
-        keyExtractor={(item) => item._id}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: 40 }}
+      {/* Sökfält */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Sök medarbetare..."
+        value={searchTerm}
+        onChangeText={setSearchTerm}
       />
+
+      {users.length === 0 ? (
+        <View style={styles.centerMessage}>
+          <Text style={styles.infoText}>
+            Det finns inga medarbetare att visa just nu.
+          </Text>
+        </View>
+      ) : filteredUsers.length === 0 ? (
+        <View style={styles.centerMessage}>
+          <Text style={styles.infoText}>
+            Ingen medarbetare matchar din sökning.
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredUsers}
+          keyExtractor={(item) => item._id}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingBottom: 40 }}
+        />
+      )}
     </View>
   );
 }
@@ -243,11 +270,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 20,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#1E293B",
+  searchInput: {
+    backgroundColor: "#FFF",
+    padding: 10,
+    borderRadius: 10,
     marginBottom: 15,
+    borderColor: "#CCC",
+    borderWidth: 1,
   },
   card: {
     backgroundColor: "#FFFFFF",
@@ -259,53 +288,36 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 2,
   },
-  rowBetween: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
   name: {
     fontSize: 18,
     fontWeight: "600",
     color: "#0F172A",
   },
-  rolesContainer: {
+  infoRow: {
+    flexDirection: "row",
     marginTop: 4,
-    flexDirection: "column",
   },
-  roleText: {
-    fontSize: 14,
+  label: {
+    fontWeight: "600",
     color: "#475569",
+    width: 80,
   },
-  email: {
-    fontSize: 14,
-    color: "#334155",
-    marginTop: 6,
-  },
-  phone: {
-    fontSize: 14,
-    color: "#334155",
-    marginTop: 2,
-  },
-  placeContainer: {
-    marginTop: 6,
-  },
-  placeLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#475569",
-    marginBottom: 2,
-  },
-  workplacesContainer: {
-    flexDirection: "column", // Visa flera arbetsplatser under varandra
-  },
-  placeText: {
-    fontSize: 14,
+  value: {
     color: "#0F172A",
+    flexShrink: 1,
   },
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  centerMessage: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  infoText: {
+    fontSize: 16,
+    color: "#475569",
   },
   loadingText: {
     marginTop: 10,

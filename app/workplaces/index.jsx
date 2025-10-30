@@ -133,18 +133,21 @@
 // export default WorkPlaceScreen;
 
 //NY kod:
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  TextInput,
+  ScrollView,
 } from "react-native";
 import useFetchWorkplaces from "../../hooks/useFetchWorkplaces";
 
 export default function WorkplacesIndexScreen() {
   const { workplaces, loading, error } = useFetchWorkplaces();
+  const [searchTerm, setSearchTerm] = useState("");
 
   if (loading) {
     return (
@@ -163,31 +166,81 @@ export default function WorkplacesIndexScreen() {
     );
   }
 
+  // Filtrera arbetsplatser via enhetens namn
+  const filteredWorkplaces = workplaces.filter((wp) =>
+    wp.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const renderCleaner = (cleaner) => (
+    <View key={cleaner._id} style={styles.cleanerCard}>
+      <Text style={styles.cleanerName} numberOfLines={1}>
+        {cleaner.name}
+      </Text>
+      <Text style={styles.cleanerRole} numberOfLines={1}>
+        {cleaner.role?.join(", ") || "–"}
+      </Text>
+      <Text style={styles.cleanerEmail} numberOfLines={1}>
+        E-postadress: {cleaner.email || "Ingen e-post"}
+      </Text>
+      <Text style={styles.cleanerPhone} numberOfLines={1}>
+        Telefon: {cleaner.phone || "–"}
+      </Text>
+    </View>
+  );
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.address}>{item.address}</Text>
 
       <View style={styles.cleanersContainer}>
-        <Text style={styles.cleanersLabel}>
-          Antal tilldelade lokalvårdare::
-        </Text>
-        <Text style={styles.cleanersCount}>
+        {item.cleaners && item.cleaners.length > 0 && (
+          <Text style={styles.cleanersLabel}>Här jobbar</Text>
+        )}
+        {/* <Text style={styles.cleanersCount}>
           {Array.isArray(item.cleaners) ? item.cleaners.length : 0}
-        </Text>
+        </Text> */}
       </View>
+
+      {Array.isArray(item.cleaners) && item.cleaners.length > 0 ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginTop: 10 }}>
+          {item.cleaners.map(renderCleaner)}
+        </ScrollView>
+      ) : null}
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Arbetsplatser</Text>
-      <FlatList
-        data={workplaces}
-        keyExtractor={(item) => item._id}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: 40 }}
+      {/* <Text style={styles.title}>Arbetsplatser</Text> */}
+
+      {/* Sökfält */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Sök arbetsplats..."
+        value={searchTerm}
+        onChangeText={setSearchTerm}
       />
+
+      {filteredWorkplaces.length === 0 ? (
+        <View style={styles.center}>
+          <Text style={styles.noWorkplacesText}>
+            {workplaces.length === 0
+              ? "Det finns inga arbetsplatser att visa just nu."
+              : "Ingen arbetsplats matchar söktermen."}
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredWorkplaces}
+          keyExtractor={(item) => item._id}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingBottom: 40 }}
+        />
+      )}
     </View>
   );
 }
@@ -203,6 +256,14 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
     color: "#065F46",
+    marginBottom: 10,
+  },
+  searchInput: {
+    backgroundColor: "#FFF",
+    padding: 10,
+    borderRadius: 10,
+    borderColor: "#CCC",
+    borderWidth: 1,
     marginBottom: 15,
   },
   card: {
@@ -231,14 +292,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cleanersLabel: {
-    fontSize: 14,
-    color: "#065F46",
+    fontSize: 17,
+    color: "#033225ff",
     marginRight: 6,
   },
   cleanersCount: {
     fontSize: 14,
     fontWeight: "600",
     color: "#047857",
+  },
+  cleanerCard: {
+    backgroundColor: "#F3F4F6",
+    padding: 8,
+    borderRadius: 8,
+    marginRight: 10,
+    width: 150,
+  },
+  cleanerName: {
+    fontWeight: "600",
+    color: "#064E3B",
+    fontSize: 12,
+  },
+  cleanerRole: {
+    fontSize: 10,
+    color: "#064E3B",
+  },
+  cleanerEmail: {
+    fontSize: 10,
+    color: "#064E3B",
+  },
+  cleanerPhone: {
+    fontSize: 10,
+    color: "#064E3B",
   },
   center: {
     flex: 1,
@@ -251,5 +336,11 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
+  },
+  noWorkplacesText: {
+    color: "#065F46",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
   },
 });

@@ -180,6 +180,8 @@ const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
     backgroundColor: "#f4f6f8",
+    justifyContent: "center",
+    alignItems: "center",
   },
   dashboardTitle: {
     fontSize: 22,
