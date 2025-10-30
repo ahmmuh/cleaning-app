@@ -1,5 +1,5 @@
 //NYare kod:
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   FlatList,
   ActivityIndicator,
@@ -11,11 +11,17 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import MachineItem from "./machineItem";
 import useFetchMachines from "../../hooks/useFetchMachines";
+import { useFocusEffect } from "expo-router";
 
 export default function MachineIndex() {
-  const { machines, loading, error } = useFetchMachines();
+  const { fetchMachines, machines, loading, error } = useFetchMachines();
   const [selectedUnit, setSelectedUnit] = useState("");
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchMachines();
+    }, [])
+  );
   const units = useMemo(() => {
     if (!machines) return [];
     const seen = new Set();
@@ -69,15 +75,11 @@ export default function MachineIndex() {
       <FlatList
         data={filteredMachines}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <MachineItem
-            item={item}
-            ListEmptyComponent={() => (
-              <Text style={{ textAlign: "center", marginTop: 20 }}>
-                Inga maskiner hittades
-              </Text>
-            )}
-          />
+        renderItem={({ item }) => <MachineItem item={item} />}
+        ListEmptyComponent={() => (
+          <Text style={{ textAlign: "center", marginTop: 20 }}>
+            Inga maskiner hittades
+          </Text>
         )}
       />
     </SafeAreaView>

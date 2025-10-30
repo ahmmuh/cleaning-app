@@ -302,7 +302,7 @@ function UnitScreen() {
       {/* Sökfält */}
       <TextInput
         style={styles.searchInput}
-        placeholder="Sök enhet eller chef..."
+        placeholder="Sök enhet..."
         value={searchTerm}
         onChangeText={setSearchTerm}
       />

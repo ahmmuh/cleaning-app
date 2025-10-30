@@ -60,7 +60,10 @@ export default function MachineScanScreen() {
   const handleBarcodeScanned = ({ type, data }) => {
     setScanned(true);
     // Navigera till detaljsidan med scannad maskinId
-    router.push(`/machines/${data}`);
+    // router.push(`/machines/${data}`);
+
+    //NY kod
+    router.replace(`/machines/${data}`);
   };
 
   if (!permission)

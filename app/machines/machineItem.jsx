@@ -15,11 +15,6 @@ export default function MachineItem({ item }) {
         <FontAwesome name="cog" size={24} color="#007AFF" />
         <Text style={styles.label}>{name}</Text>
         {/* Scan-ikon */}
-        <TouchableOpacity
-          style={{ marginLeft: "auto" }}
-          onPress={() => router.push(`/machines/${item._id}/machineScan`)}>
-          <FontAwesome name="camera" size={24} color="#007AFF" />
-        </TouchableOpacity>
       </View>
 
       <Text style={styles.detail}> {item.unitId?.name || "Okänd"}</Text>
@@ -29,6 +24,22 @@ export default function MachineItem({ item }) {
       <Text style={styles.detail}>
         Senast ändrad: {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
       </Text>
+
+      <TouchableOpacity
+        style={{ marginLeft: "auto" }}
+        onPress={() => router.push(`/machines/${item._id}/machineScan`)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            gap: 6,
+          }}>
+          <Text>Skanna</Text>
+          <FontAwesome name="camera" size={24} color="#007AFF" />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }

@@ -23,10 +23,10 @@ export default function MachineDetailScreen() {
   const [machine, setMachine] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { fetchMachines } = useFetchMachines();
-  useEffect(() => {
-    fetchMachines();
-  }, [machineId]);
+  // const { fetchMachines } = useFetchMachines();
+  // useEffect(() => {
+  //   fetchMachines();
+  // }, [machineId]);
 
   const fetchMachine = async () => {
     setLoading(true);

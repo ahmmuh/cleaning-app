@@ -180,7 +180,7 @@ function KeyItem({ item }) {
             </Text>
           </View>
 
-          <Text style={styles.detail}>Enhet: {item.location}</Text>
+          <Text style={styles.detail}>Enhet: {item?.unit?.name}</Text>
           {normalizeStatus(item.status) === "checked-out" &&
             item.borrowedBy && (
               <Text style={styles.detail}>
