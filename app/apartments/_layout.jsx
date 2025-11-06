@@ -6,12 +6,13 @@ const ApartmentLayout = () => {
       screenOptions={{
         headerShown: false,
         headerStyle: {
-          backgroundColor: "#bff38c",
+          backgroundColor: "#5381b1ff",
         },
         headerTitleStyle: {
           fontWeight: "bold",
         },
         headerTitle: "Flyttstäd",
+        headerTintColor: "#fff",
         headerShown: true,
       }}>
       <Stack.Screen

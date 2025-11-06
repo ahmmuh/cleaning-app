@@ -390,7 +390,7 @@ function UnitScreen() {
                 </Pressable>
 
                 {/* Flytstäd */}
-                <Pressable
+                {/* <Pressable
                   style={styles.linkButton}
                   onPress={() =>
                     router.push({
@@ -404,7 +404,7 @@ function UnitScreen() {
                       Flyttstäd ({item?.apartments?.length})
                     </Text>
                   </View>
-                </Pressable>
+                </Pressable> */}
               </View>
             );
           }}

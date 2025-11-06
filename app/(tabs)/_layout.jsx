@@ -9,12 +9,13 @@ function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: "#003366",
         headerStyle: {
-          backgroundColor: "#bff38c",
+          backgroundColor: "#3e68abff",
         },
 
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        headerTintColor: "#fff",
         tabBarItemStyle: {
           flexDirection: "row",
           justifyContent: "space-between",
@@ -46,10 +47,10 @@ function TabLayout() {
         name="profile"
         options={{
           title: "Min profil",
-          headerTitle: "Min profil",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome size={25} name="user" color={color} />
+            <FontAwesome size={25} name="heart" color={color} />
           ),
+          headerShown: false,
         }}
       />
     </Tabs>

@@ -42,13 +42,14 @@ const LayoutContent = () => {
 
   return (
     <>
-      <StatusBar backgroundColor="#bff38c" barStyle="dark-content" />
+      <StatusBar backgroundColor="#5381b1ff" barStyle="dark-content" />
       <ToastManager />
       {user ? (
         <>
           <Stack
             screenOptions={{
               headerShown: false,
+              headerTintColor: "#fff",
             }}>
             <Stack.Screen
               name="(tabs)"

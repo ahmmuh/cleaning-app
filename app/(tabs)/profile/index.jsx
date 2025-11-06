@@ -34,7 +34,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Min Profil</Text>
+      {/* <Text style={styles.header}>Min Profil</Text> */}
 
       <View style={styles.card}>
         <Text style={styles.labelTitle}>Namn:</Text>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     marginTop: 30,
-    backgroundColor: "#ff4d4d",
+    backgroundColor: "#aa5f5fff",
     paddingVertical: 15,
     borderRadius: 12,
     alignItems: "center",

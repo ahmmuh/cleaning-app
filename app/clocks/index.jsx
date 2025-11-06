@@ -18,7 +18,7 @@ const { width } = Dimensions.get("window");
 export default function ClockInOut() {
   const [numbers, setNumbers] = useState([]);
   const [message, setMessage] = useState("");
-  const [messageColor, setMessageColor] = useState("#6c757d"); // default neutral
+  const [messageColor, setMessageColor] = useState("#6c757d"); 
   const [time, setTime] = useState(new Date());
 
   // Uppdatera klockan varje sekund
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     borderRadius: 12,
     alignItems: "center",
-    backgroundColor: "#a3a9a2ff",
+    backgroundColor: "#627aafff",
   },
   clearBtn: {
     flex: 1,

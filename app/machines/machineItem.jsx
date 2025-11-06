@@ -4,42 +4,47 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+import useFetchCurrentUser from "../../hooks/useFetchCurrentUser";
 
 export default function MachineItem({ item }) {
   const router = useRouter();
-  const { name, isAvailable } = item;
+  const { name, borrowedBy, isAvailable } = item;
+
+  const { user } = useFetchCurrentUser();
 
   return (
     <View style={styles.card}>
       <View style={styles.row}>
         <FontAwesome name="cog" size={24} color="#007AFF" />
         <Text style={styles.label}>{name}</Text>
+        <View>{borrowedBy && <Text> Lånad av: {borrowedBy?.name}</Text>}</View>
         {/* Scan-ikon */}
       </View>
 
-      <Text style={styles.detail}> {item.unitId?.name || "Okänd"}</Text>
+      <Text style={styles.detail}>Ägs av {item.unitId?.name || "Okänd"}</Text>
       <Text style={[styles.detail, { color: isAvailable ? "green" : "red" }]}>
         Status: {isAvailable ? "Inne" : "Utlånad"}
       </Text>
       <Text style={styles.detail}>
         Senast ändrad: {new Date(item.updatedAt).toLocaleDateString("sv-SE")}
       </Text>
-
-      <TouchableOpacity
-        style={{ marginLeft: "auto" }}
-        onPress={() => router.push(`/machines/${item._id}/machineScan`)}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-            gap: 6,
-          }}>
-          <Text>Skanna</Text>
-          <FontAwesome name="camera" size={24} color="#007AFF" />
-        </View>
-      </TouchableOpacity>
+      {user && (isAvailable || borrowedBy?._id === user._id) && (
+        <TouchableOpacity
+          style={{ marginLeft: "auto" }}
+          onPress={() => router.push(`/machines/${item._id}/machineScan`)}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              gap: 6,
+            }}>
+            <Text>Skanna</Text>
+            <FontAwesome name="camera" size={24} color="#007AFF" />
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

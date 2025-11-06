@@ -7,22 +7,8 @@ function LoginLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#003366",
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: "#bff38c",
-        },
-
-        headerTitleStyle: "bold",
-        headerShown: false,
       }}>
-      <Stack.Screen
-        name="index"
-        options={{
-          headerTitle: "Logga in",
-          headerShown: true,
-        }}
-      />
+      <Stack.Screen name="index" />
     </Stack>
   );
 }

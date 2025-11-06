@@ -6,14 +6,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const ApartmentItem = ({ item }) => {
   const router = useRouter();
   return (
-    <Pressable
-      onPress={() =>
-        router.push({
-          pathname: `/apartments/${item._id}`,
-          params: {},
-          state: { apartment: item },
-        })
-      }>
+    <Pressable onPress={() => router.push(`/apartments/${item._id}`)}>
       <View style={styles.container}>
         <Text style={styles.title}>
           <Icon name="building" size={16} color="#333" />{" "}

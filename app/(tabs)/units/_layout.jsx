@@ -1,25 +1,40 @@
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React from "react";
-function AllaEnheterSTackLayout() {
-  return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        headerStyle: {
-          backgroundColor: "#bff38c",
-        },
+import { Text, View } from "react-native";
 
-        headerTitleStyle: { fontWeight: "bold" },
-      }}>
-      <Stack.Screen
-        name="index"
-        options={{
-          headerTitle: "Alla enheter",
-          headerShown: true,
-        }}
-      />
-    </Stack>
+function AllaEnheterStackLayout() {
+  return (
+    <>
+      <StatusBar backgroundColor="#5381b1ff" style="light" />
+
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: "#5381b1ff",
+          },
+          headerTitleAlign: "left",
+          headerTintColor: "#fff",
+        }}>
+        <Stack.Screen
+          name="index"
+          options={{
+            headerShown: true,
+            headerTitle: () => (
+              <View
+                style={{ marginLeft: 16, justifyContent: "center", flex: 1 }}>
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 20, color: "#fff" }}>
+                  Alla enheter
+                </Text>
+              </View>
+            ),
+          }}
+        />
+      </Stack>
+    </>
   );
 }
 
-export default AllaEnheterSTackLayout;
+export default AllaEnheterStackLayout;

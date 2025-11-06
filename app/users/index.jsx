@@ -301,10 +301,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#475569",
     width: 80,
+    fontSize: 17,
   },
   value: {
     color: "#0F172A",
     flexShrink: 1,
+    fontSize: 17,
   },
   center: {
     flex: 1,

@@ -36,3 +36,7 @@ eas build --platform android --profile development
 
 //Start appen:
 npx expo --dev-client
+
+//Starta/spegla mobilen till datorn
+
+scrcpy
